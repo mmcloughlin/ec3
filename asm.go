@@ -1,3 +1,5 @@
+// +build ignore
+
 package main
 
 import (
@@ -67,13 +69,9 @@ func Add(x, y Int, p Crandall) {
 	l := NextMultiple(n, 64)
 	k := l / 64
 
-	// Add y into x.
-	for i := 0; i < k; i++ {
-		build.ADCXQ(y[i], x[i])
-	}
+	// Prepare a zero register.
+	zero := Zero64()
 
-	// Both inputs are < 2ˡ so the result is < 2ˡ⁺¹.
-	// If the last addition caused a carry into the l'th bit we need to perform a reduction.
 	// Note that for the Crandall prime we have
 	//
 	//	2ⁿ - c = 0 (mod p)
@@ -82,19 +80,29 @@ func Add(x, y Int, p Crandall) {
 	// However n may not be on a limb boundary, so we actually need the identity
 	//
 	//	2ˡ = 2ˡ⁻ⁿ * c (mod p)
+	//
+	// We will call this quantity d. It will be required for reductions later.
 
 	d := (1 << uint(l-n)) * p.C
-
-	// The addend may be zero or d depending on the carry.
-	// Initialize to zero and conditionally move d into it.
-	addend := Zero64()
 	dreg := build.GP64()
 	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
+
+	// Add y into x.
+	build.ADDQ(y[0], x[0])
+	for i := 1; i < k; i++ {
+		build.ADCXQ(y[i], x[i])
+	}
+
+	// Both inputs are < 2ˡ so the result is < 2ˡ⁺¹.
+	// If the last addition caused a carry into the l'th bit we need to perform a reduction.
+	// Prepare the value we will add in to perform the reduction. The addend may be
+	// zero or d depending on the carry.
+	addend := build.GP64()
+	build.MOVQ(zero, addend)
 	build.CMOVQCS(dreg, addend)
 
 	// Now add the addend into x.
-	build.ADCXQ(addend, x[0])
-	zero := Zero64()
+	build.ADDQ(addend, x[0])
 	for i := 1; i < k; i++ {
 		build.ADCXQ(zero, x[i])
 	}
@@ -104,7 +112,7 @@ func Add(x, y Int, p Crandall) {
 	// second reduction.
 
 	// As before, the addend is either 0 or d depending on the carry from the last add.
-	addend = Zero64()
+	build.MOVQ(zero, addend)
 	build.CMOVQCS(dreg, addend)
 
 	// This time we only need to perform one add. The result must be less than 2ˡ + 2*d,
@@ -117,7 +125,7 @@ func main() {
 	p := Crandall{N: 255, C: 19}
 	name := p.Slug()
 
-	build.TEXT("Add"+name, build.NOSPLIT, "func(x, y *[4]uint64)")
+	build.TEXT("Add"+name, build.NOSPLIT, "func(x, y *[32]byte)")
 
 	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
 	x := NewIntLimb64(4)
@@ -132,6 +140,10 @@ func main() {
 	}
 
 	Add(x, y, p)
+
+	for i := 0; i < 4; i++ {
+		build.MOVQ(x[i], xb.Offset(8*i))
+	}
 
 	build.RET()
 
