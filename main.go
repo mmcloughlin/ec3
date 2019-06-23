@@ -71,7 +71,7 @@ func Add(x, y Int, p Crandall) {
 		build.ADCXQ(y[i], x[i])
 	}
 
-	// Both inputs are < 2ˡ so the result is < 2^{l+1}.
+	// Both inputs are < 2ˡ so the result is < 2ˡ⁺¹.
 	// If the last addition caused a carry into the l'th bit we need to perform a reduction.
 	// Note that for the Crandall prime we have
 	//
@@ -80,7 +80,7 @@ func Add(x, y Int, p Crandall) {
 	//
 	// However n may not be on a limb boundary, so we actually need the identity
 	//
-	//	2ˡ = 2^{l-n} * c (mod p)
+	//	2ˡ = 2ˡ⁻ⁿ * c (mod p)
 
 	d := (1 << uint(l-n)) * p.C
 
