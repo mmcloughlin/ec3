@@ -10,7 +10,7 @@ import (
 	"github.com/mmcloughlin/avo/operand"
 )
 
-// Crandall represents a prime of the form 2^n - c. Named after Richard E. Crandall.
+// Crandall represents a prime of the form 2ⁿ - c. Named after Richard E. Crandall.
 type Crandall struct {
 	N int
 	C int
@@ -71,16 +71,16 @@ func Add(x, y Int, p Crandall) {
 		build.ADCXQ(y[i], x[i])
 	}
 
-	// Both inputs are < 2^l so the result is < 2^{l+1}.
+	// Both inputs are < 2ˡ so the result is < 2^{l+1}.
 	// If the last addition caused a carry into the l'th bit we need to perform a reduction.
 	// Note that for the Crandall prime we have
 	//
-	//	2^n - c = 0 (mod p)
-	//	2^n = c (mod p)
+	//	2ⁿ - c = 0 (mod p)
+	//	2ⁿ = c (mod p)
 	//
 	// However n may not be on a limb boundary, so we actually need the identity
 	//
-	//	2^l = 2^{l-n} * c (mod p)
+	//	2ˡ = 2^{l-n} * c (mod p)
 
 	d := (1 << uint(l-n)) * p.C
 
@@ -98,16 +98,17 @@ func Add(x, y Int, p Crandall) {
 		build.ADCXQ(zero, x[i])
 	}
 
-	// We have added d into the low l bits. Therefore the result is less than 2^l +
-	// d. But note that it could still be 2^l or higher, so we need to perform a
+	// We have added d into the low l bits. Therefore the result is less than 2ˡ + d.
+	// But note that it could still be 2ˡ or higher, so we need to perform a
 	// second reduction.
 
 	// As before, the addend is either 0 or d depending on the carry from the last add.
 	addend = Zero64()
 	build.CMOVQCS(dreg, addend)
 
-	// This time we only need to perform one add. The result must be less than 2^l + 2*d, therefore provided
-	// 2*d does not exceed the size of a limb we can be sure there will be no carry.
+	// This time we only need to perform one add. The result must be less than 2ˡ + 2*d,
+	// therefore provided 2*d does not exceed the size of a limb we can be sure there
+	// will be no carry.
 	build.ADCXQ(addend, x[0])
 }
 
