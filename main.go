@@ -65,9 +65,10 @@ func Zero64() reg.Register {
 func Add(x, y Int, p Crandall) {
 	n := p.Bits()
 	l := NextMultiple(n, 64)
+	k := l / 64
 
 	// Add y into x.
-	for i := 0; i < l; i++ {
+	for i := 0; i < k; i++ {
 		build.ADCXQ(y[i], x[i])
 	}
 
@@ -88,13 +89,13 @@ func Add(x, y Int, p Crandall) {
 	// Initialize to zero and conditionally move d into it.
 	addend := Zero64()
 	dreg := build.GP64()
-	build.MOVQ(operand.U16(d), dreg) // TODO(mbm): is U16 right?
+	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 	build.CMOVQCS(dreg, addend)
 
 	// Now add the addend into x.
 	build.ADCXQ(addend, x[0])
 	zero := Zero64()
-	for i := 1; i < l; i++ {
+	for i := 1; i < k; i++ {
 		build.ADCXQ(zero, x[i])
 	}
 
@@ -114,5 +115,25 @@ func Add(x, y Int, p Crandall) {
 
 func main() {
 	p := Crandall{N: 255, C: 19}
-	fmt.Println(p)
+	name := p.Slug()
+
+	build.TEXT("Add"+name, build.NOSPLIT, "func(x, y *[4]uint64)")
+
+	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
+	x := NewIntLimb64(4)
+	for i := 0; i < 4; i++ {
+		build.MOVQ(xb.Offset(8*i), x[i])
+	}
+
+	yb := operand.Mem{Base: build.Load(build.Param("y"), build.GP64())}
+	y := NewIntLimb64(4)
+	for i := 0; i < 4; i++ {
+		build.MOVQ(yb.Offset(8*i), y[i])
+	}
+
+	Add(x, y, p)
+
+	build.RET()
+
+	build.Generate()
 }
