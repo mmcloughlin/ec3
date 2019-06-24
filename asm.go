@@ -73,7 +73,7 @@ func Zero64() reg.Register {
 }
 
 // Add y into x modulo p.
-//	x = x + y (mod p)
+//	x ≡ x + y (mod p)
 func Add(x, y Int, p Crandall) {
 	n := p.Bits()
 	l := NextMultiple(n, 64)
@@ -84,12 +84,12 @@ func Add(x, y Int, p Crandall) {
 
 	// Note that for the Crandall prime we have
 	//
-	//	2ⁿ - c = 0 (mod p)
-	//	2ⁿ = c (mod p)
+	//	2ⁿ - c ≡ 0 (mod p)
+	//	2ⁿ ≡ c (mod p)
 	//
 	// However n may not be on a limb boundary, so we actually need the identity
 	//
-	//	2ˡ = 2ˡ⁻ⁿ * c (mod p)
+	//	2ˡ ≡ 2ˡ⁻ⁿ * c (mod p)
 	//
 	// We will call this quantity d. It will be required for reductions later.
 
