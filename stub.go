@@ -3,3 +3,5 @@
 package ec3
 
 func Add25519(x *[32]byte, y *[32]byte)
+
+func Mul(z *[64]byte, x *[32]byte, y *[32]byte)
