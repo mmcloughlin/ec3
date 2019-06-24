@@ -17,28 +17,6 @@ func NumTrials() int {
 	return 1 << 15
 }
 
-func TestAdd(t *testing.T) {
-	for trial := 0; trial < NumTrials(); trial++ {
-		var x, y, expect fp25519.Elt
-		rand.Read(x[:])
-		rand.Read(y[:])
-
-		var xb, yb [32]byte
-		copy(xb[:], x[:])
-		copy(yb[:], y[:])
-
-		fp25519.Add(&expect, &x, &y)
-		Add25519(&xb, &yb)
-
-		if xb != expect {
-			t.Logf(" trial = %d", trial)
-			t.Logf("   got = %x", xb)
-			t.Logf("expect = %x", expect)
-			t.Fail()
-		}
-	}
-}
-
 func TestMul(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, y [32]byte
@@ -62,6 +40,52 @@ func TestMul(t *testing.T) {
 			t.Logf("     x = %x", x)
 			t.Logf("     y = %x", y)
 			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.Fail()
+		}
+	}
+}
+
+func TestAdd25519(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, y, expect fp25519.Elt
+		rand.Read(x[:])
+		rand.Read(y[:])
+
+		var xb, yb, got [32]byte
+		copy(xb[:], x[:])
+		copy(yb[:], y[:])
+
+		fp25519.Mul(&expect, &x, &y)
+		Mul25519(&got, &xb, &yb)
+
+		if got != expect {
+			t.Logf(" trial = %d", trial)
+			t.Logf("     x = %x", x)
+			t.Logf("     y = %x", y)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.Fail()
+		}
+	}
+}
+
+func TestMul25519(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, y, expect fp25519.Elt
+		rand.Read(x[:])
+		rand.Read(y[:])
+
+		var xb, yb [32]byte
+		copy(xb[:], x[:])
+		copy(yb[:], y[:])
+
+		fp25519.Add(&expect, &x, &y)
+		Add25519(&xb, &yb)
+
+		if xb != expect {
+			t.Logf(" trial = %d", trial)
+			t.Logf("   got = %x", xb)
 			t.Logf("expect = %x", expect)
 			t.Fail()
 		}

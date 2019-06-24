@@ -2,6 +2,8 @@
 
 package ec3
 
+func Mul(z *[64]byte, x *[32]byte, y *[32]byte)
+
 func Add25519(x *[32]byte, y *[32]byte)
 
-func Mul(z *[64]byte, x *[32]byte, y *[32]byte)
+func Mul25519(z *[32]byte, x *[32]byte, y *[32]byte)

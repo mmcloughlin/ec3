@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mmcloughlin/avo/reg"
-
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
+	"github.com/mmcloughlin/avo/reg"
 )
 
 // Crandall represents a prime of the form 2ⁿ - c. Named after Richard E. Crandall.
@@ -46,9 +45,14 @@ func NextMultiple(a, n int) int {
 // Int represents a multi-precision integer.
 type Int []operand.Op
 
+// NewInt builds an empty integer with k limbs.
+func NewInt(k int) Int {
+	return make(Int, k)
+}
+
 // NewIntLimb64 builds multi-precision integer with k 64-bit limbs.
 func NewIntLimb64(k int) Int {
-	x := make(Int, k)
+	x := NewInt(k)
 	for i := 0; i < k; i++ {
 		x[i] = build.GP64()
 	}
@@ -58,7 +62,7 @@ func NewIntLimb64(k int) Int {
 // NewIntFromMem builds a multi-precision integer referencing the k 64-bit limbs
 // at memory address m.
 func NewIntFromMem(m operand.Mem, k int) Int {
-	x := make(Int, k)
+	x := NewInt(k)
 	for i := 0; i < k; i++ {
 		x[i] = m.Offset(8 * i)
 	}
@@ -72,9 +76,9 @@ func Zero64() reg.Register {
 	return zero
 }
 
-// Add y into x modulo p.
+// AddModP adds y into x modulo p.
 //	x ≡ x + y (mod p)
-func Add(x, y Int, p Crandall) {
+func AddModP(x, y Int, p Crandall) {
 	n := p.Bits()
 	l := NextMultiple(n, 64)
 	k := l / 64
@@ -93,6 +97,7 @@ func Add(x, y Int, p Crandall) {
 	//
 	// We will call this quantity d. It will be required for reductions later.
 
+	// TODO(mbm): refactor d computation
 	d := (1 << uint(l-n)) * p.C
 	dreg := build.GP64()
 	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
@@ -128,11 +133,14 @@ func Add(x, y Int, p Crandall) {
 	// This time we only need to perform one add. The result must be less than 2ˡ + 2*d,
 	// therefore provided 2*d does not exceed the size of a limb we can be sure there
 	// will be no carry.
+	// TODO(mbm): assert d is within an acceptable range
 	build.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
 }
 
 // Mul does a full multiply z = x*y.
 func Mul(z, x, y Int) {
+	// TODO(mbm): multi-precision multiply is ugly
+
 	acc := make([]operand.Op, len(z))
 	zero := build.GP64()
 
@@ -188,10 +196,84 @@ func Mul(z, x, y Int) {
 	}
 }
 
-// add builds an addition function.
-func add(p Crandall) {
+// ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.
+// This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
+// guaranteed to be less than p.
+func ReduceDouble(z, x Int, p Crandall) {
+	// TODO(mbm): helpers for limb size computations
+	n := p.Bits()
+	l := NextMultiple(n, 64)
+	k := l / 64
+
+	// Prepare a zero register.
+	zero := Zero64()
+
+	// Compute the reduction additive d.
+	d := (1 << uint(l-n)) * p.C
+	dreg := build.GP64()
+	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
+
+	// Stage 1: upper bound 2²ˡ → 2ˡ + d*2ˡ.
+	//
+	// At this point x is a 2*l bit quantity which we'll view as two l-bit halfs.
+	//
+	//	x = H ∥ L = 2ˡ * H + L ≡ d*H + L (mod p)
+	//
+	// Therefore the first reduction stage multiplies the top limbs by d and
+	// accumulates the result into the low limbs. Note the result will have an
+	// additional limb.
+
+	// Multiply r = d*H.
+	r := NewIntLimb64(k + 1)
+	build.MOVQ(dreg, reg.RDX)
+	build.XORQ(r[0], r[0]) // also clears flags
+	for i := 0; i < k; i++ {
+		lo := build.GP64()
+		build.MULXQ(x[i+k], lo, r[i+1])
+		build.ADCXQ(lo, r[i])
+	}
+
+	// Add r += x.
+	for i := 0; i < k; i++ {
+		build.ADOXQ(x[i], r[i])
+	}
+	build.ADOXQ(zero, r[k])
+
+	// Stage 2: (d+1)*2ˡ → 2ˡ + (d+1)*d
+	//
+	// Currently r has one too many limbs, so we need to reduce again. The value in
+	// the top limb is ⩽ d. When we reduce we have to multiply by d again, so the
+	// result cannot exceed d^2. Provided d is small, the result will not exceed a single limb.
+
+	// TODO(mbm): assert d is within an acceptable range
+
+	top := r[k]
+	build.IMULQ(dreg, top) // clears flags
+	build.ADCXQ(top, r[0])
+	for i := 1; i < k; i++ {
+		build.ADCXQ(zero, r[i])
+	}
+
+	// Stage 3: finish
+	//
+	// It is still possible that the final add carried, in which case we need one final
+	// add to complete the reduction.
+	addend := build.GP64()
+	build.MOVQ(zero, addend)
+	build.CMOVQCS(dreg, addend)
+	build.ADDQ(addend, r[0])
+
+	// Write out the result.
+	for i := 0; i < k; i++ {
+		build.MOVQ(r[i], z[i])
+	}
+}
+
+// addmod builds a modular addition function.
+func addmod(p Crandall) {
 	build.TEXT("Add"+p.Slug(), build.NOSPLIT, "func(x, y *[32]byte)")
 
+	// TODO(mbm): helper for loading integer from memory
 	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
 	x := NewIntLimb64(4)
 	for i := 0; i < 4; i++ {
@@ -204,7 +286,7 @@ func add(p Crandall) {
 		build.MOVQ(yb.Offset(8*i), y[i])
 	}
 
-	Add(x, y, p)
+	AddModP(x, y, p)
 
 	for i := 0; i < 4; i++ {
 		build.MOVQ(x[i], xb.Offset(8*i))
@@ -214,7 +296,7 @@ func add(p Crandall) {
 }
 
 // mul builds a multiplication function.
-func mul(p Crandall) {
+func mul() {
 	build.TEXT("Mul", build.NOSPLIT, "func(z *[64]byte, x, y *[32]byte)")
 
 	zb := operand.Mem{Base: build.Load(build.Param("z"), build.GP64())}
@@ -229,15 +311,44 @@ func mul(p Crandall) {
 	Mul(z, x, y)
 
 	build.RET()
+}
 
+// mulmod builds a modular multiplication function.
+func mulmod(p Crandall) {
+	build.TEXT("Mul"+p.Slug(), build.NOSPLIT, "func(z *[32]byte, x, y *[32]byte)")
+
+	// Load arguments.
+	zb := operand.Mem{Base: build.Load(build.Param("z"), build.GP64())}
+	z := NewIntFromMem(zb, 4)
+
+	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
+	x := NewIntFromMem(xb, 4)
+
+	yb := operand.Mem{Base: build.Load(build.Param("y"), build.GP64())}
+	y := NewIntFromMem(yb, 4)
+
+	// Perform multiplication.
+	// TODO(mbm): is it possible to store the intermediate result in registers?
+	mb := build.AllocLocal(8 * 8)
+	m := NewIntFromMem(mb, 8)
+
+	Mul(m, x, y)
+
+	// Reduce.
+	build.Comment("Reduction.")
+	ReduceDouble(z, m, p)
+
+	build.RET()
 }
 
 func main() {
-	p := Crandall{N: 255, C: 19} // Curve25519
-	//p := Crandall{N: 383, C: 187} // Curve383187
+	// Multi-precision.
+	mul()
 
-	add(p)
-	mul(p)
+	// Fp25519
+	p := Crandall{N: 255, C: 19}
+	addmod(p)
+	mulmod(p)
 
 	build.Generate()
 }
