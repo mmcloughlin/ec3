@@ -1,0 +1,8 @@
+language: go
+go:
+- 1.x
+install:
+- make bootstrap
+script:
+- go build ./...
+- go test ./...
