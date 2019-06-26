@@ -11,8 +11,6 @@ lint:
 
 .PHONY: bootstrap
 bootstrap:
-	go get \
-		github.com/mmcloughlin/avo \
-		mvdan.cc/gofumpt/gofumports
+	go get mvdan.cc/gofumpt/gofumports
 	go install ./tools/mathfmt
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ${GOPATH}/bin v1.17.1
