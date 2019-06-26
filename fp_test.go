@@ -1,8 +1,8 @@
 package ec3
 
 import (
-	"crypto/rand"
 	"math/big"
+	"math/rand"
 	"testing"
 
 	"github.com/cloudflare/circl/math/fp25519"
@@ -101,7 +101,7 @@ func IntFromBytesLittleEndian(b []byte) *big.Int {
 func BytesFromIntLittleEndian(b []byte, x *big.Int) []byte {
 	xb := x.Bytes()
 	ReverseBytes(xb)
-	copy(b[:], xb)
+	copy(b, xb)
 	return b
 }
 
