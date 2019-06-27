@@ -8,7 +8,10 @@ import (
 // Format entry as a string.
 func Format(e *Entry) (string, error) {
 	// For simplicity assume author and title.
-	s := FormatAuthors(e.Authors()) + "."
+	s := FormatAuthors(e.Authors())
+	if !strings.HasSuffix(s, ".") {
+		s += "."
+	}
 	s += " " + e.Fields["title"].String() + "."
 
 	// Custom fields.
@@ -30,6 +33,9 @@ func Format(e *Entry) (string, error) {
 	case "article":
 		// Required: author, title, journaltitle, year/date
 		if journal, found := e.Fields["journaltitle"]; found {
+			s += " " + journal.String() + "."
+		}
+		if journal, found := e.Fields["journal"]; found {
 			s += " " + journal.String() + "."
 		}
 
