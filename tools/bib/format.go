@@ -7,18 +7,41 @@ import (
 
 // Format entry as a string.
 func Format(e *Entry) (string, error) {
+	// For simplicity assume author and title.
+	s := FormatAuthors(e.Authors()) + "."
+	s += " " + e.Fields["title"].String() + "."
+
+	// Custom fields.
 	switch e.Type {
 	case "misc":
-		s := FormatAuthors(e.Authors()) + "."
-		s += " " + e.Fields["title"].String() + "."
+		// Required: author/editor, title, year/date
 		if how, found := e.Fields["howpublished"]; found {
 			s += " " + how.String() + "."
 		}
-		s += " " + e.Fields["year"].String() + "."
-		return s, nil
+
+	case "inproceedings":
+		// Required: author, title, booktitle, year/date.
+		s += " In " + e.Fields["booktitle"].String()
+		if pages, found := e.Fields["pages"]; found {
+			s += ", pages " + pages.String()
+		}
+		s += "."
+
 	default:
 		return "", fmt.Errorf("unknown entry type '%s'", e.Type)
 	}
+
+	// Look for a date.
+	if year, found := e.Fields["year"]; found {
+		s += " " + year.String() + "."
+	}
+
+	// Always look for a URL.
+	if url, found := e.Fields["url"]; found {
+		s += " " + url.String()
+	}
+
+	return s, nil
 }
 
 // FormatAuthors formats a list of authors in a readable form.
