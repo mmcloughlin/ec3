@@ -27,6 +27,9 @@ func Format(e *Entry) (string, error) {
 		}
 		s += "."
 
+	case "online":
+		// No special handling.
+
 	default:
 		return "", fmt.Errorf("unknown entry type '%s'", e.Type)
 	}
