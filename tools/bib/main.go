@@ -2,13 +2,15 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"log"
 	"os"
 )
 
 // Commandline flags.
 var (
-	bib = flag.String("bib", "", "bibliography file")
+	bibfile = flag.String("bib", "", "bibliography file")
+	write   = flag.Bool("w", false, "write result to (source) file instead of stdout")
 )
 
 func main() {
@@ -17,7 +19,7 @@ func main() {
 
 	flag.Parse()
 
-	b, err := ReadBibliography(*bib)
+	b, err := ReadBibliography(*bibfile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +39,18 @@ func process(filename string, b *Bibliography) {
 		log.Fatal(err)
 	}
 
-	if err = s.Write(os.Stdout, b); err != nil {
+	out, err := s.Bytes(b)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if *write {
+		err = ioutil.WriteFile(filename, out, 0644)
+	} else {
+		_, err = os.Stdout.Write(out)
+	}
+
+	if err != nil {
 		log.Fatal(err)
 	}
 }

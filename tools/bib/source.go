@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -107,6 +108,15 @@ func (s *Source) Validate(b *Bibliography) error {
 		}
 	}
 	return nil
+}
+
+// Bytes generates the output bytes.
+func (s *Source) Bytes(b *Bibliography) ([]byte, error) {
+	var buf bytes.Buffer
+	if err := s.Write(&buf, b); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 func (s *Source) Write(w io.Writer, b *Bibliography) error {
