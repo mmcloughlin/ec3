@@ -27,6 +27,18 @@ func Format(e *Entry) (string, error) {
 		}
 		s += "."
 
+	case "article":
+		// Required: author, title, journaltitle, year/date
+		if journal, found := e.Fields["journaltitle"]; found {
+			s += " " + journal.String() + "."
+		}
+
+	case "inbook":
+		// Required: author, title, booktitle, year/date
+		if book, found := e.Fields["booktitle"]; found {
+			s += " " + book.String() + "."
+		}
+
 	case "online":
 		// No special handling.
 
