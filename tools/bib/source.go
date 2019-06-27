@@ -6,7 +6,9 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
+	"text/tabwriter"
 )
 
 // ReferencesMarker marks where references should be placed.
@@ -125,12 +127,41 @@ func (s *Source) Write(w io.Writer, b *Bibliography) error {
 }
 
 func (s *Source) writeReferences(w io.Writer, b *Bibliography) error {
+	// Print header.
 	fmt.Fprintf(w, "%s\n//\n", ReferencesMarker)
+
+	// Lookup and sort the entries.
+	entries := []*Entry{}
 	for key := range s.Citations {
-		_, err := fmt.Fprintf(w, "// %s\n", key)
+		e := b.Lookup(key)
+		if e == nil {
+			return fmt.Errorf("unknown reference '%s'", key)
+		}
+		entries = append(entries, e)
+	}
+
+	sort.Sort(ByCiteName(entries))
+
+	// Print the entries in a tabular format.
+	tw := tabwriter.NewWriter(w, 4, 4, 2, ' ', tabwriter.StripEscape)
+	leader := []byte{tabwriter.Escape, '/', '/', '\t', tabwriter.Escape}
+
+	for _, e := range entries {
+		formatted, err := Format(e)
 		if err != nil {
 			return err
 		}
+
+		wrapped := Wrap(formatted, 80)
+		key := "[" + e.CiteName + "]"
+		for _, line := range wrapped {
+			_, err = fmt.Fprintf(tw, "%s%s\t%s\n", leader, key, line)
+			if err != nil {
+				return err
+			}
+			key = ""
+		}
 	}
-	return nil
+
+	return tw.Flush()
 }
