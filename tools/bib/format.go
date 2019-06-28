@@ -17,13 +17,17 @@ func Format(e *Entry) (string, error) {
 	// Custom fields.
 	switch e.Type {
 	case "misc":
-		// Required: author/editor, title, year/date
+		// Optional fields: author, title, howpublished, month, year, note.
 		if how, found := e.Fields["howpublished"]; found {
 			s += " " + how.String() + "."
 		}
 
+		if license, found := e.Fields["license"]; found {
+			s += " " + license.String() + "."
+		}
+
 	case "inproceedings":
-		// Required: author, title, booktitle, year/date.
+		// Required fields: author, title, booktitle, year.
 		s += " In " + e.Fields["booktitle"].String()
 		if pages, found := e.Fields["pages"]; found {
 			s += ", pages " + pages.String()
@@ -31,22 +35,29 @@ func Format(e *Entry) (string, error) {
 		s += "."
 
 	case "article":
-		// Required: author, title, journaltitle, year/date
-		if journal, found := e.Fields["journaltitle"]; found {
-			s += " " + journal.String() + "."
-		}
+		// Required fields: author, title, journal, year.
 		if journal, found := e.Fields["journal"]; found {
 			s += " " + journal.String() + "."
 		}
 
 	case "inbook":
-		// Required: author, title, booktitle, year/date
-		if book, found := e.Fields["booktitle"]; found {
-			s += " " + book.String() + "."
-		}
+		// Required fields: author or editor, title, chapter and/or pages, publisher, year.
+		s += " " + e.Fields["booktitle"].String()
+		s += ", chapter " + e.Fields["chapter"].String() + "."
 
-	case "online":
-		// No special handling.
+	case "phdthesis":
+		// Required fields: author, title, school, year.
+		s += " PhD thesis, " + e.Fields["school"].String() + "."
+
+	case "mastersthesis":
+		// Required fields: author, title, school, year.
+		s += " Masters thesis, " + e.Fields["school"].String() + "."
+
+	case "techreport":
+		// Required fields: author, title, institution, year.
+		// Optional fields: type, number, address, month, note.
+		s += " Technical Report " + e.Fields["number"].String()
+		s += ", " + e.Fields["institution"].String() + "."
 
 	default:
 		return "", fmt.Errorf("unknown entry type '%s'", e.Type)
