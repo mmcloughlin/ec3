@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/nickng/bibtex"
 )
@@ -20,6 +22,15 @@ func (e Entry) Authors() []string {
 		authors[i] = strings.TrimSpace(authors[i])
 	}
 	return authors
+}
+
+// DateField parses a field as a date in ISO 8601 format.
+func (e Entry) DateField(name string) (time.Time, error) {
+	s, ok := e.Fields[name]
+	if !ok {
+		return time.Time{}, errors.New("field not found")
+	}
+	return time.Parse("2006-01-02", s.String())
 }
 
 // ByCiteName sorts a list of entries by their citation name.

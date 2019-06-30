@@ -73,6 +73,10 @@ func Format(e *Entry) (string, error) {
 		s += " " + url.String()
 	}
 
+	if accessed, err := e.DateField("urldate"); err == nil {
+		s += " (accessed " + accessed.Format("January _2, 2006") + ")"
+	}
+
 	return s, nil
 }
 
