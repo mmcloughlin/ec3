@@ -3,30 +3,17 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
 	"github.com/mmcloughlin/avo/reg"
+
+	"github.com/mmcloughlin/ec3/prime"
 )
 
-// Crandall represents a prime of the form 2ⁿ - c. Named after Richard E. Crandall.
-type Crandall struct {
-	N int
-	C int
-}
-
-// Bits returns the number of bits required to represent p.
-func (p Crandall) Bits() int {
-	return p.N
-}
-
-func (p Crandall) String() string {
-	return fmt.Sprintf("2^%d - %d", p.N, p.C)
-}
-
-func (p Crandall) Slug() string {
+// Slug returns a concise name for p.
+func Slug(p prime.Crandall) string {
 	return strconv.Itoa(p.N) + strconv.Itoa(p.C)
 }
 
@@ -78,7 +65,7 @@ func Zero64() reg.Register {
 
 // AddModP adds y into x modulo p.
 //	x ≡ x + y (mod p)
-func AddModP(x, y Int, p Crandall) {
+func AddModP(x, y Int, p prime.Crandall) {
 	n := p.Bits()
 	l := NextMultiple(n, 64)
 	k := l / 64
@@ -199,7 +186,7 @@ func Mul(z, x, y Int) {
 // ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.
 // This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
 // guaranteed to be less than p.
-func ReduceDouble(z, x Int, p Crandall) {
+func ReduceDouble(z, x Int, p prime.Crandall) {
 	// TODO(mbm): helpers for limb size computations
 	n := p.Bits()
 	l := NextMultiple(n, 64)
@@ -270,8 +257,8 @@ func ReduceDouble(z, x Int, p Crandall) {
 }
 
 // addmod builds a modular addition function.
-func addmod(p Crandall) {
-	build.TEXT("Add"+p.Slug(), build.NOSPLIT, "func(x, y *[32]byte)")
+func addmod(p prime.Crandall) {
+	build.TEXT("Add"+Slug(p), build.NOSPLIT, "func(x, y *[32]byte)")
 
 	// TODO(mbm): helper for loading integer from memory
 	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
@@ -314,8 +301,8 @@ func mul() {
 }
 
 // mulmod builds a modular multiplication function.
-func mulmod(p Crandall) {
-	build.TEXT("Mul"+p.Slug(), build.NOSPLIT, "func(z *[32]byte, x, y *[32]byte)")
+func mulmod(p prime.Crandall) {
+	build.TEXT("Mul"+Slug(p), build.NOSPLIT, "func(z *[32]byte, x, y *[32]byte)")
 
 	// Load arguments.
 	zb := operand.Mem{Base: build.Load(build.Param("z"), build.GP64())}
@@ -346,7 +333,7 @@ func main() {
 	mul()
 
 	// Fp25519
-	p := Crandall{N: 255, C: 19}
+	p := prime.Crandall{N: 255, C: 19}
 	addmod(p)
 	mulmod(p)
 
