@@ -16,7 +16,7 @@ import (
 const ReferencesMarker = "// References:"
 
 // citations is the regular expression for citations in comments.
-var citations = regexp.MustCompile(`\[[a-zA-Z0-9:/]{4,}\]`)
+var citations = regexp.MustCompile(`\[[a-zA-Z0-9:/\-]{4,}\]`)
 
 // Source represents a parsed source file with references.
 type Source struct {
