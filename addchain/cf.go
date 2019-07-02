@@ -104,6 +104,56 @@ func (b BinaryStrategy) K(n *big.Int) []*big.Int {
 	return []*big.Int{k}
 }
 
+type TotalStrategy struct{}
+
+func (TotalStrategy) String() string { return "total" }
+
+// K returns {2,, 3, ..., n-1}.
+func (TotalStrategy) K(n *big.Int) []*big.Int {
+	ks := []*big.Int{}
+	k := big.NewInt(2)
+	one := bigint.One()
+	for k.Cmp(n) < 0 {
+		ks = append(ks, bigint.Clone(k))
+		k.Add(k, one)
+	}
+	return ks
+}
+
+type DyadicStrategy struct{}
+
+func (DyadicStrategy) String() string { return "dyadic" }
+
+// K returns floor( n / 2^j ) for all j.
+func (DyadicStrategy) K(n *big.Int) []*big.Int {
+	ks := []*big.Int{}
+	k := new(big.Int).Rsh(n, 1)
+	one := bigint.One()
+	for k.Cmp(one) > 0 {
+		ks = append(ks, bigint.Clone(k))
+		k.Rsh(k, 1)
+	}
+	return ks
+}
+
+type FermatStrategy struct{}
+
+func (FermatStrategy) String() string { return "fermat" }
+
+// K returns floor( n / 2^(2^j) ) for all j.
+func (FermatStrategy) K(n *big.Int) []*big.Int {
+	ks := []*big.Int{}
+	k := new(big.Int).Rsh(n, 1)
+	one := bigint.One()
+	s := uint(1)
+	for k.Cmp(one) > 0 {
+		ks = append(ks, bigint.Clone(k))
+		k.Rsh(k, s)
+		s *= 2
+	}
+	return ks
+}
+
 type DichotomicStrategy struct{}
 
 func (DichotomicStrategy) String() string { return "dichotomic" }
