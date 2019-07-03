@@ -447,7 +447,7 @@ func DumpChain(c Chain) {
 
 	for i, x := range c[1:] {
 		op := p[i]
-		fmt.Printf("[%3d]\t%d+%d\tx=%x\n", i+1, op.I, op.J, x)
+		fmt.Printf("[%3d]\t%d+%d\thex=%x\tdec=%d\n", i+1, op.I, op.J, x, x)
 	}
 }
 
