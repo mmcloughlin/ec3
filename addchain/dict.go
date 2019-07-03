@@ -277,15 +277,33 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 		return nil, err
 	}
 
-	/*
-		// Reduce.
-		sum, err = PrimitiveDictionary(sum, c)
-		if err != nil {
-			return nil, err
-		}
-	*/
+	// Reduce.
+	sum, err = primitive(sum, c)
+	if err != nil {
+		return nil, err
+	}
+
+	// Regenerate the chain, in case it can be done more efficiently now.
+	dict = sum.Dictionary()
+	c, err = a.seqalg.FindSequence(dict)
+	if err != nil {
+		return nil, err
+	}
 
 	// Build chain for n out of the dictionary.
+	dc := dictsumchain(sum)
+	c = append(c, dc...)
+	bigints.Sort(c)
+	c = Chain(bigints.Unique(c))
+
+	return c, nil
+}
+
+// dictsumchain builds a chain for the integer represented by sum, assuming that
+// all the terms of the sum are already present. Therefore this is intended to
+// be appended to a chain that already contains the dictionary terms.
+func dictsumchain(sum DictSum) Chain {
+	c := Chain{}
 	k := len(sum) - 1
 	cur := bigint.Clone(sum[k].D)
 	for ; k > 0; k-- {
@@ -305,18 +323,10 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 		c.AppendClone(cur)
 	}
 
-	// Prepare chain for returning.
-	bigints.Sort(c)
-	c = Chain(bigints.Unique(c))
-
-	// DumpChain(c)
-
-	return c, nil
+	return c
 }
 
-//---------------------------------------------------------------------
-
-// PrimitiveDictionary removes terms from the dictionary that are only required once.
+// primitive removes terms from the dictionary that are only required once.
 //
 // The general structure of dictionary based algorithm is to decompose the
 // target into a sum of dictionary terms, then create a chain for the
@@ -330,7 +340,7 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 // This function looks for such opportunities. If it finds them it will produce
 // an alternative dictionary sum that replaces that term with a sum of smaller
 // terms.
-func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, error) {
+func primitive(sum DictSum, c Chain) (DictSum, error) {
 	n := len(c)
 
 	// As an auxillary, we need a mapping from chain elements to where they
@@ -398,16 +408,5 @@ func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, error) {
 		return nil, errors.New("reconstruction does not match")
 	}
 
-	/*
-		// Prune any elements of the chain that are used only once.
-		pruned := Chain{}
-		for i, x := range c {
-			if neededfor[i] > 1 {
-				pruned = append(pruned, x)
-			}
-		}
-
-		return out, pruned, nil
-	*/
 	return out, nil
 }
