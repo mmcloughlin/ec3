@@ -278,14 +278,7 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 	}
 
 	// Reduce.
-	sum, err = primitive(sum, c)
-	if err != nil {
-		return nil, err
-	}
-
-	// Regenerate the chain, in case it can be done more efficiently now.
-	dict = sum.Dictionary()
-	c, err = a.seqalg.FindSequence(dict)
+	sum, c, err = primitive(sum, c)
 	if err != nil {
 		return nil, err
 	}
@@ -340,11 +333,13 @@ func dictsumchain(sum DictSum) Chain {
 // This function looks for such opportunities. If it finds them it will produce
 // an alternative dictionary sum that replaces that term with a sum of smaller
 // terms.
-func primitive(sum DictSum, c Chain) (DictSum, error) {
-	n := len(c)
+func primitive(sum DictSum, c Chain) (DictSum, Chain, error) {
+	// This optimization cannot apply if the sum has only one term.
+	if len(sum) == 1 {
+		return sum, c, nil
+	}
 
-	// As an auxillary, we need a mapping from chain elements to where they
-	// appear in the chain.
+	// We'll need a mapping from chain elements to where they appear in the chain.
 	idx := map[string]int{}
 	for i, x := range c {
 		idx[x.String()] = i
@@ -353,7 +348,7 @@ func primitive(sum DictSum, c Chain) (DictSum, error) {
 	// Build program for the chain.
 	p, err := c.Program()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Bitsets for indicies used to create each position in the chain.
@@ -361,6 +356,7 @@ func primitive(sum DictSum, c Chain) (DictSum, error) {
 
 	// Now, for every index in the chain we count how many terms in the dictionary
 	// sum depend on it.
+	n := len(c)
 	depterms := make([]int, n)
 
 	for _, t := range sum {
@@ -405,8 +401,16 @@ func primitive(sum DictSum, c Chain) (DictSum, error) {
 
 	// We should have not changed the sum.
 	if !bigint.Equal(out.Int(), sum.Int()) {
-		return nil, errors.New("reconstruction does not match")
+		return nil, nil, errors.New("reconstruction does not match")
 	}
 
-	return out, nil
+	// Prune any elements of the chain that are used only once.
+	pruned := Chain{}
+	for i, x := range c {
+		if depterms[i] > 1 {
+			pruned = append(pruned, x)
+		}
+	}
+
+	return out, pruned, nil
 }

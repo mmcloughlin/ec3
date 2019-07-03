@@ -26,6 +26,7 @@ func TestChainAlgorithms(t *testing.T) {
 			NewContinuedFractions(BinaryStrategy{}),
 		),
 
+		// Runs algorithm.
 		NewRunsAlgorithm(NewContinuedFractions(DichotomicStrategy{})),
 	}
 	for _, a := range as {
