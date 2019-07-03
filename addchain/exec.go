@@ -2,7 +2,6 @@ package addchain
 
 import (
 	"errors"
-	"log"
 	"math/big"
 	"sync"
 
@@ -20,8 +19,6 @@ type Result struct {
 
 // Execute the algorithm on the target number n.
 func Execute(n *big.Int, a ChainAlgorithm) Result {
-	log.Printf("executing: %s", a)
-
 	r := Result{
 		Target:    n,
 		Algorithm: a,
@@ -42,8 +39,6 @@ func Execute(n *big.Int, a ChainAlgorithm) Result {
 	if !bigint.Equal(r.Chain.End(), n) {
 		r.Err = errors.New("did not produce the required value")
 	}
-
-	log.Printf("done: %s", a)
 
 	return r
 }
