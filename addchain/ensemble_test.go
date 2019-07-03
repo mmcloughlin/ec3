@@ -5,9 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mmcloughlin/ec3/internal/bigint"
+
 	"github.com/mmcloughlin/ec3/internal/test"
 
-	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/prime"
 )
 
