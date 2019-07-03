@@ -31,7 +31,7 @@ func TestRunsEnsemble(t *testing.T) {
 	seqalgs := []SequenceAlgorithm{
 		// Continued fractions algorithms.
 		NewContinuedFractions(BinaryStrategy{}),
-		NewContinuedFractions(BinaryStrategy{Parity: 1}),
+		NewContinuedFractions(CoBinaryStrategy{}),
 		NewContinuedFractions(DichotomicStrategy{}),
 
 		// Heuristics algorithms.

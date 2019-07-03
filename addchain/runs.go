@@ -54,15 +54,15 @@ func (a RunsAlgorithm) FindChain(n *big.Int) (Chain, error) {
 	}
 
 	/*
-		fmt.Println("runs chain:")
-		DumpChain(c)
-	*/
+			fmt.Println("runs chain:")
+			DumpChain(c)
 
-	// Reduce.
-	sum, c, err = PrimitiveDictionary(sum, c)
-	if err != nil {
-		return nil, err
-	}
+		// Reduce.
+		sum, c, err = PrimitiveDictionary(sum, c)
+		if err != nil {
+			return nil, err
+		}
+	*/
 
 	// Build chain for n out of the dictionary.
 	k := len(sum) - 1

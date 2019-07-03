@@ -6,6 +6,8 @@ import (
 	"math/big"
 	"sort"
 
+	"github.com/mmcloughlin/ec3/internal/bigvector"
+
 	"github.com/mmcloughlin/ec3/internal/ints"
 
 	"github.com/mmcloughlin/ec3/internal/bigint"
@@ -275,11 +277,13 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 		return nil, err
 	}
 
-	// Reduce.
-	sum, c, err = PrimitiveDictionary(sum, c)
-	if err != nil {
-		return nil, err
-	}
+	/*
+		// Reduce.
+		sum, err = PrimitiveDictionary(sum, c)
+		if err != nil {
+			return nil, err
+		}
+	*/
 
 	// Build chain for n out of the dictionary.
 	k := len(sum) - 1
@@ -312,9 +316,22 @@ func (a DictAlgorithm) FindChain(n *big.Int) (Chain, error) {
 
 //---------------------------------------------------------------------
 
-func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, Chain, error) {
-	//fmt.Println("dict: ", dict)
-	//fmt.Println("chain: ", c)
+// PrimitiveDictionary removes terms from the dictionary that are only required once.
+//
+// The general structure of dictionary based algorithm is to decompose the
+// target into a sum of dictionary terms, then create a chain for the
+// dictionary, and then create the target from that. In a case where a
+// dictionary term is only required once in the target, this can cause extra
+// work. In such a case, we will spend operations on creating the dictionary
+// term independently, and then later add it into the result. Since it is only
+// needed once, we can effectively construct the dictionary term "on the fly" as
+// we build up the final target.
+//
+// This function looks for such opportunities. If it finds them it will produce
+// an alternative dictionary sum that replaces that term with a sum of smaller
+// terms.
+func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, error) {
+	n := len(c)
 
 	// As an auxillary, we need a mapping from chain elements to where they
 	// appear in the chain.
@@ -326,54 +343,47 @@ func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, Chain, error) {
 	// Build program for the chain.
 	p, err := c.Program()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	// Bitsets for indicies used.
-	used := IndiciesUsed(p)
+	// Bitsets for indicies used to create each position in the chain.
+	deps := p.Dependencies()
 
-	// Count how many dictionary entries.
-	neededfor := make([]int, len(c))
+	// Now, for every index in the chain we count how many terms in the dictionary
+	// sum depend on it.
+	depterms := make([]int, n)
 
 	for _, t := range sum {
 		i := idx[t.D.String()]
-		for _, j := range SetBits(used[i]) {
-			neededfor[j]++
+		for _, j := range bigint.BitsSet(deps[i]) {
+			depterms[j]++
 		}
 	}
 
-	/*
-		// Dump.
-		for i, x := range c[1:] {
-			op := p[i]
-			fmt.Printf("[%3d]\t%d+%d\tcount=%d x=%x\n", i+1, op.I, op.J, neededfor[i+1], x)
-		}
-	*/
-
-	// Express every position in the chain as a linear combination of terms that
-	// are used more than once.
-	vc := []Vector{NewVectorUnit(len(c), 0)}
+	// Express every position in the chain as a linear combination of dictionary
+	// terms that are used more than once.
+	vc := []bigvector.Vector{bigvector.NewBasis(n, 0)}
 	for i, op := range p {
-		var next Vector
-		if neededfor[i+1] > 1 {
-			next = NewVectorUnit(len(c), i+1)
+		var next bigvector.Vector
+		if depterms[i+1] > 1 {
+			next = bigvector.NewBasis(n, i+1)
 		} else {
-			next = Add(vc[op.I], vc[op.J])
+			next = bigvector.Add(vc[op.I], vc[op.J])
 		}
 		vc = append(vc, next)
 	}
 
-	// Express the target sum in terms that are used more than once.
-	v := NewVector(len(c))
+	// Now express the target sum in terms that are used more than once.
+	v := bigvector.New(n)
 	for _, t := range sum {
 		i := idx[t.D.String()]
-		v = Add(v, Lsh(vc[i], t.E))
+		v = bigvector.Add(v, bigvector.Lsh(vc[i], t.E))
 	}
 
-	// Now rebuild this into a dictionary sum.
+	// Rebuild this into a dictionary sum.
 	out := DictSum{}
 	for i, coeff := range v {
-		for _, e := range SetBits(coeff) {
+		for _, e := range bigint.BitsSet(coeff) {
 			out = append(out, DictTerm{
 				D: c[i],
 				E: uint(e),
@@ -385,88 +395,19 @@ func PrimitiveDictionary(sum DictSum, c Chain) (DictSum, Chain, error) {
 
 	// We should have not changed the sum.
 	if !bigint.Equal(out.Int(), sum.Int()) {
-		return nil, nil, errors.New("reconstruction does not match")
+		return nil, errors.New("reconstruction does not match")
 	}
 
-	// Prune any elements of the chain that are used only once.
-	pruned := Chain{}
-	for i, x := range c {
-		if neededfor[i] > 1 {
-			pruned = append(pruned, x)
+	/*
+		// Prune any elements of the chain that are used only once.
+		pruned := Chain{}
+		for i, x := range c {
+			if neededfor[i] > 1 {
+				pruned = append(pruned, x)
+			}
 		}
-	}
 
-	return out, pruned, nil
-}
-
-// Vector of big integers.
-type Vector []*big.Int
-
-func NewVector(n int) Vector {
-	v := make(Vector, n)
-	for i := 0; i < n; i++ {
-		v[i] = bigint.Zero()
-	}
-	return v
-}
-
-func NewVectorUnit(n, i int) Vector {
-	v := NewVector(n)
-	v[i] = bigint.One()
-	return v
-}
-
-// Add vectors.
-func Add(u, v Vector) Vector {
-	if len(u) != len(v) {
-		panic("length mismatch")
-	}
-	n := len(u)
-	w := make(Vector, n)
-	for i := 0; i < n; i++ {
-		w[i] = new(big.Int).Add(u[i], v[i])
-	}
-	return w
-}
-
-// Lsh every element of the vector v.
-func Lsh(v Vector, s uint) Vector {
-	n := len(v)
-	w := make(Vector, n)
-	for i := 0; i < n; i++ {
-		w[i] = new(big.Int).Lsh(v[i], s)
-	}
-	return w
-}
-
-func DumpChain(c Chain) {
-	p, err := c.Program()
-	if err != nil {
-		panic(err)
-	}
-
-	for i, x := range c[1:] {
-		op := p[i]
-		fmt.Printf("[%3d]\t%d+%d\thex=%x\tdec=%d\n", i+1, op.I, op.J, x, x)
-	}
-}
-
-func IndiciesUsed(p Program) []*big.Int {
-	bitsets := []*big.Int{bigint.One()}
-	for i, op := range p {
-		bitset := new(big.Int).Or(bitsets[op.I], bitsets[op.J])
-		bitset.SetBit(bitset, i+1, 1)
-		bitsets = append(bitsets, bitset)
-	}
-	return bitsets
-}
-
-func SetBits(x *big.Int) []int {
-	set := []int{}
-	for i := 0; i < x.BitLen(); i++ {
-		if x.Bit(i) == 1 {
-			set = append(set, i)
-		}
-	}
-	return set
+		return out, pruned, nil
+	*/
+	return out, nil
 }

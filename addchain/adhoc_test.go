@@ -33,7 +33,7 @@ func TestStuck(t *testing.T) {
 	// opt(dictionary(run_length(0),continued_fractions(co_binary)))
 	a := NewDictAlgorithm(
 		RunLength{T: 0},
-		NewContinuedFractions(BinaryStrategy{Parity: 1}),
+		NewContinuedFractions(CoBinaryStrategy{}),
 	)
 
 	p := prime.P25519.Int()
