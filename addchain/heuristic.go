@@ -150,6 +150,46 @@ func (Approximation) Suggest(f []*big.Int, target *big.Int) []*big.Int {
 	return []*big.Int{best}
 }
 
+// Division is the "Division" heuristic from [boscoster].
+type Division struct{}
+
+func (Division) String() string { return "division" }
+
+// Suggest looks for small prime divisors, and suggests replacements using
+// optimal addition chains for those primes.
+func (Division) Suggest(f []*big.Int, target *big.Int) []*big.Int {
+	// Small primes together with minimal addition chains for them.
+	primes := []struct {
+		P     int64
+		Chain []int64 // excluding P
+	}{
+		{P: 19, Chain: []int64{1, 2, 4, 8, 16, 18}},
+		{P: 17, Chain: []int64{1, 2, 4, 8, 9}},
+		{P: 13, Chain: []int64{1, 2, 4, 8, 9}},
+		{P: 11, Chain: []int64{1, 2, 3, 5, 10}},
+		{P: 7, Chain: []int64{1, 2, 3, 5}},
+		{P: 5, Chain: []int64{1, 2, 3}},
+		{P: 3, Chain: []int64{1, 2}},
+	}
+
+	// Check if any of them divide the target.
+	m, p := new(big.Int), new(big.Int)
+	for _, prime := range primes {
+		p.SetInt64(prime.P)
+		if m.Mod(target, p).Sign() == 0 {
+			d := new(big.Int).Div(target, p)
+			insertions := []*big.Int{}
+			for _, c := range prime.Chain {
+				insert := new(big.Int).Mul(d, big.NewInt(c))
+				insertions = append(insertions, insert)
+			}
+			return insertions
+		}
+	}
+
+	return nil
+}
+
 // Halving is the "Halving" heuristic from [boscoster].
 type Halving struct{}
 
@@ -207,4 +247,28 @@ func (h UseFirstHeuristic) Suggest(f []*big.Int, target *big.Int) []*big.Int {
 		}
 	}
 	return nil
+}
+
+// UseShortestHeuristic is a composite heuristic that will use the shortest
+// non-nil suggestion from the sub-heuristics.
+type UseShortestHeuristic []Heuristic
+
+func (h UseShortestHeuristic) String() string {
+	names := []string{}
+	for _, sub := range h {
+		names = append(names, sub.String())
+	}
+	return "use_shortest(" + strings.Join(names, ",") + ")"
+}
+
+// Suggest delegates to each sub-heuristic in turn and returns the shortest suggestion.
+func (h UseShortestHeuristic) Suggest(f []*big.Int, target *big.Int) []*big.Int {
+	var shortest []*big.Int
+	for _, heuristic := range h {
+		insert := heuristic.Suggest(f, target)
+		if insert != nil && (shortest == nil || len(insert) < len(shortest)) {
+			shortest = insert
+		}
+	}
+	return shortest
 }

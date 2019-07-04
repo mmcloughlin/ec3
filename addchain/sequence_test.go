@@ -35,6 +35,7 @@ func TestSequenceAlgorithms(t *testing.T) {
 	heuristics := []Heuristic{
 		UseFirstHeuristic{Halving{}, DeltaLargest{}},
 		UseFirstHeuristic{Halving{}, Approximation{}},
+		UseFirstHeuristic{UseShortestHeuristic{Division{}, Halving{}}, Approximation{}},
 	}
 	for _, heuristic := range heuristics {
 		suites = append(suites, SequenceAlgorithmSuite{
