@@ -6,12 +6,10 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/mmcloughlin/ec3/internal/bigvector"
-
-	"github.com/mmcloughlin/ec3/internal/ints"
-
 	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/bigints"
+	"github.com/mmcloughlin/ec3/internal/bigvector"
+	"github.com/mmcloughlin/ec3/internal/ints"
 )
 
 // References:

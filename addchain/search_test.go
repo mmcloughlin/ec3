@@ -6,10 +6,9 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/mmcloughlin/ec3/prime"
-
 	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/test"
+	"github.com/mmcloughlin/ec3/prime"
 )
 
 func TestChainAlgorithms(t *testing.T) {

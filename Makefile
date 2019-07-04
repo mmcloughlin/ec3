@@ -2,6 +2,7 @@ REPO = github.com/mmcloughlin/ec3
 
 .PHONY: fmt
 fmt:
+	find . -name '*.go' | xargs sed -i '' '/^import (/,/)/ { /^$$/ d; }'
 	find . -name '*.go' | xargs gofumports -w -local $(REPO)
 	find . -name '*.go' | xargs mathfmt -w
 	find . -name '*.go' | xargs bib -bib docs/bibliography.bib -w
