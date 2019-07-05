@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/mmcloughlin/ec3/internal/bigint"
-
 	"github.com/mmcloughlin/ec3/internal/bigints"
 )
 
