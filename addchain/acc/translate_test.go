@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/addchain/acc/ir"
+	"github.com/mmcloughlin/ec3/addchain/acc/parse"
 )
 
 func TestTranslateBasicOps(t *testing.T) {
@@ -47,7 +48,7 @@ func TestTranslateBasicOps(t *testing.T) {
 func AssertTranslate(t *testing.T, src string, expect *ir.Program) {
 	t.Helper()
 
-	s, err := String(src)
+	s, err := parse.String(src)
 	if err != nil {
 		t.Fatal(err)
 	}
