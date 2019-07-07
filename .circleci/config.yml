@@ -8,11 +8,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Bootstrap
-        command: make bootstrap
+          name: Bootstrap
+          command: make bootstrap
       - run:
-        name: Build
-        command: go build ./...
+          name: Build
+          command: go build ./...
       - run:
-        name: Test
-        command: go test ./...
+          name: Test
+          command: go test ./...
