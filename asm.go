@@ -121,7 +121,7 @@ func main() {
 	mulmod(ctx, p)
 
 	// Process the command-line.
-	flag.Parse()
+	commandline.Parse(os.Args[1:])
 	cfg := flags.Config()
 	status := build.Main(cfg, ctx)
 	os.Exit(status)
