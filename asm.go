@@ -27,8 +27,8 @@ func BitsToQuadWords(bits int) int {
 }
 
 // addmod builds a modular addition function.
-func addmod(ctx *build.Context, p prime.Crandall) {
-	ctx.Function("Add" + Slug(p))
+func addmod(ctx *build.Context, f fp.Crandall) {
+	ctx.Function("Add" + Slug(f.P))
 	ctx.Attributes(attr.NOSPLIT)
 	ctx.SignatureExpr("func(x, y *[32]byte)")
 
@@ -45,7 +45,7 @@ func addmod(ctx *build.Context, p prime.Crandall) {
 		ctx.MOVQ(yb.Offset(8*i), y[i])
 	}
 
-	fp.AddModP(ctx, x, y, p)
+	f.Add(ctx, x, y)
 
 	for i := 0; i < 4; i++ {
 		ctx.MOVQ(x[i], xb.Offset(8*i))
@@ -75,8 +75,8 @@ func mul(ctx *build.Context) {
 }
 
 // mulmod builds a modular multiplication function.
-func mulmod(ctx *build.Context, p prime.Crandall) {
-	ctx.Function("Mul" + Slug(p))
+func mulmod(ctx *build.Context, f fp.Crandall) {
+	ctx.Function("Mul" + Slug(f.P))
 	ctx.Attributes(attr.NOSPLIT)
 	ctx.SignatureExpr("func(z, x, y *[32]byte)")
 
@@ -99,7 +99,7 @@ func mulmod(ctx *build.Context, p prime.Crandall) {
 
 	// Reduce.
 	ctx.Comment("Reduction.")
-	fp.ReduceDouble(ctx, z, m, p)
+	f.ReduceDouble(ctx, z, m)
 
 	ctx.RET()
 }
@@ -117,8 +117,9 @@ func main() {
 
 	// Fp25519
 	p := prime.Crandall{N: 255, C: 19}
-	addmod(ctx, p)
-	mulmod(ctx, p)
+	f := fp.Crandall{P: p}
+	addmod(ctx, f)
+	mulmod(ctx, f)
 
 	// Process the command-line.
 	commandline.Parse(os.Args[1:])

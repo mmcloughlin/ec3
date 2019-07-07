@@ -11,10 +11,15 @@ import (
 	"github.com/mmcloughlin/ec3/prime"
 )
 
-// AddModP adds y into x modulo p.
+// Crandall generates arithmetic modulo a Crandall prime.
+type Crandall struct {
+	P prime.Crandall
+}
+
+// Add adds y into x modulo p.
 //	x ≡ x + y (mod p)
-func AddModP(ctx *build.Context, x, y mp.Int, p prime.Crandall) {
-	n := p.Bits()
+func (f Crandall) Add(ctx *build.Context, x, y mp.Int) {
+	n := f.P.Bits()
 	l := ints.NextMultiple(n, 64)
 	k := l / 64
 
@@ -33,7 +38,7 @@ func AddModP(ctx *build.Context, x, y mp.Int, p prime.Crandall) {
 	// We will call this quantity d. It will be required for reductions later.
 
 	// TODO(mbm): refactor d computation
-	d := (1 << uint(l-n)) * p.C
+	d := (1 << uint(l-n)) * f.P.C
 	dreg := ctx.GP64()
 	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
@@ -75,9 +80,9 @@ func AddModP(ctx *build.Context, x, y mp.Int, p prime.Crandall) {
 // ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.
 // This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
 // guaranteed to be less than p.
-func ReduceDouble(ctx *build.Context, z, x mp.Int, p prime.Crandall) {
+func (f Crandall) ReduceDouble(ctx *build.Context, z, x mp.Int) {
 	// TODO(mbm): helpers for limb size computations
-	n := p.Bits()
+	n := f.P.Bits()
 	l := ints.NextMultiple(n, 64)
 	k := l / 64
 
@@ -85,7 +90,7 @@ func ReduceDouble(ctx *build.Context, z, x mp.Int, p prime.Crandall) {
 	zero := asm.Zero64(ctx)
 
 	// Compute the reduction additive d.
-	d := (1 << uint(l-n)) * p.C
+	d := (1 << uint(l-n)) * f.P.C
 	dreg := ctx.GP64()
 	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
