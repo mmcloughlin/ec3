@@ -1,8 +1,0 @@
-language: go
-go:
-- 1.12
-install:
-- make bootstrap
-script:
-- go build ./...
-- go test ./...
