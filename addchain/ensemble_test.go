@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/addchain"
-
 	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/test"
@@ -202,6 +201,8 @@ func TestEnsembleResultsInversionChains(t *testing.T) {
 			}
 
 			if save {
+				t.Log("saving golden file")
+
 				r, err := acc.Decompile(b.Program)
 				if err != nil {
 					t.Fatal(err)

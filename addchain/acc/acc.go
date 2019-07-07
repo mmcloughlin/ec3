@@ -5,11 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mmcloughlin/ec3/addchain/acc/printer"
-
 	"github.com/mmcloughlin/ec3/addchain/acc/ir"
 	"github.com/mmcloughlin/ec3/addchain/acc/parse"
 	"github.com/mmcloughlin/ec3/addchain/acc/pass"
+	"github.com/mmcloughlin/ec3/addchain/acc/printer"
 )
 
 // LoadFile is a convenience for loading an addition chain script from a file.
