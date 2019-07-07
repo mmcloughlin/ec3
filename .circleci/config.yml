@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.12
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    working_directory: /go/src/github.com/mmcloughlin/ec3
     steps:
       - checkout
       - run:
