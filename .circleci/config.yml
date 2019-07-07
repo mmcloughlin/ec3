@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  test:
+  build:
     docker:
       - image: circleci/go:1.12
     working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
