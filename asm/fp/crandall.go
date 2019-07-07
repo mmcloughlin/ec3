@@ -13,13 +13,13 @@ import (
 
 // AddModP adds y into x modulo p.
 //	x ≡ x + y (mod p)
-func AddModP(x, y mp.Int, p prime.Crandall) {
+func AddModP(ctx *build.Context, x, y mp.Int, p prime.Crandall) {
 	n := p.Bits()
 	l := ints.NextMultiple(n, 64)
 	k := l / 64
 
 	// Prepare a zero register.
-	zero := asm.Zero64()
+	zero := asm.Zero64(ctx)
 
 	// Note that for the Crandall prime we have
 	//
@@ -34,27 +34,27 @@ func AddModP(x, y mp.Int, p prime.Crandall) {
 
 	// TODO(mbm): refactor d computation
 	d := (1 << uint(l-n)) * p.C
-	dreg := build.GP64()
-	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
+	dreg := ctx.GP64()
+	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
 	// Add y into x.
-	build.ADDQ(y[0], x[0]) // TODO(mbm): can we replace this with `ADCX`? need to ensure the carry flag is 0
+	ctx.ADDQ(y[0], x[0]) // TODO(mbm): can we replace this with `ADCX`? need to ensure the carry flag is 0
 	for i := 1; i < k; i++ {
-		build.ADCXQ(y[i], x[i])
+		ctx.ADCXQ(y[i], x[i])
 	}
 
 	// Both inputs are < 2ˡ so the result is < 2ˡ⁺¹.
 	// If the last addition caused a carry into the l'th bit we need to perform a reduction.
 	// Prepare the value we will add in to perform the reduction. The addend may be
 	// zero or d depending on the carry.
-	addend := build.GP64()
-	build.MOVQ(zero, addend)
-	build.CMOVQCS(dreg, addend)
+	addend := ctx.GP64()
+	ctx.MOVQ(zero, addend)
+	ctx.CMOVQCS(dreg, addend)
 
 	// Now add the addend into x.
-	build.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
+	ctx.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
 	for i := 1; i < k; i++ {
-		build.ADCXQ(zero, x[i])
+		ctx.ADCXQ(zero, x[i])
 	}
 
 	// We have added d into the low l bits. Therefore the result is less than 2ˡ + d.
@@ -62,32 +62,32 @@ func AddModP(x, y mp.Int, p prime.Crandall) {
 	// second reduction.
 
 	// As before, the addend is either 0 or d depending on the carry from the last add.
-	build.MOVQ(zero, addend)
-	build.CMOVQCS(dreg, addend)
+	ctx.MOVQ(zero, addend)
+	ctx.CMOVQCS(dreg, addend)
 
 	// This time we only need to perform one add. The result must be less than 2ˡ + 2*d,
 	// therefore provided 2*d does not exceed the size of a limb we can be sure there
 	// will be no carry.
 	// TODO(mbm): assert d is within an acceptable range
-	build.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
+	ctx.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
 }
 
 // ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.
 // This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
 // guaranteed to be less than p.
-func ReduceDouble(z, x mp.Int, p prime.Crandall) {
+func ReduceDouble(ctx *build.Context, z, x mp.Int, p prime.Crandall) {
 	// TODO(mbm): helpers for limb size computations
 	n := p.Bits()
 	l := ints.NextMultiple(n, 64)
 	k := l / 64
 
 	// Prepare a zero register.
-	zero := asm.Zero64()
+	zero := asm.Zero64(ctx)
 
 	// Compute the reduction additive d.
 	d := (1 << uint(l-n)) * p.C
-	dreg := build.GP64()
-	build.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
+	dreg := ctx.GP64()
+	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
 	// Stage 1: upper bound 2²ˡ → 2ˡ + d*2ˡ.
 	//
@@ -100,20 +100,20 @@ func ReduceDouble(z, x mp.Int, p prime.Crandall) {
 	// additional limb.
 
 	// Multiply r = d*H.
-	r := mp.NewIntLimb64(k + 1)
-	build.MOVQ(dreg, reg.RDX)
-	build.XORQ(r[0], r[0]) // also clears flags
+	r := mp.NewIntLimb64(ctx, k+1)
+	ctx.MOVQ(dreg, reg.RDX)
+	ctx.XORQ(r[0], r[0]) // also clears flags
 	for i := 0; i < k; i++ {
-		lo := build.GP64()
-		build.MULXQ(x[i+k], lo, r[i+1])
-		build.ADCXQ(lo, r[i])
+		lo := ctx.GP64()
+		ctx.MULXQ(x[i+k], lo, r[i+1])
+		ctx.ADCXQ(lo, r[i])
 	}
 
 	// Add r += x.
 	for i := 0; i < k; i++ {
-		build.ADOXQ(x[i], r[i])
+		ctx.ADOXQ(x[i], r[i])
 	}
-	build.ADOXQ(zero, r[k])
+	ctx.ADOXQ(zero, r[k])
 
 	// Stage 2: (d+1)*2ˡ → 2ˡ + (d+1)*d
 	//
@@ -124,23 +124,23 @@ func ReduceDouble(z, x mp.Int, p prime.Crandall) {
 	// TODO(mbm): assert d is within an acceptable range
 
 	top := r[k]
-	build.IMULQ(dreg, top) // clears flags
-	build.ADCXQ(top, r[0])
+	ctx.IMULQ(dreg, top) // clears flags
+	ctx.ADCXQ(top, r[0])
 	for i := 1; i < k; i++ {
-		build.ADCXQ(zero, r[i])
+		ctx.ADCXQ(zero, r[i])
 	}
 
 	// Stage 3: finish
 	//
 	// It is still possible that the final add carried, in which case we need one final
 	// add to complete the reduction.
-	addend := build.GP64()
-	build.MOVQ(zero, addend)
-	build.CMOVQCS(dreg, addend)
-	build.ADDQ(addend, r[0])
+	addend := ctx.GP64()
+	ctx.MOVQ(zero, addend)
+	ctx.CMOVQCS(dreg, addend)
+	ctx.ADDQ(addend, r[0])
 
 	// Write out the result.
 	for i := 0; i < k; i++ {
-		build.MOVQ(r[i], z[i])
+		ctx.MOVQ(r[i], z[i])
 	}
 }

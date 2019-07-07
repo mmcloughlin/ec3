@@ -3,8 +3,11 @@
 package main
 
 import (
+	"flag"
+	"os"
 	"strconv"
 
+	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
 
@@ -24,85 +27,102 @@ func BitsToQuadWords(bits int) int {
 }
 
 // addmod builds a modular addition function.
-func addmod(p prime.Crandall) {
-	build.TEXT("Add"+Slug(p), build.NOSPLIT, "func(x, y *[32]byte)")
+func addmod(ctx *build.Context, p prime.Crandall) {
+	ctx.Function("Add" + Slug(p))
+	ctx.Attributes(attr.NOSPLIT)
+	ctx.SignatureExpr("func(x, y *[32]byte)")
 
 	// TODO(mbm): helper for loading integer from memory
-	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
-	x := mp.NewIntLimb64(4)
+	xb := operand.Mem{Base: ctx.Load(ctx.Param("x"), ctx.GP64())}
+	x := mp.NewIntLimb64(ctx, 4)
 	for i := 0; i < 4; i++ {
-		build.MOVQ(xb.Offset(8*i), x[i])
+		ctx.MOVQ(xb.Offset(8*i), x[i])
 	}
 
-	yb := operand.Mem{Base: build.Load(build.Param("y"), build.GP64())}
-	y := mp.NewIntLimb64(4)
+	yb := operand.Mem{Base: ctx.Load(ctx.Param("y"), ctx.GP64())}
+	y := mp.NewIntLimb64(ctx, 4)
 	for i := 0; i < 4; i++ {
-		build.MOVQ(yb.Offset(8*i), y[i])
+		ctx.MOVQ(yb.Offset(8*i), y[i])
 	}
 
-	fp.AddModP(x, y, p)
+	fp.AddModP(ctx, x, y, p)
 
 	for i := 0; i < 4; i++ {
-		build.MOVQ(x[i], xb.Offset(8*i))
+		ctx.MOVQ(x[i], xb.Offset(8*i))
 	}
 
-	build.RET()
+	ctx.RET()
 }
 
 // mul builds a multiplication function.
-func mul() {
-	build.TEXT("Mul", build.NOSPLIT, "func(z *[64]byte, x, y *[32]byte)")
+func mul(ctx *build.Context) {
+	ctx.Function("Mul")
+	ctx.Attributes(attr.NOSPLIT)
+	ctx.SignatureExpr("func(z *[64]byte, x, y *[32]byte)")
 
-	zb := operand.Mem{Base: build.Load(build.Param("z"), build.GP64())}
+	zb := operand.Mem{Base: ctx.Load(ctx.Param("z"), ctx.GP64())}
 	z := mp.NewIntFromMem(zb, 8)
 
-	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
+	xb := operand.Mem{Base: ctx.Load(ctx.Param("x"), ctx.GP64())}
 	x := mp.NewIntFromMem(xb, 4)
 
-	yb := operand.Mem{Base: build.Load(build.Param("y"), build.GP64())}
+	yb := operand.Mem{Base: ctx.Load(ctx.Param("y"), ctx.GP64())}
 	y := mp.NewIntFromMem(yb, 4)
 
-	mp.Mul(z, x, y)
+	mp.Mul(ctx, z, x, y)
 
-	build.RET()
+	ctx.RET()
 }
 
 // mulmod builds a modular multiplication function.
-func mulmod(p prime.Crandall) {
-	build.TEXT("Mul"+Slug(p), build.NOSPLIT, "func(z *[32]byte, x, y *[32]byte)")
+func mulmod(ctx *build.Context, p prime.Crandall) {
+	ctx.Function("Mul" + Slug(p))
+	ctx.Attributes(attr.NOSPLIT)
+	ctx.SignatureExpr("func(z, x, y *[32]byte)")
 
 	// Load arguments.
-	zb := operand.Mem{Base: build.Load(build.Param("z"), build.GP64())}
+	zb := operand.Mem{Base: ctx.Load(ctx.Param("z"), ctx.GP64())}
 	z := mp.NewIntFromMem(zb, 4)
 
-	xb := operand.Mem{Base: build.Load(build.Param("x"), build.GP64())}
+	xb := operand.Mem{Base: ctx.Load(ctx.Param("x"), ctx.GP64())}
 	x := mp.NewIntFromMem(xb, 4)
 
-	yb := operand.Mem{Base: build.Load(build.Param("y"), build.GP64())}
+	yb := operand.Mem{Base: ctx.Load(ctx.Param("y"), ctx.GP64())}
 	y := mp.NewIntFromMem(yb, 4)
 
 	// Perform multiplication.
 	// TODO(mbm): is it possible to store the intermediate result in registers?
-	mb := build.AllocLocal(8 * 8)
+	mb := ctx.AllocLocal(8 * 8)
 	m := mp.NewIntFromMem(mb, 8)
 
-	mp.Mul(m, x, y)
+	mp.Mul(ctx, m, x, y)
 
 	// Reduce.
-	build.Comment("Reduction.")
-	fp.ReduceDouble(z, m, p)
+	ctx.Comment("Reduction.")
+	fp.ReduceDouble(ctx, z, m, p)
 
-	build.RET()
+	ctx.RET()
 }
 
+var (
+	commandline = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	flags       = build.NewFlags(commandline)
+)
+
 func main() {
+	ctx := build.NewContext()
+
 	// Multi-precision.
-	mul()
+	mul(ctx)
 
 	// Fp25519
 	p := prime.Crandall{N: 255, C: 19}
-	addmod(p)
-	mulmod(p)
+	addmod(ctx, p)
+	mulmod(ctx, p)
 
-	build.Generate()
+	// Process the command-line.
+	flag.Parse()
+	cfg := flags.Config()
+	status := build.Main(cfg, ctx)
+	os.Exit(status)
 }
