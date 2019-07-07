@@ -1,0 +1,18 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/go:1.12
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    steps:
+      - checkout
+      - run:
+        name: Bootstrap
+        command: make bootstrap
+      - run:
+        name: Build
+        command: go build ./...
+      - run:
+        name: Test
+        command: go test ./...
