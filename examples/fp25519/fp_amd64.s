@@ -5,34 +5,34 @@
 // func Add(x *[32]byte, y *[32]byte)
 TEXT ·Add(SB), NOSPLIT, $0-16
 	MOVQ    x+0(FP), AX
-	MOVQ    (AX), CX
-	MOVQ    8(AX), DX
-	MOVQ    16(AX), BX
-	MOVQ    24(AX), BP
-	MOVQ    y+8(FP), SI
-	MOVQ    (SI), DI
-	MOVQ    8(SI), R8
-	MOVQ    16(SI), R9
-	MOVQ    24(SI), SI
+	MOVQ    y+8(FP), CX
+	MOVQ    (AX), DX
+	MOVQ    8(AX), BX
+	MOVQ    16(AX), BP
+	MOVQ    24(AX), SI
+	MOVQ    (CX), DI
+	MOVQ    8(CX), R8
+	MOVQ    16(CX), R9
+	MOVQ    24(CX), CX
 	XORQ    R10, R10
 	MOVQ    $0x00000026, R11
-	ADDQ    DI, CX
-	ADCXQ   R8, DX
-	ADCXQ   R9, BX
-	ADCXQ   SI, BP
-	MOVQ    R10, SI
-	CMOVQCS R11, SI
-	ADDQ    SI, CX
-	ADCXQ   R10, DX
+	ADDQ    DI, DX
+	ADCXQ   R8, BX
+	ADCXQ   R9, BP
+	ADCXQ   CX, SI
+	MOVQ    R10, CX
+	CMOVQCS R11, CX
+	ADDQ    CX, DX
 	ADCXQ   R10, BX
 	ADCXQ   R10, BP
-	MOVQ    R10, SI
-	CMOVQCS R11, SI
-	ADDQ    SI, CX
-	MOVQ    CX, (AX)
-	MOVQ    DX, 8(AX)
-	MOVQ    BX, 16(AX)
-	MOVQ    BP, 24(AX)
+	ADCXQ   R10, SI
+	MOVQ    R10, CX
+	CMOVQCS R11, CX
+	ADDQ    CX, DX
+	MOVQ    DX, (AX)
+	MOVQ    BX, 8(AX)
+	MOVQ    BP, 16(AX)
+	MOVQ    SI, 24(AX)
 	RET
 
 // func Mul(z *[32]byte, x *[32]byte, y *[32]byte)

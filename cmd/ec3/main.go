@@ -12,7 +12,7 @@ import (
 
 var (
 	flags     = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	directory = flags.String("dir", ".", "directory to write to")
+	directory = flags.String("dir", "", "directory to write to")
 )
 
 func main() {
@@ -38,7 +38,10 @@ func main() {
 		fmt.Printf("```\n")
 	}
 
-	if err := fs.Output(*directory); err != nil {
-		log.Fatal(err)
+	if *directory != "" {
+		log.Printf("writing to %s", *directory)
+		if err := fs.Output(*directory); err != nil {
+			log.Fatal(err)
+		}
 	}
 }

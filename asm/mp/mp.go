@@ -33,6 +33,29 @@ func NewIntFromMem(m operand.Mem, k int) Int {
 	return x
 }
 
+// Param builds a multi-precision integer from a function parameter. The
+// parameter is expected to be a pointer to the start of the integer.
+func Param(ctx *build.Context, name string, k int) Int {
+	base := ctx.Load(ctx.Param(name), ctx.GP64())
+	addr := operand.Mem{Base: base}
+	return NewIntFromMem(addr, k)
+}
+
+// Copy copies x to y with 64-bit move instructions. If x and y are different
+// sizes it will copy to the smaller size.
+func Copy(ctx *build.Context, y, x Int) {
+	for i := 0; i < len(x) && i < len(y); i++ {
+		ctx.MOVQ(x[i], y[i])
+	}
+}
+
+// Registers will copy x into registers.
+func Registers(ctx *build.Context, x Int) Int {
+	r := NewIntLimb64(ctx, len(x))
+	Copy(ctx, r, x)
+	return r
+}
+
 // Mul does a full multiply z = x*y.
 func Mul(ctx *build.Context, z, x, y Int) {
 	// TODO(mbm): multi-precision multiply is ugly
