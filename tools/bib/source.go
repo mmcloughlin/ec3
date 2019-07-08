@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"text/tabwriter"
+
+	"golang.org/x/xerrors"
 )
 
 // ReferencesMarker marks where references should be placed.
@@ -104,7 +106,7 @@ func ParseCitations(line string) []string {
 func (s *Source) Validate(b *Bibliography) error {
 	for key := range s.Citations {
 		if b.Lookup(key) == nil {
-			return fmt.Errorf("unknown reference '%s'", key)
+			return xerrors.Errorf("unknown reference '%s'", key)
 		}
 	}
 	return nil
@@ -145,7 +147,7 @@ func (s *Source) writeReferences(w io.Writer, b *Bibliography) error {
 	for key := range s.Citations {
 		e := b.Lookup(key)
 		if e == nil {
-			return fmt.Errorf("unknown reference '%s'", key)
+			return xerrors.Errorf("unknown reference '%s'", key)
 		}
 		entries = append(entries, e)
 	}

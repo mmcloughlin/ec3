@@ -2,12 +2,12 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/nickng/bibtex"
+	"golang.org/x/xerrors"
 )
 
 // Entry in a bibliography.
@@ -72,7 +72,7 @@ func ReadBibliography(path string) (*Bibliography, error) {
 // AddEntry adds an entry to the bibliography.
 func (b *Bibliography) AddEntry(e *Entry) error {
 	if b.Lookup(e.CiteName) != nil {
-		return fmt.Errorf("key '%s' already in bibliography", e.CiteName)
+		return xerrors.Errorf("key '%s' already in bibliography", e.CiteName)
 	}
 	b.Entries = append(b.Entries, e)
 	return nil

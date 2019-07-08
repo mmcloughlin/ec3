@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"strings"
+
+	"golang.org/x/xerrors"
 )
 
 // Format entry as a string.
@@ -60,7 +61,7 @@ func Format(e *Entry) (string, error) {
 		s += ", " + e.Fields["institution"].String() + "."
 
 	default:
-		return "", fmt.Errorf("unknown entry type '%s'", e.Type)
+		return "", xerrors.Errorf("unknown entry type '%s'", e.Type)
 	}
 
 	// Look for a date.
