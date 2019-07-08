@@ -1,9 +1,6 @@
 package fp
 
 import (
-	"go/token"
-	"go/types"
-
 	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/gotypes"
@@ -31,17 +28,10 @@ func (a Asm) Context() *build.Context {
 }
 
 func (a Asm) Function(name string, params ...string) {
-	// Build signature.
-	ptr := a.cfg.PointerType()
-	paramvars := []*types.Var{}
-	for _, param := range params {
-		paramvars = append(paramvars, types.NewParam(token.NoPos, nil, param, ptr))
-	}
-	sig := types.NewSignature(nil, types.NewTuple(paramvars...), nil, false)
-
-	// Declare function.
 	a.ctx.Function(name)
 	a.ctx.Attributes(attr.NOSPLIT)
+
+	sig := a.cfg.Signature(params...)
 	a.ctx.Signature(gotypes.NewSignature(nil, sig))
 }
 

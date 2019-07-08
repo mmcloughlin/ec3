@@ -7,3 +7,8 @@ const Size = 32
 
 // Elt is a field element.
 type Elt [32]uint8
+
+// Square computes z = x^2 (mod p).
+func Square(z *Elt, x *Elt) {
+	Mul(z, x)
+}
