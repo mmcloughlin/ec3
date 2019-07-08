@@ -4,7 +4,6 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/mmcloughlin/ec3/asm"
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/internal/gocode"
 	"github.com/mmcloughlin/ec3/internal/ints"
@@ -32,25 +31,27 @@ func (c Config) ElementType() *types.Named {
 	return types.NewNamed(name, ptr, nil)
 }
 
-func Package(cfg Config) (*gen.Bundle, error) {
-	b := gen.NewBundle()
+func Package(cfg Config) (gen.Files, error) {
+	fs := gen.Files{}
 
 	// Exported functions.
-	b.Add("fp.go", API(cfg))
+	b, err := API(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	fs.Add("fp.go", b)
 
 	// Assembly backend.
 	a := NewAsm(cfg)
 	a.Add()
 	a.Mul()
 
-	f, err := asm.Compile(a.Context())
-	if err != nil {
+	if err := fs.CompileAsm(cfg.PackageName, "fp_amd64", a.Context()); err != nil {
 		return nil, err
 	}
-	b.Add("fp_amd64.go", gen.Stubs(cfg.PackageName, f))
-	b.Add("fp_amd64.s", gen.Asm(cfg.PackageName, f))
 
-	return b, nil
+	return fs, nil
 }
 
 type api struct {
@@ -58,11 +59,12 @@ type api struct {
 	gocode.Generator
 }
 
-func API(cfg Config) gen.Interface {
-	return gen.Formatted(&api{
+func API(cfg Config) ([]byte, error) {
+	a := &api{
 		Config:    cfg,
 		Generator: gocode.NewGenerator(),
-	})
+	}
+	return a.Generate()
 }
 
 func (a *api) Generate() ([]byte, error) {
