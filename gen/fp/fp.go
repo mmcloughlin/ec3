@@ -4,28 +4,19 @@ import (
 	"go/token"
 	"go/types"
 
+	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/internal/gocode"
-	"github.com/mmcloughlin/ec3/internal/ints"
-	"github.com/mmcloughlin/ec3/prime"
 )
 
 type Config struct {
 	PackageName     string
-	Prime           prime.Crandall
+	Field           fp.Crandall
 	ElementTypeName string
 }
 
-func (c Config) ElementSize() int {
-	return c.ElementBits() / 8
-}
-
-func (c Config) ElementBits() int {
-	return ints.NextMultiple(c.Prime.Bits(), 8)
-}
-
 func (c Config) Type() *types.Named {
-	array := types.NewArray(types.Typ[types.Byte], int64(c.ElementSize()))
+	array := types.NewArray(types.Typ[types.Byte], int64(c.Field.ElementSize()))
 	name := types.NewTypeName(token.NoPos, nil, c.ElementTypeName, nil)
 	return types.NewNamed(name, array, nil)
 }
@@ -77,7 +68,7 @@ func (a *api) Generate() ([]byte, error) {
 	// Define element type.
 	a.NL()
 	a.Comment("Size of a field element in bytes.")
-	a.Linef("const Size = %d", a.Config.ElementSize())
+	a.Linef("const Size = %d", a.Config.Field.ElementSize())
 
 	a.NL()
 	a.Commentf("%s is a field element.", a.Config.ElementTypeName)

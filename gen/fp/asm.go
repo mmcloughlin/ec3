@@ -20,11 +20,9 @@ type Asm struct {
 
 func NewAsm(cfg Config) *Asm {
 	return &Asm{
-		cfg: cfg,
-		field: fp.Crandall{
-			P: cfg.Prime,
-		},
-		ctx: build.NewContext(),
+		cfg:   cfg,
+		field: cfg.Field,
+		ctx:   build.NewContext(),
 	}
 }
 
@@ -51,8 +49,8 @@ func (a Asm) Add() {
 	a.Function("Add", "x", "y")
 
 	// Load parameters.
-	xp := mp.Param(a.ctx, "x", 4)
-	yp := mp.Param(a.ctx, "y", 4)
+	xp := mp.Param(a.ctx, "x", a.field.Limbs())
+	yp := mp.Param(a.ctx, "y", a.field.Limbs())
 
 	// Bring into registers.
 	x := mp.Registers(a.ctx, xp)
@@ -69,16 +67,17 @@ func (a Asm) Add() {
 
 func (a Asm) Mul() {
 	a.Function("Mul", "z", "x", "y")
+	k := a.field.Limbs()
 
 	// Load parameters.
-	z := mp.Param(a.ctx, "z", 4)
-	x := mp.Param(a.ctx, "x", 4)
-	y := mp.Param(a.ctx, "y", 4)
+	z := mp.Param(a.ctx, "z", k)
+	x := mp.Param(a.ctx, "x", k)
+	y := mp.Param(a.ctx, "y", k)
 
 	// Perform multiplication.
 	// TODO(mbm): is it possible to store the intermediate result in registers?
-	stack := a.ctx.AllocLocal(8 * 8)
-	m := mp.NewIntFromMem(stack, 8)
+	stack := a.ctx.AllocLocal(8 * 2 * k)
+	m := mp.NewIntFromMem(stack, 2*k)
 	mp.Mul(a.ctx, m, x, y)
 
 	// Reduce.

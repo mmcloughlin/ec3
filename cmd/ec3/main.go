@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	asmfp "github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/prime"
 )
@@ -18,9 +19,12 @@ var (
 func main() {
 	flags.Parse(os.Args[1:])
 
+	field := asmfp.Crandall{
+		P: prime.P25519,
+	}
 	cfg := fp.Config{
+		Field:           field,
 		PackageName:     "fp25519",
-		Prime:           prime.P25519,
 		ElementTypeName: "Elt",
 	}
 

@@ -16,29 +16,51 @@ type Crandall struct {
 	P prime.Crandall
 }
 
+// ElementBits returns the number of bits used to represent a field element.
+// This will be larger than the size of the prime if it's not on a word boundary.
+func (f Crandall) ElementBits() int {
+	n := f.P.Bits()
+	return ints.NextMultiple(n, 64)
+}
+
+// ElementSize returns the number of bytes used to represent a field element.
+func (f Crandall) ElementSize() int {
+	return f.ElementBits() / 8
+}
+
+// Limbs returns the number of 64-bit limbs required for a field element.
+func (f Crandall) Limbs() int {
+	return f.ElementBits() / 64
+}
+
+// ReductionMultiplier returns the value an element must be multiplied by to reduce it modulo p upon overflow of the element size.
+// Note that for the Crandall prime we have
+//
+//	2ⁿ - c ≡ 0 (mod p)
+//	2ⁿ ≡ c (mod p)
+//
+// However n may not be on a limb boundary, so we actually need the identity
+//
+//	2ˡ ≡ 2ˡ⁻ⁿ * c (mod p)
+//
+// We'll call this the reduction multiplier.
+func (f Crandall) ReductionMultiplier() uint32 {
+	n := f.P.Bits()
+	l := f.ElementBits()
+	// TODO(mbm): check for overflow
+	return uint32((1 << uint(l-n)) * f.P.C)
+}
+
 // Add adds y into x modulo p.
 //	x ≡ x + y (mod p)
 func (f Crandall) Add(ctx *build.Context, x, y mp.Int) {
-	n := f.P.Bits()
-	l := ints.NextMultiple(n, 64)
-	k := l / 64
+	k := f.Limbs()
 
 	// Prepare a zero register.
 	zero := asm.Zero64(ctx)
 
-	// Note that for the Crandall prime we have
-	//
-	//	2ⁿ - c ≡ 0 (mod p)
-	//	2ⁿ ≡ c (mod p)
-	//
-	// However n may not be on a limb boundary, so we actually need the identity
-	//
-	//	2ˡ ≡ 2ˡ⁻ⁿ * c (mod p)
-	//
-	// We will call this quantity d. It will be required for reductions later.
-
-	// TODO(mbm): refactor d computation
-	d := (1 << uint(l-n)) * f.P.C
+	// Load reduction multiplier.
+	d := f.ReductionMultiplier()
 	dreg := ctx.GP64()
 	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
@@ -81,16 +103,13 @@ func (f Crandall) Add(ctx *build.Context, x, y mp.Int) {
 // This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
 // guaranteed to be less than p.
 func (f Crandall) ReduceDouble(ctx *build.Context, z, x mp.Int) {
-	// TODO(mbm): helpers for limb size computations
-	n := f.P.Bits()
-	l := ints.NextMultiple(n, 64)
-	k := l / 64
+	k := f.Limbs()
 
 	// Prepare a zero register.
 	zero := asm.Zero64(ctx)
 
-	// Compute the reduction additive d.
-	d := (1 << uint(l-n)) * f.P.C
+	// Compute the reduction multiplier.
+	d := f.ReductionMultiplier()
 	dreg := ctx.GP64()
 	ctx.MOVQ(operand.U32(d), dreg) // TODO(mbm): is U32 right?
 
