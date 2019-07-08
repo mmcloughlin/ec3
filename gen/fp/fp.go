@@ -86,7 +86,7 @@ func (a *api) Generate() ([]byte, error) {
 	// Implement square in terms of multipy.
 	a.Comment("Square computes z = x^2 (mod p).")
 	a.Function("Square", a.Signature("z", "x"))
-	a.Linef("Mul(z, x)")
+	a.Linef("Mul(z, x, x)")
 	a.LeaveBlock()
 
 	return a.Formatted()

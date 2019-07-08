@@ -10,5 +10,5 @@ type Elt [32]uint8
 
 // Square computes z = x^2 (mod p).
 func Square(z *Elt, x *Elt) {
-	Mul(z, x)
+	Mul(z, x, x)
 }
