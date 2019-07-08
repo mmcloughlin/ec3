@@ -1,8 +1,12 @@
 package fp
 
 import (
+	"go/token"
+	"go/types"
+
 	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
+	"github.com/mmcloughlin/avo/gotypes"
 
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/asm/mp"
@@ -28,10 +32,23 @@ func (a Asm) Context() *build.Context {
 	return a.ctx
 }
 
-func (a Asm) Add() {
-	a.ctx.Function("Add")
+func (a Asm) Function(name string, params ...string) {
+	// Build signature.
+	ptr := a.cfg.PointerType()
+	paramvars := []*types.Var{}
+	for _, param := range params {
+		paramvars = append(paramvars, types.NewParam(token.NoPos, nil, param, ptr))
+	}
+	sig := types.NewSignature(nil, types.NewTuple(paramvars...), nil, false)
+
+	// Declare function.
+	a.ctx.Function(name)
 	a.ctx.Attributes(attr.NOSPLIT)
-	a.ctx.SignatureExpr("func(x, y *[32]byte)")
+	a.ctx.Signature(gotypes.NewSignature(nil, sig))
+}
+
+func (a Asm) Add() {
+	a.Function("Add", "x", "y")
 
 	// Load parameters.
 	xp := mp.Param(a.ctx, "x", 4)
@@ -51,9 +68,7 @@ func (a Asm) Add() {
 }
 
 func (a Asm) Mul() {
-	a.ctx.Function("Mul")
-	a.ctx.Attributes(attr.NOSPLIT)
-	a.ctx.SignatureExpr("func(z, x, y *[32]byte)")
+	a.Function("Mul", "z", "x", "y")
 
 	// Load parameters.
 	z := mp.Param(a.ctx, "z", 4)

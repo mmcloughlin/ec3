@@ -2,6 +2,6 @@
 
 package fp25519
 
-func Add(x *[32]byte, y *[32]byte)
+func Add(x *Elt, y *Elt)
 
-func Mul(z *[32]byte, x *[32]byte, y *[32]byte)
+func Mul(z *Elt, x *Elt, y *Elt)

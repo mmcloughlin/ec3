@@ -6,4 +6,4 @@ package fp25519
 const Size = 32
 
 // Elt is a field element.
-type Elt *[32]uint8
+type Elt [32]uint8

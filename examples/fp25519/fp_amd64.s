@@ -2,7 +2,7 @@
 
 #include "textflag.h"
 
-// func Add(x *[32]byte, y *[32]byte)
+// func Add(x *Elt, y *Elt)
 TEXT ·Add(SB), NOSPLIT, $0-16
 	MOVQ    x+0(FP), AX
 	MOVQ    y+8(FP), CX
@@ -35,7 +35,7 @@ TEXT ·Add(SB), NOSPLIT, $0-16
 	MOVQ    SI, 24(AX)
 	RET
 
-// func Mul(z *[32]byte, x *[32]byte, y *[32]byte)
+// func Mul(z *Elt, x *Elt, y *Elt)
 TEXT ·Mul(SB), NOSPLIT, $64-24
 	MOVQ z+0(FP), AX
 	MOVQ x+8(FP), CX

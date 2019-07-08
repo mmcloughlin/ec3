@@ -24,11 +24,14 @@ func (c Config) ElementBits() int {
 	return ints.NextMultiple(c.Prime.Bits(), 8)
 }
 
-func (c Config) ElementType() *types.Named {
+func (c Config) Type() *types.Named {
 	array := types.NewArray(types.Typ[types.Byte], int64(c.ElementSize()))
-	ptr := types.NewPointer(array)
 	name := types.NewTypeName(token.NoPos, nil, c.ElementTypeName, nil)
-	return types.NewNamed(name, ptr, nil)
+	return types.NewNamed(name, array, nil)
+}
+
+func (c Config) PointerType() *types.Pointer {
+	return types.NewPointer(c.Type())
 }
 
 func Package(cfg Config) (gen.Files, error) {
@@ -78,7 +81,7 @@ func (a *api) Generate() ([]byte, error) {
 
 	a.NL()
 	a.Commentf("%s is a field element.", a.Config.ElementTypeName)
-	a.Linef("type %s %s", a.Config.ElementTypeName, a.Config.ElementType().Underlying())
+	a.Linef("type %s %s", a.Config.Type(), a.Config.Type().Underlying())
 
 	return a.Result()
 }
