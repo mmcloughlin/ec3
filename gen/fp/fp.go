@@ -3,7 +3,9 @@ package fp
 import (
 	"go/token"
 	"go/types"
+	"strings"
 
+	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/addchain/acc/ir"
 	"github.com/mmcloughlin/ec3/addchain/acc/pass"
 	"github.com/mmcloughlin/ec3/asm/fp"
@@ -105,8 +107,29 @@ func (a *api) Square() {
 }
 
 func (a *api) Inverse() {
+	// Function header.
+	a.Comment("Inv computes z = 1/x (mod p).")
+	a.Function("Inv", a.Signature("z", "x"))
+
+	// Comment describing the addition chain.
+	p := a.InverseChain.Clone()
+	script, err := acc.String(p)
+	if err != nil {
+		a.SetError(err)
+		return
+	}
+	a.Comment("Inversion computation is derived from the addition chain:", "")
+	a.Comment(strings.Split(script, "\n")...)
+
+	if err := pass.Eval(p); err != nil {
+		a.SetError(err)
+		return
+	}
+
+	sqrs, muls := p.Program.Count()
+	a.Commentf("Operations: %d squares %d multiplies", sqrs, muls)
+
 	// Perform temporary variable allocation.
-	p := a.InverseChain
 	alloc := pass.Allocator{
 		Input:  "x",
 		Output: "z",
@@ -116,16 +139,16 @@ func (a *api) Inverse() {
 		a.SetError(err)
 		return
 	}
+
+	// Allocate required temporaries.
 	n := len(p.Temporaries)
-
-	// Output the function.
-	a.Comment("Inv computes z = 1/x (mod p).")
-	a.Function("Inv", a.Signature("z", "x"))
-
-	// Allocate the temporaries on the stack.
+	a.NL()
+	a.Commentf("Allocate %d temporaries.", n)
 	a.Linef("var t [%d]%s", n, a.Type())
 
 	for _, inst := range p.Instructions {
+		a.NL()
+		a.Commentf("Step %d: %s = x^%#x.", inst.Output.Index, inst.Output, p.Chain[inst.Output.Index])
 		switch op := inst.Op.(type) {
 		case ir.Add:
 			a.Linef("Mul(%s, %s, %s)", inst.Output, op.X, op.Y)

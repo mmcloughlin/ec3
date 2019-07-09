@@ -15,57 +15,125 @@ func Sqr(z *Elt, x *Elt) {
 
 // Inv computes z = 1/x (mod p).
 func Inv(z *Elt, x *Elt) {
+	// Inversion computation is derived from the addition chain:
+	//
+	// _10       = 2*1
+	// _11       = 1 + _10
+	// _1100     = _11 << 2
+	// _1111     = _11 + _1100
+	// _11110000 = _1111 << 4
+	// _11111111 = _1111 + _11110000
+	// x10       = _11111111 << 2 + _11
+	// x20       = x10 << 10 + x10
+	// x30       = x20 << 10 + x10
+	// x60       = x30 << 30 + x30
+	// x120      = x60 << 60 + x60
+	// x240      = x120 << 120 + x120
+	// x250      = x240 << 10 + x10
+	// return      (x250 << 2 + 1) << 3 + _11
+	//
+	// Operations: 254 squares 12 multiplies
+
+	// Allocate 3 temporaries.
 	var t [3]Elt
+
+	// Step 1: z = x^0x2.
 	Sqr(z, x)
+
+	// Step 2: z = x^0x3.
 	Mul(z, x, z)
+
+	// Step 4: &t[0] = x^0xc.
 	Sqr(&t[0], z)
 	for s := 1; s < 2; s++ {
 		Sqr(&t[0], &t[0])
 	}
+
+	// Step 5: &t[0] = x^0xf.
 	Mul(&t[0], z, &t[0])
+
+	// Step 9: &t[1] = x^0xf0.
 	Sqr(&t[1], &t[0])
 	for s := 1; s < 4; s++ {
 		Sqr(&t[1], &t[1])
 	}
+
+	// Step 10: &t[0] = x^0xff.
 	Mul(&t[0], &t[0], &t[1])
+
+	// Step 12: &t[0] = x^0x3fc.
 	for s := 0; s < 2; s++ {
 		Sqr(&t[0], &t[0])
 	}
+
+	// Step 13: &t[0] = x^0x3ff.
 	Mul(&t[0], z, &t[0])
+
+	// Step 23: &t[1] = x^0xffc00.
 	Sqr(&t[1], &t[0])
 	for s := 1; s < 10; s++ {
 		Sqr(&t[1], &t[1])
 	}
+
+	// Step 24: &t[1] = x^0xfffff.
 	Mul(&t[1], &t[0], &t[1])
+
+	// Step 34: &t[1] = x^0x3ffffc00.
 	for s := 0; s < 10; s++ {
 		Sqr(&t[1], &t[1])
 	}
+
+	// Step 35: &t[1] = x^0x3fffffff.
 	Mul(&t[1], &t[0], &t[1])
+
+	// Step 65: &t[2] = x^0xfffffffc0000000.
 	Sqr(&t[2], &t[1])
 	for s := 1; s < 30; s++ {
 		Sqr(&t[2], &t[2])
 	}
+
+	// Step 66: &t[1] = x^0xfffffffffffffff.
 	Mul(&t[1], &t[1], &t[2])
+
+	// Step 126: &t[2] = x^0xfffffffffffffff000000000000000.
 	Sqr(&t[2], &t[1])
 	for s := 1; s < 60; s++ {
 		Sqr(&t[2], &t[2])
 	}
+
+	// Step 127: &t[1] = x^0xffffffffffffffffffffffffffffff.
 	Mul(&t[1], &t[1], &t[2])
+
+	// Step 247: &t[2] = x^0xffffffffffffffffffffffffffffff000000000000000000000000000000.
 	Sqr(&t[2], &t[1])
 	for s := 1; s < 120; s++ {
 		Sqr(&t[2], &t[2])
 	}
+
+	// Step 248: &t[1] = x^0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
 	Mul(&t[1], &t[1], &t[2])
+
+	// Step 258: &t[1] = x^0x3fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc00.
 	for s := 0; s < 10; s++ {
 		Sqr(&t[1], &t[1])
 	}
+
+	// Step 259: &t[0] = x^0x3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
 	Mul(&t[0], &t[0], &t[1])
+
+	// Step 261: &t[0] = x^0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffc.
 	for s := 0; s < 2; s++ {
 		Sqr(&t[0], &t[0])
 	}
+
+	// Step 262: &t[0] = x^0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd.
 	Mul(&t[0], x, &t[0])
+
+	// Step 265: &t[0] = x^0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe8.
 	for s := 0; s < 3; s++ {
 		Sqr(&t[0], &t[0])
 	}
+
+	// Step 266: z = x^0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeb.
 	Mul(z, z, &t[0])
 }
