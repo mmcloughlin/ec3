@@ -4,14 +4,19 @@ import (
 	"go/token"
 	"go/types"
 
+	"github.com/mmcloughlin/ec3/addchain/acc/ir"
+	"github.com/mmcloughlin/ec3/addchain/acc/pass"
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/gen"
+	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/gocode"
 )
 
 type Config struct {
+	Field        fp.Crandall
+	InverseChain *ir.Program
+
 	PackageName     string
-	Field           fp.Crandall
 	ElementTypeName string
 }
 
@@ -83,11 +88,62 @@ func (a *api) Generate() ([]byte, error) {
 	a.Commentf("%s is a field element.", a.ElementTypeName)
 	a.Linef("type %s %s", a.Type(), a.Type().Underlying())
 
-	// Implement square in terms of multipy.
-	a.Comment("Square computes z = x^2 (mod p).")
-	a.Function("Square", a.Signature("z", "x"))
-	a.Linef("Mul(z, x, x)")
-	a.LeaveBlock()
+	// Implement field operations.
+	a.Square()
+	a.Inverse()
 
 	return a.Formatted()
+}
+
+// Square generates a square function. This is currently implemented naively
+// using multiply.
+func (a *api) Square() {
+	a.Comment("Sqr computes z = x^2 (mod p).")
+	a.Function("Sqr", a.Signature("z", "x"))
+	a.Linef("Mul(z, x, x)")
+	a.LeaveBlock()
+}
+
+func (a *api) Inverse() {
+	// Perform temporary variable allocation.
+	p := a.InverseChain
+	alloc := pass.Allocator{
+		Input:  "x",
+		Output: "z",
+		Format: "&t[%d]",
+	}
+	if err := alloc.Execute(p); err != nil {
+		a.SetError(err)
+		return
+	}
+	n := len(p.Temporaries)
+
+	// Output the function.
+	a.Comment("Inv computes z = 1/x (mod p).")
+	a.Function("Inv", a.Signature("z", "x"))
+
+	// Allocate the temporaries on the stack.
+	a.Linef("var t [%d]%s", n, a.Type())
+
+	for _, inst := range p.Instructions {
+		switch op := inst.Op.(type) {
+		case ir.Add:
+			a.Linef("Mul(%s, %s, %s)", inst.Output, op.X, op.Y)
+		case ir.Double:
+			a.Linef("Sqr(%s, %s)", inst.Output, op.X)
+		case ir.Shift:
+			first := 0
+			if inst.Output.Identifier != op.X.Identifier {
+				a.Linef("Sqr(%s, %s)", inst.Output, op.X)
+				first++
+			}
+			a.Linef("for s := %d; s < %d; s++ {", first, op.S)
+			a.Linef("Sqr(%s, %s)", inst.Output, inst.Output)
+			a.Linef("}")
+		default:
+			a.SetError(errutil.UnexpectedType(op))
+		}
+	}
+
+	a.LeaveBlock()
 }

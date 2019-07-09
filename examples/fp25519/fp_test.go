@@ -16,6 +16,28 @@ func NumTrials() int {
 	return 1 << 15
 }
 
+func TestAdd(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, y, expect fp25519.Elt
+		rand.Read(x[:])
+		rand.Read(y[:])
+
+		var xb, yb Elt
+		copy(xb[:], x[:])
+		copy(yb[:], y[:])
+
+		fp25519.Add(&expect, &x, &y)
+		Add(&xb, &yb)
+
+		if !bytes.Equal(xb[:], expect[:]) {
+			t.Logf(" trial = %d", trial)
+			t.Logf("   got = %x", xb)
+			t.Logf("expect = %x", expect)
+			t.Fail()
+		}
+	}
+}
+
 func TestMul(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, y, expect fp25519.Elt
@@ -40,22 +62,21 @@ func TestMul(t *testing.T) {
 	}
 }
 
-func TestAdd(t *testing.T) {
+func TestInv(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
-		var x, y, expect fp25519.Elt
+		var x, expect fp25519.Elt
 		rand.Read(x[:])
-		rand.Read(y[:])
 
-		var xb, yb Elt
+		var xb, got Elt
 		copy(xb[:], x[:])
-		copy(yb[:], y[:])
 
-		fp25519.Add(&expect, &x, &y)
-		Add(&xb, &yb)
+		fp25519.Inv(&expect, &x)
+		Inv(&got, &xb)
 
-		if !bytes.Equal(xb[:], expect[:]) {
+		if !bytes.Equal(got[:], expect[:]) {
 			t.Logf(" trial = %d", trial)
-			t.Logf("   got = %x", xb)
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
 			t.Fail()
 		}
