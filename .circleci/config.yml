@@ -15,4 +15,8 @@ jobs:
           command: go build ./...
       - run:
           name: Test
-          command: go test ./...
+          command: go test -coverprofile=coverage.out -covermode=count ./...
+      - run:
+          name: Upload Coverage
+          command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
+          when: on_success
