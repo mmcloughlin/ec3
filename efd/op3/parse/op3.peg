@@ -1,0 +1,103 @@
+{
+
+package parser
+
+}
+
+// Program
+
+Program <- as:Assignment* EOF {
+    p := &ast.Program{}
+    for _, a := range as.([]interface{}) {
+        p.Assignments = append(p.Assignments, a.(ast.Assignment))
+    }
+    return p, nil
+}
+
+// Assignment
+
+Assignment <- v:Variable _ '=' _ e:Expression _ EOL {
+    return ast.Assignment{
+        LHS: v.(ast.Variable),
+        RHS: e.(ast.Expression),
+    }, nil
+}
+
+// Operators
+
+Expression <- Pow / Inv / Mul / Neg / Add / Sub / Operand
+
+Pow <- x:Variable _ '^' _ n:Constant {
+    return ast.Pow{
+        X: x.(ast.Variable),
+        N: n.(ast.Constant),
+    }, nil
+}
+
+Inv <- '1' _ '/' _ x:Variable {
+    return ast.Inv{
+        X: x.(ast.Variable),
+    }, nil
+}
+
+Mul <- x:Operand _ '*' _ y:Operand {
+    return ast.Mul{
+        X: x.(ast.Operand),
+        Y: y.(ast.Operand),
+    }, nil
+}
+
+Neg <- '-' _ x:Variable {
+    return ast.Neg{
+        X: x.(ast.Variable),
+    }, nil
+}
+
+Add <- x:Operand _ '+' _ y:Operand {
+    return ast.Add{
+        X: x.(ast.Operand),
+        Y: y.(ast.Operand),
+    }, nil
+}
+
+Sub <- x:Operand _ '-' _ y:Operand {
+    return ast.Sub{
+        X: x.(ast.Operand),
+        Y: y.(ast.Operand),
+    }, nil
+}
+
+// Operand
+
+Operand <- o:(Variable / Constant) {
+    return ast.Operand(o), nil
+}
+
+Variable <- [0-9]* [a-zA-Z] [a-zA-Z0-9]* {
+    return ast.Variable(c.text), nil
+}
+
+Constant <- u:Uint64Literal {
+    return ast.Constant(u.(uint64)), nil
+}
+
+// Primitives
+
+Uint64Literal <- (HexUintLiteral / OctalUintLiteral / DecimalUintLiteral) {
+    return strconv.ParseUint(string(c.text), 0, 64)
+}
+
+DecimalUintLiteral <- [0-9]+
+
+HexUintLiteral <- "0x" [0-9a-fA-F]+
+
+OctalUintLiteral <- '0' [0-7]+
+
+// Character classes
+
+__ <- Whitespace+
+_ <- Whitespace*
+
+Whitespace <- [ \t\r]
+EOL <- '\n'
+EOF <- !.
