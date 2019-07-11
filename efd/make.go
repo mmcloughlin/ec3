@@ -67,6 +67,7 @@ type generator struct {
 func (g *generator) Generate() ([]byte, error) {
 	g.CodeGenerationWarningSelf()
 	g.Package("efd")
+	g.Import("github.com/mmcloughlin/ec3/efd/op3/ast")
 
 	g.shapes()
 	g.representations()
@@ -200,7 +201,7 @@ func (g *generator) formula(f *efd.Formula) {
 	g.Linef("Assume: %#v,", f.Assume)
 	g.Linef("Compute: %#v,", f.Compute)
 	g.Linef("Parameters: %#v,", f.Parameters)
-	// 	Program    *ast.Program
+	g.Linef("Program: %#v,", f.Program)
 	g.Dedent()
 	g.Linef("},")
 }

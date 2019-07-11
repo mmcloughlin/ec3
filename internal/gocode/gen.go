@@ -24,6 +24,20 @@ func (g *Generator) Package(name string) {
 	g.Linef("package %s", name)
 }
 
+func (g *Generator) Import(pkgs ...string) {
+	g.NL()
+	if len(pkgs) == 1 {
+		g.Linef("import %q", pkgs[0])
+		return
+	}
+
+	g.Linef("import (")
+	for _, pkg := range pkgs {
+		g.Linef("\t%q", pkg)
+	}
+	g.Linef(")")
+}
+
 // Comment writes comment lines prefixed with "// ".
 func (g *Generator) Comment(lines ...string) {
 	for _, line := range lines {
