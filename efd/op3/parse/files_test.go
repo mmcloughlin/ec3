@@ -14,7 +14,7 @@ import (
 func TestParseAllEFDFiles(t *testing.T) {
 	archive := "../../efd.tar.gz"
 
-	err := db.Walk(archive, func(filename string, r io.Reader) error {
+	err := db.Walk(archive, db.VisitorFunc(func(filename string, r io.Reader) error {
 		if filepath.Ext(filename) != ".op3" {
 			return nil
 		}
@@ -41,7 +41,7 @@ func TestParseAllEFDFiles(t *testing.T) {
 		}
 
 		return nil
-	})
+	}))
 
 	assert.NoError(t, err)
 }
