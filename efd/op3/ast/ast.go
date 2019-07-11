@@ -1,5 +1,9 @@
 package ast
 
+import (
+	"fmt"
+)
+
 type Program struct {
 	Assignments []Assignment
 }
@@ -30,4 +34,12 @@ type Operand interface{}
 
 type Variable string
 
+func (v Variable) GoString() string {
+	return fmt.Sprintf("ast.Variable(%q)", v)
+}
+
 type Constant uint
+
+func (c Constant) GoString() string {
+	return fmt.Sprintf("ast.Constant(%d)", c)
+}
