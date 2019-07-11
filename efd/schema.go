@@ -2,6 +2,17 @@ package efd
 
 import "github.com/mmcloughlin/ec3/efd/op3/ast"
 
+type Representation struct {
+	Class string
+	Shape *Shape
+
+	Name       string
+	Assume     []string
+	Parameters []string
+	Variables  []string
+	Satisfying []string
+}
+
 type Formula struct {
 	Class          string
 	Shape          *Shape
@@ -17,7 +28,4 @@ type Formula struct {
 }
 
 type Shape struct {
-}
-
-type Representation struct {
 }

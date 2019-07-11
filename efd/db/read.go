@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/mmcloughlin/ec3/efd/op3/parse"
+
 	"golang.org/x/xerrors"
 
 	"github.com/mmcloughlin/ec3/efd"
@@ -83,6 +85,13 @@ func (d Database) representation(k string) *efd.Representation {
 	return d.Representations[k]
 }
 
+func (d Database) formula(k string) *efd.Formula {
+	if _, ok := d.Formulae[k]; !ok {
+		d.Formulae[k] = &efd.Formula{}
+	}
+	return d.Formulae[k]
+}
+
 func Read(archive string) (*Database, error) {
 	p := parser{
 		DB: New(),
@@ -117,16 +126,17 @@ func (p parser) Visit(filename string, r io.Reader) error {
 }
 
 func (p parser) formula(k Key, r io.Reader) error {
-	f := &efd.Formula{
-		Class:          k.Class,
-		Shape:          p.DB.shape(k.ShapeID()),
-		Representation: p.DB.representation(k.RepresentationID()),
-		Operation:      k.Operation,
-	}
+	f := p.DB.formula(k.FormulaID())
+	f.Class = k.Class
+	f.Shape = p.DB.shape(k.ShapeID())
+	f.Representation = p.DB.representation(k.RepresentationID())
+	f.Operation = k.Operation
+
 	props, err := ParseProperties(r)
 	if err != nil {
 		return err
 	}
+
 	for prop, vs := range props {
 		switch prop {
 		case "source":
@@ -146,11 +156,40 @@ func (p parser) formula(k Key, r io.Reader) error {
 			return err
 		}
 	}
-	p.DB.Formulae[k.FormulaID()] = f
+
 	return nil
 }
 
 func (p parser) representation(k Key, r io.Reader) error {
+	repr := p.DB.representation(k.RepresentationID())
+	repr.Class = k.Class
+	repr.Shape = p.DB.shape(k.ShapeID())
+
+	props, err := ParseProperties(r)
+	if err != nil {
+		return err
+	}
+
+	for prop, vs := range props {
+		switch prop {
+		case "name":
+			repr.Name, err = exactlyone(prop, vs)
+		case "assume":
+			repr.Assume = vs
+		case "parameter":
+			repr.Parameters = vs
+		case "variable":
+			repr.Variables = vs
+		case "satisfying":
+			repr.Satisfying = vs
+		default:
+			return xerrors.Errorf("unknown property %q", prop)
+		}
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -159,6 +198,14 @@ func (p parser) shape(k Key, r io.Reader) error {
 }
 
 func (p parser) op3(k Key, r io.Reader) error {
+	prog, err := parse.Reader(k.Path, r)
+	// Note we expect some files to fail parsing, so we supress errors here.
+	if err != nil {
+		return nil
+	}
+
+	f := p.DB.formula(k.FormulaID())
+	f.Program = prog
 	return nil
 }
 
@@ -182,6 +229,13 @@ func ParseProperties(r io.Reader) (map[string][]string, error) {
 		return nil, err
 	}
 	return properties, nil
+}
+
+func exactlyone(prop string, vs []string) (string, error) {
+	if len(vs) != 1 {
+		return "", xerrors.Errorf("expected exactly one value for %q", prop)
+	}
+	return vs[0], nil
 }
 
 func atmostone(prop string, vs []string) (string, error) {
