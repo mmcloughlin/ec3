@@ -3,7 +3,6 @@ package db
 import (
 	"bufio"
 	"io"
-	"log"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -256,10 +255,8 @@ func ParseProperties(r io.Reader) (map[string][]string, error) {
 	s := bufio.NewScanner(r)
 	for s.Scan() {
 		line := s.Text()
-		log.Print(line)
 		parts := whitespace.Split(line, 2)
 		if len(parts) != 2 || parts[0] == "" {
-			log.Print("skip", line)
 			continue
 		}
 		key, value := parts[0], parts[1]
