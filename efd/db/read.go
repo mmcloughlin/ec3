@@ -9,11 +9,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mmcloughlin/ec3/efd/op3/parse"
-
 	"golang.org/x/xerrors"
 
 	"github.com/mmcloughlin/ec3/efd"
+	"github.com/mmcloughlin/ec3/efd/op3/parse"
 )
 
 type Key struct {
@@ -194,6 +193,47 @@ func (p parser) representation(k Key, r io.Reader) error {
 }
 
 func (p parser) shape(k Key, r io.Reader) error {
+	s := p.DB.shape(k.ShapeID())
+	s.Class = k.Class
+
+	props, err := ParseProperties(r)
+	if err != nil {
+		return err
+	}
+
+	for prop, vs := range props {
+		switch prop {
+		case "name":
+			s.Name, err = exactlyone(prop, vs)
+		case "coordinate":
+			s.Coordinates = vs
+		case "a0", "a1", "a2", "a3", "a4", "a6":
+			i := int(prop[1] - '0')
+			s.A[i], err = exactlyone(prop, vs)
+		case "satisfying":
+			s.Satisfying = vs
+		case "parameter":
+			s.Parameters = vs
+		case "addition":
+			s.Addition = vs
+		case "doubling":
+			s.Doubling = vs
+		case "negation":
+			s.Negation = vs
+		case "neutral":
+			s.Neutral = vs
+		case "fromweierstrass":
+			s.FromWeierstrass = vs
+		case "toweierstrass":
+			s.ToWeierstrass = vs
+		default:
+			return xerrors.Errorf("unknown property %q", prop)
+		}
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

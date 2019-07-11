@@ -28,4 +28,17 @@ type Formula struct {
 }
 
 type Shape struct {
+	Class string
+
+	Name            string
+	Parameters      []string
+	Coordinates     []string
+	A               [7]string
+	Satisfying      []string
+	Addition        []string
+	Doubling        []string
+	Negation        []string
+	Neutral         []string
+	FromWeierstrass []string
+	ToWeierstrass   []string
 }
