@@ -7,6 +7,7 @@ import "github.com/mmcloughlin/ec3/efd/op3/ast"
 var shapes = []*Shape{
 	{
 		ID:              "g12o/edwards",
+		Tag:             "edwards",
 		Class:           "g12o",
 		Name:            "binary Edwards curves",
 		Parameters:      []string{"d1", "d2"},
@@ -22,6 +23,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g12o/hessian",
+		Tag:             "hessian",
 		Class:           "g12o",
 		Name:            "Hessian curves",
 		Parameters:      []string{"d"},
@@ -37,6 +39,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g12o/shortw",
+		Tag:             "shortw",
 		Class:           "g12o",
 		Name:            "short Weierstrass curves",
 		Parameters:      []string{"a2", "a6"},
@@ -52,6 +55,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/2dik",
+		Tag:             "2dik",
 		Class:           "g1p",
 		Name:            "doubling-oriented Doche--Icart--Kohel curves",
 		Parameters:      []string{"a"},
@@ -67,6 +71,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/3dik",
+		Tag:             "3dik",
 		Class:           "g1p",
 		Name:            "tripling-oriented Doche--Icart--Kohel curves",
 		Parameters:      []string{"a"},
@@ -82,6 +87,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/edwards",
+		Tag:             "edwards",
 		Class:           "g1p",
 		Name:            "Edwards curves",
 		Parameters:      []string{"c", "d"},
@@ -97,6 +103,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/hessian",
+		Tag:             "hessian",
 		Class:           "g1p",
 		Name:            "Hessian curves",
 		Parameters:      []string{"d"},
@@ -112,6 +119,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/jintersect",
+		Tag:             "jintersect",
 		Class:           "g1p",
 		Name:            "Jacobi intersections",
 		Parameters:      []string{"a"},
@@ -127,6 +135,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/jquartic",
+		Tag:             "jquartic",
 		Class:           "g1p",
 		Name:            "Jacobi quartics",
 		Parameters:      []string{"a"},
@@ -142,6 +151,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/montgom",
+		Tag:             "montgom",
 		Class:           "g1p",
 		Name:            "Montgomery curves",
 		Parameters:      []string{"a", "b"},
@@ -157,6 +167,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/shortw",
+		Tag:             "shortw",
 		Class:           "g1p",
 		Name:            "short Weierstrass curves",
 		Parameters:      []string{"a", "b"},
@@ -172,6 +183,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/twisted",
+		Tag:             "twisted",
 		Class:           "g1p",
 		Name:            "twisted Edwards curves",
 		Parameters:      []string{"a", "d"},
@@ -187,6 +199,7 @@ var shapes = []*Shape{
 	},
 	{
 		ID:              "g1p/twistedhessian",
+		Tag:             "twistedhessian",
 		Class:           "g1p",
 		Name:            "twisted Hessian curves",
 		Parameters:      []string{"a", "d"},
@@ -205,6 +218,7 @@ var shapes = []*Shape{
 var representations = []*Representation{
 	{
 		ID:         "g12o/edwards/w",
+		Tag:        "w",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "w coordinates",
@@ -215,6 +229,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/w-1",
+		Tag:        "w-1",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "w coordinates with d1=d2",
@@ -225,6 +240,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/wz",
+		Tag:        "wz",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "WZ coordinates",
@@ -235,6 +251,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/wz-1",
+		Tag:        "wz-1",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "WZ coordinates with d1=d2",
@@ -245,6 +262,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/xy",
+		Tag:        "xy",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "affine coordinates",
@@ -255,6 +273,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/xy-1",
+		Tag:        "xy-1",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "affine coordinates with d1=d2",
@@ -265,6 +284,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/xyz",
+		Tag:        "xyz",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "projective coordinates",
@@ -275,6 +295,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/edwards/xyz-1",
+		Tag:        "xyz-1",
 		Class:      "g12o",
 		Shape:      shapes[0],
 		Name:       "projective coordinates with d1=d2",
@@ -285,6 +306,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/hessian/standard",
+		Tag:        "standard",
 		Class:      "g12o",
 		Shape:      shapes[1],
 		Name:       "projective coordinates",
@@ -295,6 +317,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/affine",
+		Tag:        "affine",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "affine coordinates",
@@ -305,6 +328,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/extended-0",
+		Tag:        "extended-0",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "extended Lopez-Dahab coordinates with a2=0",
@@ -315,6 +339,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/extended-1",
+		Tag:        "extended-1",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "extended Lopez-Dahab coordinates with a2=1",
@@ -325,6 +350,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/jacobian",
+		Tag:        "jacobian",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "Jacobian coordinates",
@@ -335,6 +361,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/lambda",
+		Tag:        "lambda",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "Lambda coordinates",
@@ -345,6 +372,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/lopezdahab",
+		Tag:        "lopezdahab",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "Lopez-Dahab coordinates",
@@ -355,6 +383,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/lopezdahab-0",
+		Tag:        "lopezdahab-0",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "Lopez-Dahab coordinates with a2=0",
@@ -365,6 +394,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/lopezdahab-1",
+		Tag:        "lopezdahab-1",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "Lopez-Dahab coordinates with a2=1",
@@ -375,6 +405,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/projective",
+		Tag:        "projective",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "projective coordinates",
@@ -385,6 +416,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g12o/shortw/xz",
+		Tag:        "xz",
 		Class:      "g12o",
 		Shape:      shapes[2],
 		Name:       "XZ coordinates",
@@ -395,6 +427,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/2dik/standard",
+		Tag:        "standard",
 		Class:      "g1p",
 		Shape:      shapes[3],
 		Name:       "standard coordinates",
@@ -405,6 +438,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/3dik/standard",
+		Tag:        "standard",
 		Class:      "g1p",
 		Shape:      shapes[4],
 		Name:       "standard coordinates",
@@ -415,6 +449,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/edwards/inverted",
+		Tag:        "inverted",
 		Class:      "g1p",
 		Shape:      shapes[5],
 		Name:       "inverted coordinates",
@@ -425,6 +460,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/edwards/projective",
+		Tag:        "projective",
 		Class:      "g1p",
 		Shape:      shapes[5],
 		Name:       "projective coordinates",
@@ -435,6 +471,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/edwards/yz",
+		Tag:        "yz",
 		Class:      "g1p",
 		Shape:      shapes[5],
 		Name:       "YZ coordinates with square d",
@@ -445,6 +482,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/edwards/yzsquared",
+		Tag:        "yzsquared",
 		Class:      "g1p",
 		Shape:      shapes[5],
 		Name:       "squared YZ coordinates with square d",
@@ -455,6 +493,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/hessian/extended",
+		Tag:        "extended",
 		Class:      "g1p",
 		Shape:      shapes[6],
 		Name:       "extended coordinates",
@@ -465,6 +504,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/hessian/standard",
+		Tag:        "standard",
 		Class:      "g1p",
 		Shape:      shapes[6],
 		Name:       "projective coordinates",
@@ -475,6 +515,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jintersect/extended",
+		Tag:        "extended",
 		Class:      "g1p",
 		Shape:      shapes[7],
 		Name:       "extended coordinates",
@@ -485,6 +526,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jintersect/standard",
+		Tag:        "standard",
 		Class:      "g1p",
 		Shape:      shapes[7],
 		Name:       "projective coordinates",
@@ -495,6 +537,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/2xxyzz",
+		Tag:        "2xxyzz",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "doubling-oriented XXYZZ coordinates",
@@ -505,6 +548,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/2xxyzzr",
+		Tag:        "2xxyzzr",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "doubling-oriented XXYZZR coordinates",
@@ -515,6 +559,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/2xyz",
+		Tag:        "2xyz",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "doubling-oriented XYZ coordinates",
@@ -525,6 +570,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/xxyzz",
+		Tag:        "xxyzz",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "XXYZZ coordinates",
@@ -535,6 +581,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/xxyzzr",
+		Tag:        "xxyzzr",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "XXYZZR coordinates",
@@ -545,6 +592,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/jquartic/xyz",
+		Tag:        "xyz",
 		Class:      "g1p",
 		Shape:      shapes[8],
 		Name:       "XYZ coordinates",
@@ -555,6 +603,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/montgom/xz",
+		Tag:        "xz",
 		Class:      "g1p",
 		Shape:      shapes[9],
 		Name:       "XZ coordinates",
@@ -565,6 +614,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/jacobian",
+		Tag:        "jacobian",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "Jacobian coordinates",
@@ -575,6 +625,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/jacobian-0",
+		Tag:        "jacobian-0",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "Jacobian coordinates with a4=0",
@@ -585,6 +636,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/jacobian-3",
+		Tag:        "jacobian-3",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "Jacobian coordinates with a4=-3",
@@ -595,6 +647,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/modified",
+		Tag:        "modified",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "modified Jacobian coordinates",
@@ -605,6 +658,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/projective",
+		Tag:        "projective",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "projective coordinates",
@@ -615,6 +669,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/projective-1",
+		Tag:        "projective-1",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "projective coordinates with a4=-1",
@@ -625,6 +680,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/projective-3",
+		Tag:        "projective-3",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "projective coordinates with a4=-3",
@@ -635,6 +691,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/w12-0",
+		Tag:        "w12-0",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "W12 coordinates with a6=0",
@@ -645,6 +702,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/xyzz",
+		Tag:        "xyzz",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "XYZZ coordinates",
@@ -655,6 +713,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/xyzz-3",
+		Tag:        "xyzz-3",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "XYZZ coordinates with a4=-3",
@@ -665,6 +724,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/shortw/xz",
+		Tag:        "xz",
 		Class:      "g1p",
 		Shape:      shapes[10],
 		Name:       "XZ coordinates",
@@ -675,6 +735,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/twisted/extended",
+		Tag:        "extended",
 		Class:      "g1p",
 		Shape:      shapes[11],
 		Name:       "extended coordinates",
@@ -685,6 +746,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/twisted/extended-1",
+		Tag:        "extended-1",
 		Class:      "g1p",
 		Shape:      shapes[11],
 		Name:       "extended coordinates with a=-1",
@@ -695,6 +757,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/twisted/inverted",
+		Tag:        "inverted",
 		Class:      "g1p",
 		Shape:      shapes[11],
 		Name:       "inverted coordinates",
@@ -705,6 +768,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/twisted/projective",
+		Tag:        "projective",
 		Class:      "g1p",
 		Shape:      shapes[11],
 		Name:       "projective coordinates",
@@ -715,6 +779,7 @@ var representations = []*Representation{
 	},
 	{
 		ID:         "g1p/twistedhessian/projective",
+		Tag:        "projective",
 		Class:      "g1p",
 		Shape:      shapes[12],
 		Name:       "projective coordinates",
@@ -728,6 +793,7 @@ var representations = []*Representation{
 var formulae = []*Formula{
 	{
 		ID:             "g12o/edwards/w-1/diffadd/dadd-2008-blr",
+		Tag:            "dadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -741,6 +807,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/diffadd/dadd-2008-blr-1",
+		Tag:            "dadd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -754,6 +821,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -767,6 +835,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/doubling/dbl-2008-blr-1",
+		Tag:            "dbl-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -780,6 +849,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/ladder/ladd-2008-blr",
+		Tag:            "ladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -793,6 +863,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/ladder/ladd-2008-blr-1",
+		Tag:            "ladd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -806,6 +877,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w-1/scaling/copy",
+		Tag:            "copy",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[1],
@@ -819,6 +891,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w/diffadd/dadd-2008-blr",
+		Tag:            "dadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[0],
@@ -832,6 +905,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[0],
@@ -845,6 +919,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w/ladder/ladd-2008-blr",
+		Tag:            "ladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[0],
@@ -858,6 +933,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/w/scaling/copy",
+		Tag:            "copy",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[0],
@@ -871,6 +947,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/dadd-2008-blr",
+		Tag:            "dadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -884,6 +961,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/dadd-2008-blr-1",
+		Tag:            "dadd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -897,6 +975,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/dadd-2008-blr-2",
+		Tag:            "dadd-2008-blr-2",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -910,6 +989,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/dadd-2008-blr-3",
+		Tag:            "dadd-2008-blr-3",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -923,6 +1003,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/mdadd-2008-blr",
+		Tag:            "mdadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -936,6 +1017,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/diffadd/mdadd-2008-blr-1",
+		Tag:            "mdadd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -949,6 +1031,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -962,6 +1045,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/doubling/dbl-2008-blr-1",
+		Tag:            "dbl-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -975,6 +1059,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/ladder/ladd-2008-blr",
+		Tag:            "ladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -988,6 +1073,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/ladder/ladd-2008-blr-1",
+		Tag:            "ladd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -1001,6 +1087,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/ladder/mladd-2008-blr",
+		Tag:            "mladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -1014,6 +1101,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/ladder/mladd-2008-blr-1",
+		Tag:            "mladd-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -1027,6 +1115,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz-1/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[3],
@@ -1040,6 +1129,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/diffadd/dadd-2008-blr",
+		Tag:            "dadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1053,6 +1143,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/diffadd/dadd-2008-blr-2",
+		Tag:            "dadd-2008-blr-2",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1066,6 +1157,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/diffadd/mdadd-2008-blr",
+		Tag:            "mdadd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1079,6 +1171,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1092,6 +1185,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/ladder/ladd-2008-blr",
+		Tag:            "ladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1105,6 +1199,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/ladder/mladd-2008-blr",
+		Tag:            "mladd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1118,6 +1213,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/wz/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[2],
@@ -1131,6 +1227,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy-1/addition/add-2008-blr",
+		Tag:            "add-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[5],
@@ -1144,6 +1241,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy-1/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[5],
@@ -1157,6 +1255,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy-1/doubling/dbl-2008-blr+1",
+		Tag:            "dbl-2008-blr+1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[5],
@@ -1170,6 +1269,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy-1/doubling/dbl-2008-blr+cse",
+		Tag:            "dbl-2008-blr+cse",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[5],
@@ -1183,6 +1283,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy-1/scaling/copy",
+		Tag:            "copy",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[5],
@@ -1196,6 +1297,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy/addition/add-2008-blr",
+		Tag:            "add-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[4],
@@ -1209,6 +1311,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[4],
@@ -1222,6 +1325,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy/doubling/dbl-2008-blr+cse",
+		Tag:            "dbl-2008-blr+cse",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[4],
@@ -1235,6 +1339,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xy/scaling/copy",
+		Tag:            "copy",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[4],
@@ -1248,6 +1353,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/add-2008-blr-1",
+		Tag:            "add-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1261,6 +1367,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/add-2008-blr-2",
+		Tag:            "add-2008-blr-2",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1274,6 +1381,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/add-2008-blr-3",
+		Tag:            "add-2008-blr-3",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1287,6 +1395,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/add-2008-blr-4",
+		Tag:            "add-2008-blr-4",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1300,6 +1409,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/add-2008-blr-5",
+		Tag:            "add-2008-blr-5",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1313,6 +1423,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/addition/madd-2008-blr",
+		Tag:            "madd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1326,6 +1437,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1339,6 +1451,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/doubling/dbl-2008-blr-2",
+		Tag:            "dbl-2008-blr-2",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1352,6 +1465,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz-1/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[7],
@@ -1365,6 +1479,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/addition/add-2008-blr-1",
+		Tag:            "add-2008-blr-1",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1378,6 +1493,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/addition/add-2008-blr-2",
+		Tag:            "add-2008-blr-2",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1391,6 +1507,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/addition/add-2008-blr-4",
+		Tag:            "add-2008-blr-4",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1404,6 +1521,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/addition/madd-2008-blr",
+		Tag:            "madd-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1417,6 +1535,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1430,6 +1549,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/edwards/xyz/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[0],
 		Representation: representations[6],
@@ -1443,6 +1563,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/addition/add",
+		Tag:            "add",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1456,6 +1577,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/addition/add-2001-jq",
+		Tag:            "add-2001-jq",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1469,6 +1591,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/addition/add2",
+		Tag:            "add2",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1482,6 +1605,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/addition/madd",
+		Tag:            "madd",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1495,6 +1619,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/addition/mmadd",
+		Tag:            "mmadd",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1508,6 +1633,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/doubling/dbl",
+		Tag:            "dbl",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1521,6 +1647,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/doubling/dbl-2001-jq",
+		Tag:            "dbl-2001-jq",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1534,6 +1661,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1547,6 +1675,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/doubling/dbl-2007-hcd-2",
+		Tag:            "dbl-2007-hcd-2",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1560,6 +1689,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/doubling/dbl2",
+		Tag:            "dbl2",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1573,6 +1703,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/scaling/z",
+		Tag:            "z",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1586,6 +1717,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1599,6 +1731,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/hessian/standard/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g12o",
 		Shape:          shapes[1],
 		Representation: representations[8],
@@ -1612,6 +1745,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/affine/addition/add",
+		Tag:            "add",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[9],
@@ -1625,6 +1759,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/affine/doubling/dbl",
+		Tag:            "dbl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[9],
@@ -1638,6 +1773,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/affine/scaling/copy",
+		Tag:            "copy",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[9],
@@ -1651,6 +1787,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-0/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[10],
@@ -1664,6 +1801,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-0/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[10],
@@ -1677,6 +1815,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-0/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[10],
@@ -1690,6 +1829,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-0/doubling/mdbl-2008-blr",
+		Tag:            "mdbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[10],
@@ -1703,6 +1843,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-1/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[11],
@@ -1716,6 +1857,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-1/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[11],
@@ -1729,6 +1871,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-1/addition/madd-2007-kk",
+		Tag:            "madd-2007-kk",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[11],
@@ -1742,6 +1885,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-1/doubling/dbl-2007-kk",
+		Tag:            "dbl-2007-kk",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[11],
@@ -1755,6 +1899,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/extended-1/doubling/dbl-2008-blr",
+		Tag:            "dbl-2008-blr",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[11],
@@ -1768,6 +1913,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/jacobian/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[12],
@@ -1781,6 +1927,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/jacobian/addition/madd-2008-bl",
+		Tag:            "madd-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[12],
@@ -1794,6 +1941,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/jacobian/doubling/dbl-2005-dl",
+		Tag:            "dbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[12],
@@ -1807,6 +1955,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/jacobian/doubling/mdbl-2008-bl",
+		Tag:            "mdbl-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[12],
@@ -1820,6 +1969,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/jacobian/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[12],
@@ -1833,6 +1983,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lambda/addition/add-2013-olar",
+		Tag:            "add-2013-olar",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[13],
@@ -1846,6 +1997,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lambda/doubling/dbl-2013-olar",
+		Tag:            "dbl-2013-olar",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[13],
@@ -1859,6 +2011,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lambda/doubling/dbl-2013-olar-2",
+		Tag:            "dbl-2013-olar-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[13],
@@ -1872,6 +2025,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1885,6 +2039,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1898,6 +2053,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/addition/mmadd-2005-dl",
+		Tag:            "mmadd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1911,6 +2067,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/doubling/dbl-2005-dl",
+		Tag:            "dbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1924,6 +2081,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/doubling/dbl-2005-dl-a2-0",
+		Tag:            "dbl-2005-dl-a2-0",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1937,6 +2095,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/doubling/dbl-2005-l",
+		Tag:            "dbl-2005-l",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1950,6 +2109,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-0/doubling/mdbl-2005-dl",
+		Tag:            "mdbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[15],
@@ -1963,6 +2123,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -1976,6 +2137,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -1989,6 +2151,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/addition/mmadd-2005-dl",
+		Tag:            "mmadd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -2002,6 +2165,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/doubling/dbl-2005-dl",
+		Tag:            "dbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -2015,6 +2179,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/doubling/dbl-2005-dl-a2-1",
+		Tag:            "dbl-2005-dl-a2-1",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -2028,6 +2193,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/doubling/dbl-2005-l",
+		Tag:            "dbl-2005-l",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -2041,6 +2207,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab-1/doubling/mdbl-2005-dl",
+		Tag:            "mdbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[16],
@@ -2054,6 +2221,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2067,6 +2235,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2080,6 +2249,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/addition/mmadd-2005-dl",
+		Tag:            "mmadd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2093,6 +2263,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/doubling/dbl-2005-dl",
+		Tag:            "dbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2106,6 +2277,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/doubling/dbl-2005-l",
+		Tag:            "dbl-2005-l",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2119,6 +2291,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/lopezdahab/doubling/mdbl-2005-dl",
+		Tag:            "mdbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[14],
@@ -2132,6 +2305,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/add-2005-dl",
+		Tag:            "add-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2145,6 +2319,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/add-2005-dl-2",
+		Tag:            "add-2005-dl-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2158,6 +2333,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/add-2008-bl",
+		Tag:            "add-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2171,6 +2347,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/madd-2005-dl",
+		Tag:            "madd-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2184,6 +2361,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/madd-2008-bl",
+		Tag:            "madd-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2197,6 +2375,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/addition/mmadd-2008-bl",
+		Tag:            "mmadd-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2210,6 +2389,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/doubling/dbl-2005-dl",
+		Tag:            "dbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2223,6 +2403,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/doubling/dbl-2008-bl",
+		Tag:            "dbl-2008-bl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2236,6 +2417,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/doubling/mdbl-2005-dl",
+		Tag:            "mdbl-2005-dl",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2249,6 +2431,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/projective/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[17],
@@ -2262,6 +2445,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/diffadd/dadd-2003-s",
+		Tag:            "dadd-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2275,6 +2459,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/diffadd/dadd-2003-s-2",
+		Tag:            "dadd-2003-s-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2288,6 +2473,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/diffadd/mdadd-2003-s",
+		Tag:            "mdadd-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2301,6 +2487,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/diffadd/mdadd-2003-s-2",
+		Tag:            "mdadd-2003-s-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2314,6 +2501,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/doubling/dbl-2003-s",
+		Tag:            "dbl-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2327,6 +2515,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/doubling/dbl-2003-s-2",
+		Tag:            "dbl-2003-s-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2340,6 +2529,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/doubling/dbl-2003-s-3",
+		Tag:            "dbl-2003-s-3",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2353,6 +2543,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/doubling/dbl-2003-s-4",
+		Tag:            "dbl-2003-s-4",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2366,6 +2557,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/doubling/mdbl-2003-s",
+		Tag:            "mdbl-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2379,6 +2571,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/ladd-2003-s",
+		Tag:            "ladd-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2392,6 +2585,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/ladd-2003-s-2",
+		Tag:            "ladd-2003-s-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2405,6 +2599,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/ladd-2003-s-3",
+		Tag:            "ladd-2003-s-3",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2418,6 +2613,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/ladd-2003-s-4",
+		Tag:            "ladd-2003-s-4",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2431,6 +2627,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/mladd-2003-s",
+		Tag:            "mladd-2003-s",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2444,6 +2641,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/mladd-2003-s-2",
+		Tag:            "mladd-2003-s-2",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2457,6 +2655,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/ladder/mladd-2003-s-3",
+		Tag:            "mladd-2003-s-3",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2470,6 +2669,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g12o/shortw/xz/scaling/scale",
+		Tag:            "scale",
 		Class:          "g12o",
 		Shape:          shapes[2],
 		Representation: representations[18],
@@ -2483,6 +2683,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/add-2006-dik",
+		Tag:            "add-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2496,6 +2697,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/add-2006-dik-2",
+		Tag:            "add-2006-dik-2",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2509,6 +2711,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/add-2006-dik-3",
+		Tag:            "add-2006-dik-3",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2522,6 +2725,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/madd-2006-dik",
+		Tag:            "madd-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2535,6 +2739,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2548,6 +2753,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/mmadd-2006-dik",
+		Tag:            "mmadd-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2561,6 +2767,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/mmadd-20080308-bl",
+		Tag:            "mmadd-20080308-bl",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2574,6 +2781,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/addition/mmadd-20080313-bl",
+		Tag:            "mmadd-20080313-bl",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2587,6 +2795,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/doubling/dbl-2006-dik",
+		Tag:            "dbl-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2600,6 +2809,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/doubling/dbl-2006-dik-2",
+		Tag:            "dbl-2006-dik-2",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2613,6 +2823,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2626,6 +2837,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2639,6 +2851,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/2dik/standard/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[3],
 		Representation: representations[19],
@@ -2652,6 +2865,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/add-2006-dik",
+		Tag:            "add-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2665,6 +2879,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/add-2006-dik-2",
+		Tag:            "add-2006-dik-2",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2678,6 +2893,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/add-2006-dik-3",
+		Tag:            "add-2006-dik-3",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2691,6 +2907,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/add-2007-bblp",
+		Tag:            "add-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2704,6 +2921,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/madd-2006-dik",
+		Tag:            "madd-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2717,6 +2935,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/madd-2007-bblp",
+		Tag:            "madd-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2730,6 +2949,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/mmadd-2006-dik",
+		Tag:            "mmadd-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2743,6 +2963,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/addition/mmadd-2007-bblp",
+		Tag:            "mmadd-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2756,6 +2977,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/doubling/dbl-2006-dik",
+		Tag:            "dbl-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2769,6 +2991,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/doubling/dbl-2006-dik-2",
+		Tag:            "dbl-2006-dik-2",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2782,6 +3005,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/doubling/dbl-2007-bblp",
+		Tag:            "dbl-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2795,6 +3019,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/doubling/mdbl-2007-bblp",
+		Tag:            "mdbl-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2808,6 +3033,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2821,6 +3047,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/tripling/tpl-2006-dik",
+		Tag:            "tpl-2006-dik",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2834,6 +3061,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/3dik/standard/tripling/tpl-2006-dik-2",
+		Tag:            "tpl-2006-dik-2",
 		Class:          "g1p",
 		Shape:          shapes[4],
 		Representation: representations[20],
@@ -2847,6 +3075,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2860,6 +3089,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2873,6 +3103,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2886,6 +3117,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2899,6 +3131,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2912,6 +3145,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/addition/xmadd-2007-bl",
+		Tag:            "xmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2925,6 +3159,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2938,6 +3173,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2951,6 +3187,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2964,6 +3201,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/tripling/tpl-2007-bl",
+		Tag:            "tpl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2977,6 +3215,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/inverted/tripling/tpl-2007-bl-2",
+		Tag:            "tpl-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[21],
@@ -2990,6 +3229,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3003,6 +3243,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-2007-bl-2",
+		Tag:            "add-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3016,6 +3257,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-2007-bl-3",
+		Tag:            "add-2007-bl-3",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3029,6 +3271,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-2007-bl-4",
+		Tag:            "add-2007-bl-4",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3042,6 +3285,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3055,6 +3299,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/add-20090311-hwcd",
+		Tag:            "add-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3068,6 +3313,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3081,6 +3327,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/madd-2007-bl-2",
+		Tag:            "madd-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3094,6 +3341,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/madd-2007-bl-3",
+		Tag:            "madd-2007-bl-3",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3107,6 +3355,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3120,6 +3369,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3133,6 +3383,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/addition/xmadd-2007-hcd",
+		Tag:            "xmadd-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3146,6 +3397,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3159,6 +3411,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/doubling/dbl-2007-bl-2",
+		Tag:            "dbl-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3172,6 +3425,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/doubling/dbl-2007-bl-3",
+		Tag:            "dbl-2007-bl-3",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3185,6 +3439,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3198,6 +3453,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3211,6 +3467,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/tripling/tpl-2007-bblp",
+		Tag:            "tpl-2007-bblp",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3224,6 +3481,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/tripling/tpl-2007-bblp-2",
+		Tag:            "tpl-2007-bblp-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3237,6 +3495,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/tripling/tpl-2007-bblp-3",
+		Tag:            "tpl-2007-bblp-3",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3250,6 +3509,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/projective/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[22],
@@ -3263,6 +3523,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/diffadd/dadd-2006-g",
+		Tag:            "dadd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3276,6 +3537,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/diffadd/dadd-2006-g-2",
+		Tag:            "dadd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3289,6 +3551,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/diffadd/mdadd-2006-g-2",
+		Tag:            "mdadd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3302,6 +3565,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/doubling/dbl-2006-g",
+		Tag:            "dbl-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3315,6 +3579,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/doubling/dbl-2006-g-2",
+		Tag:            "dbl-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3328,6 +3593,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/doubling/mdbl-2006-g-2",
+		Tag:            "mdbl-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3341,6 +3607,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/doubling/mdbl-2006-g-3",
+		Tag:            "mdbl-2006-g-3",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3354,6 +3621,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/ladder/ladd-2006-g",
+		Tag:            "ladd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3367,6 +3635,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/ladder/ladd-2006-g-2",
+		Tag:            "ladd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3380,6 +3649,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/ladder/mladd-2006-g-2",
+		Tag:            "mladd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3393,6 +3663,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yz/scaling/scale",
+		Tag:            "scale",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[23],
@@ -3406,6 +3677,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/diffadd/dadd-2006-g",
+		Tag:            "dadd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3419,6 +3691,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/diffadd/mdadd-2006-g",
+		Tag:            "mdadd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3432,6 +3705,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/doubling/dbl-2006-g",
+		Tag:            "dbl-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3445,6 +3719,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/doubling/mdbl-2006-g",
+		Tag:            "mdbl-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3458,6 +3733,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/ladder/ladd-2006-g",
+		Tag:            "ladd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3471,6 +3747,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/ladder/ladd-2006-g-2",
+		Tag:            "ladd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3484,6 +3761,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/ladder/mladd-2006-g",
+		Tag:            "mladd-2006-g",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3497,6 +3775,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/ladder/mladd-2006-g-2",
+		Tag:            "mladd-2006-g-2",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3510,6 +3789,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/edwards/yzsquared/scaling/scale",
+		Tag:            "scale",
 		Class:          "g1p",
 		Shape:          shapes[5],
 		Representation: representations[24],
@@ -3523,6 +3803,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/extended/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[25],
@@ -3536,6 +3817,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/extended/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[25],
@@ -3549,6 +3831,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/extended/doubling/dbl-20080225-hwcd",
+		Tag:            "dbl-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[25],
@@ -3562,6 +3845,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/extended/doubling/mdbl-20080225-hwcd",
+		Tag:            "mdbl-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[25],
@@ -3575,6 +3859,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/extended/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[25],
@@ -3588,6 +3873,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/add",
+		Tag:            "add",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3601,6 +3887,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/add-2001-jq",
+		Tag:            "add-2001-jq",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3614,6 +3901,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/add-2008-hwcd",
+		Tag:            "add-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3627,6 +3915,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/add-2009-bkl",
+		Tag:            "add-2009-bkl",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3640,6 +3929,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/add2",
+		Tag:            "add2",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3653,6 +3943,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/madd",
+		Tag:            "madd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3666,6 +3957,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/mmadd",
+		Tag:            "mmadd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3679,6 +3971,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/addition/xmadd-2007-hcd",
+		Tag:            "xmadd-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3692,6 +3985,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl",
+		Tag:            "dbl",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3705,6 +3999,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl-2001-jq",
+		Tag:            "dbl-2001-jq",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3718,6 +4013,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3731,6 +4027,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl-2007-hcd-2",
+		Tag:            "dbl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3744,6 +4041,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl-2007-hcd-3",
+		Tag:            "dbl-2007-hcd-3",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3757,6 +4055,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl-2007-hcd-4",
+		Tag:            "dbl-2007-hcd-4",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3770,6 +4069,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/dbl2",
+		Tag:            "dbl2",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3783,6 +4083,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/doubling/mdbl-2007-hcd",
+		Tag:            "mdbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3796,6 +4097,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3809,6 +4111,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3822,6 +4125,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3835,6 +4139,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/hessian/standard/tripling/tpl-2007-hcd-3",
+		Tag:            "tpl-2007-hcd-3",
 		Class:          "g1p",
 		Shape:          shapes[6],
 		Representation: representations[26],
@@ -3848,6 +4153,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3861,6 +4167,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/add-1986-cc-2",
+		Tag:            "add-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3874,6 +4181,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/add-2001-ls",
+		Tag:            "add-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3887,6 +4195,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3900,6 +4209,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/madd-2001-ls",
+		Tag:            "madd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3913,6 +4223,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3926,6 +4237,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/mmadd-2001-ls",
+		Tag:            "mmadd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3939,6 +4251,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/addition/smadd-2001-ls",
+		Tag:            "smadd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3952,6 +4265,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/dbl-1986-cc",
+		Tag:            "dbl-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3965,6 +4279,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/dbl-1986-cc-2",
+		Tag:            "dbl-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3978,6 +4293,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/dbl-2001-ls",
+		Tag:            "dbl-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -3991,6 +4307,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4004,6 +4321,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/dbl-20080225-hwcd",
+		Tag:            "dbl-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4017,6 +4335,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4030,6 +4349,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4043,6 +4363,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4056,6 +4377,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4069,6 +4391,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/tripling/tpl-2007-hcd-3",
+		Tag:            "tpl-2007-hcd-3",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4082,6 +4405,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/extended/tripling/tpl-2007-hcd-4",
+		Tag:            "tpl-2007-hcd-4",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[27],
@@ -4095,6 +4419,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4108,6 +4433,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/add-1986-cc-2",
+		Tag:            "add-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4121,6 +4447,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/add-2001-ls",
+		Tag:            "add-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4134,6 +4461,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4147,6 +4475,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/madd-2001-ls",
+		Tag:            "madd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4160,6 +4489,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4173,6 +4503,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/mmadd-2001-ls",
+		Tag:            "mmadd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4186,6 +4517,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/addition/smadd-2001-ls",
+		Tag:            "smadd-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4199,6 +4531,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/dbl-1986-cc",
+		Tag:            "dbl-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4212,6 +4545,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/dbl-1986-cc-2",
+		Tag:            "dbl-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4225,6 +4559,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/dbl-2001-ls",
+		Tag:            "dbl-2001-ls",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4238,6 +4573,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4251,6 +4587,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/dbl-20080225-hwcd",
+		Tag:            "dbl-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4264,6 +4601,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4277,6 +4615,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/mdbl-20080225-hwcd",
+		Tag:            "mdbl-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4290,6 +4629,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/doubling/mdbl-20090427-b",
+		Tag:            "mdbl-20090427-b",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4303,6 +4643,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4316,6 +4657,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4329,6 +4671,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4342,6 +4685,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/tripling/tpl-2007-hcd-3",
+		Tag:            "tpl-2007-hcd-3",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4355,6 +4699,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jintersect/standard/tripling/tpl-2007-hcd-4",
+		Tag:            "tpl-2007-hcd-4",
 		Class:          "g1p",
 		Shape:          shapes[7],
 		Representation: representations[28],
@@ -4368,6 +4713,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4381,6 +4727,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4394,6 +4741,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4407,6 +4755,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4420,6 +4769,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-2007-fw-3",
+		Tag:            "dbl-2007-fw-3",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4433,6 +4783,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-2007-fw-4",
+		Tag:            "dbl-2007-fw-4",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4446,6 +4797,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4459,6 +4811,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/dbl-20090311-hwcd",
+		Tag:            "dbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4472,6 +4825,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/mdbl-2007-hcd",
+		Tag:            "mdbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4485,6 +4839,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/doubling/mdbl-20090311-hwcd",
+		Tag:            "mdbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4498,6 +4853,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4511,6 +4867,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4524,6 +4881,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzz/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[29],
@@ -4537,6 +4895,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4550,6 +4909,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/add-2007-d",
+		Tag:            "add-2007-d",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4563,6 +4923,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4576,6 +4937,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4589,6 +4951,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4602,6 +4965,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4615,6 +4979,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4628,6 +4993,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4641,6 +5007,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-2007-fw-3",
+		Tag:            "dbl-2007-fw-3",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4654,6 +5021,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-2007-fw-4",
+		Tag:            "dbl-2007-fw-4",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4667,6 +5035,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4680,6 +5049,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/dbl-20090311-hwcd",
+		Tag:            "dbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4693,6 +5063,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/mdbl-2007-hcd",
+		Tag:            "mdbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4706,6 +5077,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/doubling/mdbl-20090311-hwcd",
+		Tag:            "mdbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4719,6 +5091,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4732,6 +5105,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4745,6 +5119,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xxyzzr/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[30],
@@ -4758,6 +5133,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/add-2002-bj",
+		Tag:            "add-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4771,6 +5147,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/add-2002-bj-2",
+		Tag:            "add-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4784,6 +5161,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/add-2002-bj-3",
+		Tag:            "add-2002-bj-3",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4797,6 +5175,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4810,6 +5189,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/add-2007-d",
+		Tag:            "add-2007-d",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4823,6 +5203,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/madd-2002-bj",
+		Tag:            "madd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4836,6 +5217,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/mmadd-2002-bj",
+		Tag:            "mmadd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4849,6 +5231,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/addition/mmadd-2002-bj-2",
+		Tag:            "mmadd-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4862,6 +5245,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2002-bj",
+		Tag:            "dbl-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4875,6 +5259,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2002-bj-2",
+		Tag:            "dbl-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4888,6 +5273,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4901,6 +5287,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4914,6 +5301,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4927,6 +5315,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-fw-3",
+		Tag:            "dbl-2007-fw-3",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4940,6 +5329,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-fw-4",
+		Tag:            "dbl-2007-fw-4",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4953,6 +5343,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4966,6 +5357,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/doubling/mdbl-2007-fw",
+		Tag:            "mdbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4979,6 +5371,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/2xyz/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[31],
@@ -4992,6 +5385,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5005,6 +5399,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5018,6 +5413,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5031,6 +5427,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5044,6 +5441,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5057,6 +5455,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/dbl-20090311-hwcd",
+		Tag:            "dbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5070,6 +5469,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/mdbl-2007-hcd",
+		Tag:            "mdbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5083,6 +5483,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/doubling/mdbl-20090311-hwcd",
+		Tag:            "mdbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5096,6 +5497,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5109,6 +5511,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5122,6 +5525,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzz/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[32],
@@ -5135,6 +5539,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5148,6 +5553,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/add-2007-d",
+		Tag:            "add-2007-d",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5161,6 +5567,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/add-20080225-hwcd",
+		Tag:            "add-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5174,6 +5581,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5187,6 +5595,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/madd-20080225-hwcd",
+		Tag:            "madd-20080225-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5200,6 +5609,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5213,6 +5623,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5226,6 +5637,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5239,6 +5651,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5252,6 +5665,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/dbl-20090311-hwcd",
+		Tag:            "dbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5265,6 +5679,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/mdbl-2007-hcd",
+		Tag:            "mdbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5278,6 +5693,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/doubling/mdbl-20090311-hwcd",
+		Tag:            "mdbl-20090311-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5291,6 +5707,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5304,6 +5721,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/tripling/tpl-2007-hcd",
+		Tag:            "tpl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5317,6 +5735,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xxyzzr/tripling/tpl-2007-hcd-2",
+		Tag:            "tpl-2007-hcd-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[33],
@@ -5330,6 +5749,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/add-2002-bj",
+		Tag:            "add-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5343,6 +5763,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/add-2002-bj-2",
+		Tag:            "add-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5356,6 +5777,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/add-2002-bj-3",
+		Tag:            "add-2002-bj-3",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5369,6 +5791,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5382,6 +5805,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/add-2007-d",
+		Tag:            "add-2007-d",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5395,6 +5819,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/madd-2002-bj",
+		Tag:            "madd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5408,6 +5833,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/mmadd-2002-bj",
+		Tag:            "mmadd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5421,6 +5847,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/addition/mmadd-2002-bj-2",
+		Tag:            "mmadd-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5434,6 +5861,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2002-bj",
+		Tag:            "dbl-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5447,6 +5875,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2002-bj-2",
+		Tag:            "dbl-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5460,6 +5889,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5473,6 +5903,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2007-fw",
+		Tag:            "dbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5486,6 +5917,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2007-fw-2",
+		Tag:            "dbl-2007-fw-2",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5499,6 +5931,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/dbl-2007-hcd",
+		Tag:            "dbl-2007-hcd",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5512,6 +5945,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/doubling/mdbl-2007-fw",
+		Tag:            "mdbl-2007-fw",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5525,6 +5959,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/jquartic/xyz/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[8],
 		Representation: representations[34],
@@ -5538,6 +5973,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/diffadd/dadd-1987-m",
+		Tag:            "dadd-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5551,6 +5987,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/diffadd/dadd-1987-m-2",
+		Tag:            "dadd-1987-m-2",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5564,6 +6001,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/diffadd/dadd-1987-m-3",
+		Tag:            "dadd-1987-m-3",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5577,6 +6015,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/diffadd/mdadd-1987-m",
+		Tag:            "mdadd-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5590,6 +6029,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/doubling/dbl-1987-m",
+		Tag:            "dbl-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5603,6 +6043,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/doubling/dbl-1987-m-2",
+		Tag:            "dbl-1987-m-2",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5616,6 +6057,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/doubling/dbl-1987-m-3",
+		Tag:            "dbl-1987-m-3",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5629,6 +6071,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/doubling/mdbl-1987-m",
+		Tag:            "mdbl-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5642,6 +6085,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/ladder/ladd-1987-m",
+		Tag:            "ladd-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5655,6 +6099,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/ladder/ladd-1987-m-2",
+		Tag:            "ladd-1987-m-2",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5668,6 +6113,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/ladder/ladd-1987-m-3",
+		Tag:            "ladd-1987-m-3",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5681,6 +6127,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/ladder/mladd-1987-m",
+		Tag:            "mladd-1987-m",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5694,6 +6141,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/montgom/xz/scaling/scale",
+		Tag:            "scale",
 		Class:          "g1p",
 		Shape:          shapes[9],
 		Representation: representations[35],
@@ -5707,6 +6155,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5720,6 +6169,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-1986-cc-2",
+		Tag:            "add-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5733,6 +6183,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5746,6 +6197,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5759,6 +6211,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-1998-hnm",
+		Tag:            "add-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5772,6 +6225,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-2001-b",
+		Tag:            "add-2001-b",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5785,6 +6239,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5798,6 +6253,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/madd",
+		Tag:            "madd",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5811,6 +6267,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/madd-2004-hmv",
+		Tag:            "madd-2004-hmv",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5824,6 +6281,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5837,6 +6295,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/madd-2008-g",
+		Tag:            "madd-2008-g",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5850,6 +6309,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5863,6 +6323,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/addition/zadd-2007-m",
+		Tag:            "zadd-2007-m",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5876,6 +6337,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-1986-cc",
+		Tag:            "dbl-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5889,6 +6351,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5902,6 +6365,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5915,6 +6379,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-1998-hnm",
+		Tag:            "dbl-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5928,6 +6393,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5941,6 +6407,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-2009-alnr",
+		Tag:            "dbl-2009-alnr",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5954,6 +6421,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/dbl-2009-l",
+		Tag:            "dbl-2009-l",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5967,6 +6435,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5980,6 +6449,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -5993,6 +6463,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/tripling/tpl-2005-dim",
+		Tag:            "tpl-2005-dim",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -6006,6 +6477,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/tripling/tpl-2005-dim-2",
+		Tag:            "tpl-2005-dim-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -6019,6 +6491,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-0/tripling/tpl-2007-bl",
+		Tag:            "tpl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[37],
@@ -6032,6 +6505,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6045,6 +6519,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-1986-cc-2",
+		Tag:            "add-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6058,6 +6533,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6071,6 +6547,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6084,6 +6561,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-1998-hnm",
+		Tag:            "add-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6097,6 +6575,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-2001-b",
+		Tag:            "add-2001-b",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6110,6 +6589,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6123,6 +6603,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/madd",
+		Tag:            "madd",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6136,6 +6617,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/madd-2004-hmv",
+		Tag:            "madd-2004-hmv",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6149,6 +6631,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6162,6 +6645,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/madd-2008-g",
+		Tag:            "madd-2008-g",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6175,6 +6659,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6188,6 +6673,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/addition/zadd-2007-m",
+		Tag:            "zadd-2007-m",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6201,6 +6687,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1986-cc",
+		Tag:            "dbl-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6214,6 +6701,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1986-cc-2",
+		Tag:            "dbl-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6227,6 +6715,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6240,6 +6729,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6253,6 +6743,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1998-hnm",
+		Tag:            "dbl-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6266,6 +6757,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-1998-hnm-2",
+		Tag:            "dbl-1998-hnm-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6279,6 +6771,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-2001-b",
+		Tag:            "dbl-2001-b",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6292,6 +6785,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-2004-hmv",
+		Tag:            "dbl-2004-hmv",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6305,6 +6799,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6318,6 +6813,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6331,6 +6827,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6344,6 +6841,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/tripling/tpl-2005-dim",
+		Tag:            "tpl-2005-dim",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6357,6 +6855,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/tripling/tpl-2005-dim-2",
+		Tag:            "tpl-2005-dim-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6370,6 +6869,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/tripling/tpl-2007-bl",
+		Tag:            "tpl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6383,6 +6883,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian-3/tripling/tpl-2007-bl-2",
+		Tag:            "tpl-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[38],
@@ -6396,6 +6897,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6409,6 +6911,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-1986-cc-2",
+		Tag:            "add-1986-cc-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6422,6 +6925,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6435,6 +6939,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6448,6 +6953,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-1998-hnm",
+		Tag:            "add-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6461,6 +6967,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-2001-b",
+		Tag:            "add-2001-b",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6474,6 +6981,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6487,6 +6995,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/madd",
+		Tag:            "madd",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6500,6 +7009,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/madd-2004-hmv",
+		Tag:            "madd-2004-hmv",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6513,6 +7023,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/madd-2007-bl",
+		Tag:            "madd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6526,6 +7037,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/madd-2008-g",
+		Tag:            "madd-2008-g",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6539,6 +7051,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/mmadd-2007-bl",
+		Tag:            "mmadd-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6552,6 +7065,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/addition/zadd-2007-m",
+		Tag:            "zadd-2007-m",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6565,6 +7079,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/dbl-1986-cc",
+		Tag:            "dbl-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6578,6 +7093,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6591,6 +7107,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6604,6 +7121,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/dbl-1998-hnm",
+		Tag:            "dbl-1998-hnm",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6617,6 +7135,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6630,6 +7149,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6643,6 +7163,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6656,6 +7177,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/tripling/tpl-2005-dim",
+		Tag:            "tpl-2005-dim",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6669,6 +7191,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/tripling/tpl-2005-dim-2",
+		Tag:            "tpl-2005-dim-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6682,6 +7205,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/jacobian/tripling/tpl-2007-bl",
+		Tag:            "tpl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[36],
@@ -6695,6 +7219,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6708,6 +7233,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/addition/add-2009-bl",
+		Tag:            "add-2009-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6721,6 +7247,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/addition/madd-2009-bl",
+		Tag:            "madd-2009-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6734,6 +7261,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/addition/mmadd-2009-bl",
+		Tag:            "mmadd-2009-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6747,6 +7275,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6760,6 +7289,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/doubling/dbl-2009-bl",
+		Tag:            "dbl-2009-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6773,6 +7303,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/modified/doubling/mdbl-2009-bl",
+		Tag:            "mdbl-2009-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[39],
@@ -6786,6 +7317,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6799,6 +7331,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6812,6 +7345,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6825,6 +7359,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-2002-bj",
+		Tag:            "add-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6838,6 +7373,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-2002-bj-2",
+		Tag:            "add-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6851,6 +7387,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6864,6 +7401,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/madd-1998-cmo",
+		Tag:            "madd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6877,6 +7415,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/addition/mmadd-1998-cmo",
+		Tag:            "mmadd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6890,6 +7429,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6903,6 +7443,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6916,6 +7457,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6929,6 +7471,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6942,6 +7485,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-1/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[41],
@@ -6955,6 +7499,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -6968,6 +7513,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -6981,6 +7527,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -6994,6 +7541,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/add-2002-bj",
+		Tag:            "add-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7007,6 +7555,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7020,6 +7569,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/madd-1998-cmo",
+		Tag:            "madd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7033,6 +7583,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/addition/mmadd-1998-cmo",
+		Tag:            "mmadd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7046,6 +7597,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7059,6 +7611,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7072,6 +7625,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7085,6 +7639,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/doubling/dbl-2007-bl-2",
+		Tag:            "dbl-2007-bl-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7098,6 +7653,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7111,6 +7667,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective-3/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
@@ -7124,6 +7681,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/add-1986-cc",
+		Tag:            "add-1986-cc",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7137,6 +7695,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/add-1998-cmo",
+		Tag:            "add-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7150,6 +7709,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/add-1998-cmo-2",
+		Tag:            "add-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7163,6 +7723,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/add-2002-bj",
+		Tag:            "add-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7176,6 +7737,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/add-2007-bl",
+		Tag:            "add-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7189,6 +7751,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/madd-1998-cmo",
+		Tag:            "madd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7202,6 +7765,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/addition/mmadd-1998-cmo",
+		Tag:            "mmadd-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7215,6 +7779,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/doubling/dbl-1998-cmo",
+		Tag:            "dbl-1998-cmo",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7228,6 +7793,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/doubling/dbl-1998-cmo-2",
+		Tag:            "dbl-1998-cmo-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7241,6 +7807,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/doubling/dbl-2007-bl",
+		Tag:            "dbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7254,6 +7821,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/doubling/mdbl-2007-bl",
+		Tag:            "mdbl-2007-bl",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7267,6 +7835,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/projective/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[40],
@@ -7280,6 +7849,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/w12-0/addition/add-2010-cln",
+		Tag:            "add-2010-cln",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[43],
@@ -7293,6 +7863,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/w12-0/addition/madd-2010-cln",
+		Tag:            "madd-2010-cln",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[43],
@@ -7306,6 +7877,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/w12-0/doubling/dbl-2010-cln",
+		Tag:            "dbl-2010-cln",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[43],
@@ -7319,6 +7891,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/addition/add-2008-s",
+		Tag:            "add-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7332,6 +7905,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/addition/madd-2008-s",
+		Tag:            "madd-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7345,6 +7919,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/addition/mmadd-2008-s",
+		Tag:            "mmadd-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7358,6 +7933,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/doubling/dbl-2008-s-1",
+		Tag:            "dbl-2008-s-1",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7371,6 +7947,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/doubling/dbl-2008-s-2",
+		Tag:            "dbl-2008-s-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7384,6 +7961,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/doubling/mdbl-2008-s-1",
+		Tag:            "mdbl-2008-s-1",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7397,6 +7975,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/doubling/mdbl-2008-s-2",
+		Tag:            "mdbl-2008-s-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7410,6 +7989,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz-3/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[45],
@@ -7423,6 +8003,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/addition/add-2008-s",
+		Tag:            "add-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7436,6 +8017,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/addition/madd-2008-s",
+		Tag:            "madd-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7449,6 +8031,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/addition/mmadd-2008-s",
+		Tag:            "mmadd-2008-s",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7462,6 +8045,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/doubling/dbl-2008-s-1",
+		Tag:            "dbl-2008-s-1",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7475,6 +8059,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/doubling/mdbl-2008-s-1",
+		Tag:            "mdbl-2008-s-1",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7488,6 +8073,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xyzz/scaling/z",
+		Tag:            "z",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[44],
@@ -7501,6 +8087,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/dadd-2002-it",
+		Tag:            "dadd-2002-it",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7514,6 +8101,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/dadd-2002-it-2",
+		Tag:            "dadd-2002-it-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7527,6 +8115,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/dadd-2002-it-3",
+		Tag:            "dadd-2002-it-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7540,6 +8129,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/dadd-2002-it-4",
+		Tag:            "dadd-2002-it-4",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7553,6 +8143,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-bj",
+		Tag:            "mdadd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7566,6 +8157,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-bj-2",
+		Tag:            "mdadd-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7579,6 +8171,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-it",
+		Tag:            "mdadd-2002-it",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7592,6 +8185,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-it-2",
+		Tag:            "mdadd-2002-it-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7605,6 +8199,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-it-3",
+		Tag:            "mdadd-2002-it-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7618,6 +8213,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/diffadd/mdadd-2002-it-4",
+		Tag:            "mdadd-2002-it-4",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7631,6 +8227,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/doubling/dbl-2002-bj",
+		Tag:            "dbl-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7644,6 +8241,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/doubling/dbl-2002-bj-2",
+		Tag:            "dbl-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7657,6 +8255,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/doubling/dbl-2002-bj-3",
+		Tag:            "dbl-2002-bj-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7670,6 +8269,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/doubling/dbl-2002-it",
+		Tag:            "dbl-2002-it",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7683,6 +8283,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/doubling/dbl-2002-it-2",
+		Tag:            "dbl-2002-it-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7696,6 +8297,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/ladd-2002-it",
+		Tag:            "ladd-2002-it",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7709,6 +8311,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/ladd-2002-it-2",
+		Tag:            "ladd-2002-it-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7722,6 +8325,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/ladd-2002-it-3",
+		Tag:            "ladd-2002-it-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7735,6 +8339,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/ladd-2002-it-4",
+		Tag:            "ladd-2002-it-4",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7748,6 +8353,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-bj",
+		Tag:            "mladd-2002-bj",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7761,6 +8367,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-bj-2",
+		Tag:            "mladd-2002-bj-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7774,6 +8381,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-bj-3",
+		Tag:            "mladd-2002-bj-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7787,6 +8395,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-it",
+		Tag:            "mladd-2002-it",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7800,6 +8409,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-it-2",
+		Tag:            "mladd-2002-it-2",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7813,6 +8423,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-it-3",
+		Tag:            "mladd-2002-it-3",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7826,6 +8437,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-it-4",
+		Tag:            "mladd-2002-it-4",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7839,6 +8451,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/shortw/xz/ladder/mladd-2002-it-5",
+		Tag:            "mladd-2002-it-5",
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[46],
@@ -7852,6 +8465,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/add-2008-hwcd",
+		Tag:            "add-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7865,6 +8479,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/add-2008-hwcd-2",
+		Tag:            "add-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7878,6 +8493,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/add-2008-hwcd-3",
+		Tag:            "add-2008-hwcd-3",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7891,6 +8507,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/add-2008-hwcd-4",
+		Tag:            "add-2008-hwcd-4",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7904,6 +8521,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/madd-2008-hwcd",
+		Tag:            "madd-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7917,6 +8535,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/madd-2008-hwcd-2",
+		Tag:            "madd-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7930,6 +8549,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/madd-2008-hwcd-3",
+		Tag:            "madd-2008-hwcd-3",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7943,6 +8563,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/madd-2008-hwcd-4",
+		Tag:            "madd-2008-hwcd-4",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7956,6 +8577,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/mmadd-2008-hwcd",
+		Tag:            "mmadd-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7969,6 +8591,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/mmadd-2008-hwcd-2",
+		Tag:            "mmadd-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7982,6 +8605,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/mmadd-2008-hwcd-3",
+		Tag:            "mmadd-2008-hwcd-3",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -7995,6 +8619,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/addition/mmadd-2008-hwcd-4",
+		Tag:            "mmadd-2008-hwcd-4",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -8008,6 +8633,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/doubling/dbl-2008-hwcd",
+		Tag:            "dbl-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -8021,6 +8647,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/doubling/mdbl-2008-hwcd",
+		Tag:            "mdbl-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -8034,6 +8661,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended-1/tripling/tpl-2015-c",
+		Tag:            "tpl-2015-c",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[48],
@@ -8047,6 +8675,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/add-2008-hwcd",
+		Tag:            "add-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8060,6 +8689,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/add-2008-hwcd-2",
+		Tag:            "add-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8073,6 +8703,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/madd-2008-hwcd",
+		Tag:            "madd-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8086,6 +8717,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/madd-2008-hwcd-2",
+		Tag:            "madd-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8099,6 +8731,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/mmadd-2008-hwcd",
+		Tag:            "mmadd-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8112,6 +8745,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/addition/mmadd-2008-hwcd-2",
+		Tag:            "mmadd-2008-hwcd-2",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8125,6 +8759,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/doubling/dbl-2008-hwcd",
+		Tag:            "dbl-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8138,6 +8773,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/doubling/mdbl-2008-hwcd",
+		Tag:            "mdbl-2008-hwcd",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8151,6 +8787,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/extended/tripling/tpl-2015-c",
+		Tag:            "tpl-2015-c",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[47],
@@ -8164,6 +8801,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/inverted/addition/add-2008-bbjlp",
+		Tag:            "add-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[49],
@@ -8177,6 +8815,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/inverted/addition/madd-2008-bbjlp",
+		Tag:            "madd-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[49],
@@ -8190,6 +8829,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/inverted/addition/mmadd-2008-bbjlp",
+		Tag:            "mmadd-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[49],
@@ -8203,6 +8843,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/inverted/doubling/dbl-2008-bbjlp",
+		Tag:            "dbl-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[49],
@@ -8216,6 +8857,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/inverted/doubling/mdbl-2008-bbjlp",
+		Tag:            "mdbl-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[49],
@@ -8229,6 +8871,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/addition/add-2008-bbjlp",
+		Tag:            "add-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8242,6 +8885,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/addition/madd-2008-bbjlp",
+		Tag:            "madd-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8255,6 +8899,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/addition/mmadd-2008-bbjlp",
+		Tag:            "mmadd-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8268,6 +8913,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/doubling/dbl-2008-bbjlp",
+		Tag:            "dbl-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8281,6 +8927,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/doubling/mdbl-2008-bbjlp",
+		Tag:            "mdbl-2008-bbjlp",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8294,6 +8941,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twisted/projective/tripling/tpl-2015-c",
+		Tag:            "tpl-2015-c",
 		Class:          "g1p",
 		Shape:          shapes[11],
 		Representation: representations[50],
@@ -8307,6 +8955,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/addition/add-2009-bkl",
+		Tag:            "add-2009-bkl",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],
@@ -8320,6 +8969,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/doubling/dbl-2009-bkl",
+		Tag:            "dbl-2009-bkl",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],
@@ -8333,6 +8983,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/doubling/dbl-2009-bkl-2",
+		Tag:            "dbl-2009-bkl-2",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],
@@ -8346,6 +8997,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/doubling/dbl-2009-bkl-3",
+		Tag:            "dbl-2009-bkl-3",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],
@@ -8359,6 +9011,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/doubling/dbl-2012-c",
+		Tag:            "dbl-2012-c",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],
@@ -8372,6 +9025,7 @@ var formulae = []*Formula{
 	},
 	{
 		ID:             "g1p/twistedhessian/projective/tripling/tpl-2009-bkl",
+		Tag:            "tpl-2009-bkl",
 		Class:          "g1p",
 		Shape:          shapes[12],
 		Representation: representations[51],

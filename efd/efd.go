@@ -28,3 +28,15 @@ func (c Collection) Filter(predicates ...Predicate) Collection {
 func Formulae(predicates ...Predicate) Collection {
 	return Collection(formulae).Filter(predicates...)
 }
+
+func WithClass(class string) Predicate {
+	return func(f *Formula) bool { return f.Class == class }
+}
+
+func WithShape(shape string) Predicate {
+	return func(f *Formula) bool { return f.Shape.Tag == shape }
+}
+
+func WithRepresentation(repr string) Predicate {
+	return func(f *Formula) bool { return f.Representation.Tag == repr }
+}

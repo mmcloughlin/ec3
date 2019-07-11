@@ -4,6 +4,7 @@ import "github.com/mmcloughlin/ec3/efd/op3/ast"
 
 type Shape struct {
 	ID    string
+	Tag   string
 	Class string
 
 	Name            string
@@ -21,6 +22,7 @@ type Shape struct {
 
 type Representation struct {
 	ID    string
+	Tag   string
 	Class string
 	Shape *Shape
 
@@ -33,6 +35,7 @@ type Representation struct {
 
 type Formula struct {
 	ID             string
+	Tag            string
 	Class          string
 	Shape          *Shape
 	Representation *Representation

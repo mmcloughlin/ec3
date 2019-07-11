@@ -131,6 +131,7 @@ func (p parser) Visit(filename string, r io.Reader) error {
 
 func (p parser) formula(k Key, r io.Reader) error {
 	f := p.DB.formula(k.FormulaID())
+	f.Tag = k.Name
 	f.Class = k.Class
 	f.Shape = p.DB.shape(k.ShapeID())
 	f.Representation = p.DB.representation(k.RepresentationID())
@@ -166,6 +167,7 @@ func (p parser) formula(k Key, r io.Reader) error {
 
 func (p parser) representation(k Key, r io.Reader) error {
 	repr := p.DB.representation(k.RepresentationID())
+	repr.Tag = k.Representation
 	repr.Class = k.Class
 	repr.Shape = p.DB.shape(k.ShapeID())
 
@@ -199,6 +201,7 @@ func (p parser) representation(k Key, r io.Reader) error {
 
 func (p parser) shape(k Key, r io.Reader) error {
 	s := p.DB.shape(k.ShapeID())
+	s.Tag = k.Shape
 	s.Class = k.Class
 
 	props, err := ParseProperties(r)

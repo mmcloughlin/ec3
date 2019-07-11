@@ -101,6 +101,7 @@ func (g *generator) shapes() {
 func (g *generator) shape(s *efd.Shape) {
 	g.EnterBlock()
 	g.Linef("ID: %#v,", s.ID)
+	g.Linef("Tag: %#v,", s.Tag)
 	g.Linef("Class: %#v,", s.Class)
 	g.Linef("Name: %#v,", s.Name)
 	g.Linef("Parameters: %#v,", s.Parameters)
@@ -150,6 +151,7 @@ func (g *generator) representations() {
 func (g *generator) representation(r *efd.Representation) {
 	g.EnterBlock()
 	g.Linef("ID: %#v,", r.ID)
+	g.Linef("Tag: %#v,", r.Tag)
 	g.Linef("Class: %#v,", r.Class)
 	g.Linef("Shape: %s,", g.shaperef(r.Shape))
 	g.Linef("Name: %#v,", r.Name)
@@ -192,6 +194,7 @@ func (g *generator) formulae() {
 func (g *generator) formula(f *efd.Formula) {
 	g.EnterBlock()
 	g.Linef("ID: %#v,", f.ID)
+	g.Linef("Tag: %#v,", f.Tag)
 	g.Linef("Class: %#v,", f.Class)
 	g.Linef("Shape: %s,", g.shaperef(f.Shape))
 	g.Linef("Representation: %s,", g.representationref(f.Representation))
