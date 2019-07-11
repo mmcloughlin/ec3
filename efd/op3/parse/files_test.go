@@ -1,4 +1,4 @@
-package parse
+package parse_test
 
 import (
 	"bytes"
@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/efd/db"
+	"github.com/mmcloughlin/ec3/efd/op3/parse"
 	"github.com/mmcloughlin/ec3/internal/assert"
 )
 
@@ -30,7 +31,7 @@ func TestParseAllEFDFiles(t *testing.T) {
 		expecterr := bytes.Contains(b, []byte("error:"))
 
 		// Parse.
-		_, err = Reader(filename, bytes.NewReader(b))
+		_, err = parse.Reader(filename, bytes.NewReader(b))
 
 		if expecterr && err == nil {
 			t.Fatal("expected an error")
