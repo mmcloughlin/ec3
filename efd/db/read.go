@@ -71,21 +71,27 @@ func New() *Database {
 
 func (d Database) shape(k string) *efd.Shape {
 	if _, ok := d.Shapes[k]; !ok {
-		d.Shapes[k] = &efd.Shape{}
+		d.Shapes[k] = &efd.Shape{
+			ID: k,
+		}
 	}
 	return d.Shapes[k]
 }
 
 func (d Database) representation(k string) *efd.Representation {
 	if _, ok := d.Representations[k]; !ok {
-		d.Representations[k] = &efd.Representation{}
+		d.Representations[k] = &efd.Representation{
+			ID: k,
+		}
 	}
 	return d.Representations[k]
 }
 
 func (d Database) formula(k string) *efd.Formula {
 	if _, ok := d.Formulae[k]; !ok {
-		d.Formulae[k] = &efd.Formula{}
+		d.Formulae[k] = &efd.Formula{
+			ID: k,
+		}
 	}
 	return d.Formulae[k]
 }
