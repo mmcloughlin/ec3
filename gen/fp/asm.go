@@ -11,15 +11,16 @@ import (
 
 type Asm struct {
 	cfg   Config
-	field fp.Crandall
+	field fp.Builder
 	ctx   *build.Context
 }
 
 func NewAsm(cfg Config) *Asm {
+	ctx := build.NewContext()
 	return &Asm{
 		cfg:   cfg,
-		field: cfg.Field,
-		ctx:   build.NewContext(),
+		field: cfg.Field.Build(ctx),
+		ctx:   ctx,
 	}
 }
 
@@ -47,7 +48,7 @@ func (a Asm) Add() {
 	y := mp.Registers(a.ctx, yp)
 
 	// Add.
-	a.field.Add(a.ctx, x, y)
+	a.field.Add(x, y)
 
 	// Write back to registers.
 	mp.Copy(a.ctx, xp, x)
@@ -72,7 +73,7 @@ func (a Asm) Mul() {
 
 	// Reduce.
 	a.ctx.Comment("Reduction.")
-	a.field.ReduceDouble(a.ctx, z, m)
+	a.field.ReduceDouble(z, m)
 
 	a.ctx.RET()
 }

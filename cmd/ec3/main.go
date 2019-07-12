@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
-	asmfp "github.com/mmcloughlin/ec3/asm/fp"
+	"github.com/mmcloughlin/ec3/asm/fp/crandall"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/prime"
 )
@@ -31,9 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	field := asmfp.Crandall{
-		P: prime.P25519,
-	}
+	field := crandall.New(prime.P25519)
 
 	cfg := fp.Config{
 		Field:        field,

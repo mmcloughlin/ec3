@@ -15,7 +15,7 @@ import (
 )
 
 type Config struct {
-	Field        fp.Crandall
+	Field        fp.Field
 	InverseChain *ir.Program
 
 	PackageName     string
