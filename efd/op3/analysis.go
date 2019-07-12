@@ -1,6 +1,10 @@
 package op3
 
-import "github.com/mmcloughlin/ec3/efd/op3/ast"
+import (
+	"golang.org/x/xerrors"
+
+	"github.com/mmcloughlin/ec3/efd/op3/ast"
+)
 
 // Inputs returns input variables for the given program.
 func Inputs(p *ast.Program) []ast.Variable {
@@ -23,4 +27,16 @@ func Inputs(p *ast.Program) []ast.Variable {
 	}
 
 	return vs
+}
+
+// CheckSSA verifies that every variable is written once.
+func CheckSSA(p *ast.Program) error {
+	seen := map[ast.Variable]bool{}
+	for _, a := range p.Assignments {
+		v := a.LHS
+		if seen[v] {
+			return xerrors.Errorf("variable %s written more than once", v)
+		}
+	}
+	return nil
 }
