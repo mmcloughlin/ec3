@@ -70,7 +70,7 @@ Sub <- x:Operand _ '-' _ y:Operand {
 // Operand
 
 Operand <- o:(Variable / Constant) {
-    return ast.Operand(o), nil
+    return o.(ast.Operand), nil
 }
 
 Variable <- [0-9]* [a-zA-Z] [a-zA-Z0-9]* {

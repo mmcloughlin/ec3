@@ -40,3 +40,7 @@ func WithShape(shape string) Predicate {
 func WithRepresentation(repr string) Predicate {
 	return func(f *Formula) bool { return f.Representation.Tag == repr }
 }
+
+func WithOperation(op string) Predicate {
+	return func(f *Formula) bool { return f.Operation == op }
+}
