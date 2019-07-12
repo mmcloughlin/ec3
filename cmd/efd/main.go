@@ -4,8 +4,11 @@ import (
 	"flag"
 	"log"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/mmcloughlin/ec3/efd"
+	"github.com/mmcloughlin/ec3/efd/op3"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/internal/print"
 )
@@ -72,7 +75,7 @@ func (p *printer) formula(f *efd.Formula) {
 	p.values("params", f.Parameters)
 	p.values("assume", f.Assume)
 	p.values("compute", f.Compute)
-	p.program("op3", f.Program)
+	p.program(f.Program)
 }
 
 func (p *printer) field(key, value string) {
@@ -95,13 +98,24 @@ func (p *printer) values(key string, values []string) {
 	}
 }
 
-func (p *printer) program(key string, prog *ast.Program) {
+func (p *printer) program(prog *ast.Program) {
 	if prog == nil {
 		return
 	}
+
+	// Dump the op3 program.
 	lines := []string{}
 	for _, a := range prog.Assignments {
 		lines = append(lines, a.String())
 	}
-	p.values(key, lines)
+	p.values("op3", lines)
+
+	// Show inputs.
+	inputs := op3.Inputs(prog)
+	names := []string{}
+	for _, input := range inputs {
+		names = append(names, input.String())
+	}
+	sort.Strings(names)
+	p.field("inputs", strings.Join(names, " "))
 }
