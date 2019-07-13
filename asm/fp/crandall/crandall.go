@@ -16,7 +16,6 @@ func New(p prime.Crandall) fp.Field {
 	return field{p: p}
 }
 
-// C generates arithmetic modulo a Crandall prime.
 type field struct {
 	p prime.Crandall
 }
