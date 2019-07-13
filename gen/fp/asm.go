@@ -44,8 +44,8 @@ func (a Asm) Add() {
 	yp := mp.Param(a.ctx, "y", a.field.Limbs())
 
 	// Bring into registers.
-	x := mp.Registers(a.ctx, xp)
-	y := mp.Registers(a.ctx, yp)
+	x := mp.CopyIntoRegisters(a.ctx, xp)
+	y := mp.CopyIntoRegisters(a.ctx, yp)
 
 	// Add.
 	a.field.Add(x, y)

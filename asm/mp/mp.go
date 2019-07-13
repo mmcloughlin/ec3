@@ -49,8 +49,8 @@ func Copy(ctx *build.Context, y, x Int) {
 	}
 }
 
-// Registers will copy x into registers.
-func Registers(ctx *build.Context, x Int) Int {
+// CopyIntoRegisters will copy x into registers.
+func CopyIntoRegisters(ctx *build.Context, x Int) Int {
 	r := NewIntLimb64(ctx, len(x))
 	Copy(ctx, r, x)
 	return r
