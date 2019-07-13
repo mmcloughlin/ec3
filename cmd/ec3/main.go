@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
-	"github.com/mmcloughlin/ec3/asm/fp/crandall"
+	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/prime"
 )
@@ -31,13 +31,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	field := crandall.New(prime.P25519)
+	// cfg := fp.Config{
+	// 	Field:        crandall.New(prime.P25519),
+	// 	InverseChain: p,
+
+	// 	PackageName:     "fp25519",
+	// 	ElementTypeName: "Elt",
+	// }
 
 	cfg := fp.Config{
-		Field:        field,
+		Field:        mont.New(prime.NISTP256),
 		InverseChain: p,
 
-		PackageName:     "fp25519",
+		PackageName:     "p256",
 		ElementTypeName: "Elt",
 	}
 
