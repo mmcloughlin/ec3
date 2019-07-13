@@ -1,6 +1,7 @@
 package mp
 
 import (
+	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
 	"github.com/mmcloughlin/avo/reg"
@@ -54,6 +55,17 @@ func CopyIntoRegisters(ctx *build.Context, x Int) Int {
 	r := NewIntLimb64(ctx, len(x))
 	Copy(ctx, r, x)
 	return r
+}
+
+// StaticGlobal returns a multi-precision integer stored in a static global data
+// section.
+func StaticGlobal(ctx *build.Context, name string, limbs []uint64) Int {
+	addr := ctx.StaticGlobal(name)
+	ctx.DataAttributes(attr.RODATA | attr.NOPTR)
+	for _, limb := range limbs {
+		ctx.AppendDatum(operand.U64(limb))
+	}
+	return NewIntFromMem(addr, len(limbs))
 }
 
 // Mul does a full multiply z = x*y.
