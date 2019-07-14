@@ -70,6 +70,7 @@ func (p *printer) formula(f *efd.Formula) {
 	p.field("shape", f.Shape.Tag)
 	p.field("repr", f.Representation.Tag)
 	p.field("operation", f.Operation)
+	p.field("url", f.URL())
 
 	p.cost(f)
 	p.maybe("source", f.Source)
