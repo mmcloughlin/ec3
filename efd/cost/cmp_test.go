@@ -1,6 +1,8 @@
 package cost
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"reflect"
 	"sort"
 	"strings"
@@ -10,6 +12,16 @@ import (
 )
 
 func TestCompare(t *testing.T) {
+	// Load expected costs.
+	expected := map[string]string{}
+	b, err := ioutil.ReadFile("testdata/expect.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal(b, &expected); err != nil {
+		t.Fatal(err)
+	}
+
 	for _, f := range efd.All {
 		if f.Program == nil {
 			continue
