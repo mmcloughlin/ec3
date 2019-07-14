@@ -10,6 +10,14 @@ import (
 // Int represents a multi-precision integer.
 type Int []operand.Op
 
+// Limb returns the ith limb of x, or the immediate value 0 if i ⩾ len(x).
+func (x Int) Limb(i int) operand.Op {
+	if i < len(x) {
+		return x[i]
+	}
+	return operand.U32(0)
+}
+
 // NewInt builds an empty integer with k limbs.
 func NewInt(k int) Int {
 	return make(Int, k)

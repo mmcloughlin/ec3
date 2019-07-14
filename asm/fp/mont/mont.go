@@ -1,8 +1,11 @@
 package mont
 
 import (
+	"math/big"
+
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
+	"github.com/mmcloughlin/avo/reg"
 
 	"github.com/mmcloughlin/ec3/asm"
 	"github.com/mmcloughlin/ec3/asm/fp"
@@ -11,6 +14,15 @@ import (
 	"github.com/mmcloughlin/ec3/internal/ints"
 	"github.com/mmcloughlin/ec3/prime"
 )
+
+// References:
+//
+//	[fastprimefieldecc]  Shay Gueron and Vlad Krasnov. Fast Prime Field Elliptic Curve Cryptography with
+//	                     256 Bit Primes. Cryptology ePrint Archive, Report 2013/816. 2013.
+//	                     https://eprint.iacr.org/2013/816
+//	[hac:impl]           Alfred J. Menezes, Paul C. van Oorschot and Scott A. Vanstone. Efficient
+//	                     Implementation. Handbook of Applied Cryptography, chapter 14. 1996.
+//	                     http://cacr.uwaterloo.ca/hac/about/chap14.pdf
 
 func New(p prime.Prime) fp.Field {
 	return field{p: p}
@@ -45,9 +57,10 @@ type builder struct {
 	*build.Context
 
 	modulus mp.Int
+	mprime  operand.Op
 }
 
-func (b builder) Add(x, y mp.Int) {
+func (b *builder) Add(x, y mp.Int) {
 	k := b.Limbs()
 
 	// Add as multi-precision integers, allowing a carry into a high word.
@@ -68,9 +81,9 @@ func (b builder) Add(x, y mp.Int) {
 }
 
 // ConditionalSubtractModulus subtracts p from x if x ⩾ p in constant time.
-func (b builder) ConditionalSubtractModulus(x mp.Int) {
+func (b *builder) ConditionalSubtractModulus(x mp.Int) {
 	subp := mp.CopyIntoRegisters(b.Context, x)
-	p := b.P()
+	p := b.Modulus()
 
 	// Subtract p.
 	// TODO(mbm): Sub() function in mp package
@@ -88,8 +101,8 @@ func (b builder) ConditionalSubtractModulus(x mp.Int) {
 	}
 }
 
-// P returns the prime modulus p as a multi-precision integer.
-func (b *builder) P() mp.Int {
+// Modulus returns the prime modulus p as a multi-precision integer.
+func (b *builder) Modulus() mp.Int {
 	if b.modulus != nil {
 		return b.modulus
 	}
@@ -98,5 +111,84 @@ func (b *builder) P() mp.Int {
 	return b.modulus
 }
 
+// IsFriendly reports whether the modulus is "Montgomery friendly". This concept
+// is introduced in [fastprimefieldecc], Section 3. The modulus is considered
+// friendly if the m' value is one, which allows us to save a multiply in each
+// Montgomery reduction step.
+func (b *builder) IsFriendly() bool {
+	// Note that m' ≡ -1/m (mod b), therefore m' is 1 when m ≡ -1 (mod b).
+	m := b.p.Int()
+	mplus1mod64 := new(big.Int).Add(m, bigint.One())
+	mplus1mod64.Mod(mplus1mod64, bigint.Pow2(64))
+	return bigint.IsZero(mplus1mod64)
+}
+
+// ModulusPrime returns the m' value required for Montgomery reduction, specifically:
+//	m' ≡ -1/m (mod b)
+// where b is the base 2⁶⁴. Note for certain friendly primes this value will be
+// one, in which case it is not necessary to generate a constant for it. See
+// IsFriendly to check for this case.
+func (b *builder) ModulusPrime() operand.Op {
+	if b.mprime != nil {
+		return b.mprime
+	}
+	base := bigint.Pow2(64)
+	m := b.p.Int()
+	mprime := new(big.Int).ModInverse(m, base)
+	mprime.Sub(base, mprime)
+	mprimeint := mp.StaticGlobal(b.Context, "mprime", []uint64{mprime.Uint64()})
+	b.mprime = mprimeint[0]
+	return b.mprime
+}
+
 func (b builder) ReduceDouble(z, x mp.Int) {
+	// Reduction is performed with multi-word Montgomery reduction. See [hac:impl]
+	// Algorithm 14.32.
+
+	k := b.Limbs()
+
+	// We'll need a zero register.
+	zero := b.GP64()
+
+	// Set up accumulator registers.
+	acc := mp.NewIntLimb64(b.Context, 2*k+1)
+	mp.Copy(b.Context, acc, x[:k+1])
+
+	// Step 2: iterate over limbs
+	for i := 0; i < k; i++ {
+		// Step 2.1: u_i = x_i * m' (mod b)
+		var u operand.Op
+		if b.IsFriendly() {
+			u = acc[i]
+		} else {
+			mprime := b.ModulusPrime()
+			b.MOVQ(mprime, reg.RDX)
+			lo, hi := b.GP64(), b.GP64()
+			b.MULXQ(acc[i], lo, hi)
+			u = lo
+		}
+
+		// Step 2.2: x += u_i * m * b^i
+		b.MOVQ(x.Limb(i+k+1), acc[i+k+1])
+		b.MOVQ(u, reg.RDX)
+		m := b.Modulus()
+		b.XORQ(zero, zero) // clears flags
+		for j := 0; j < k; j++ {
+			lo, hi := b.GP64(), b.GP64()
+			b.MULXQ(m[j], lo, hi)
+			b.ADCXQ(lo, acc[i+j])
+			b.ADOXQ(hi, acc[i+j+1])
+		}
+		b.ADCXQ(zero, acc[i+k])
+		b.ADOXQ(zero, acc[i+k+1])
+	}
+
+	// Step 4: if x ⩾ m subtract m
+	result := acc[k:]
+	b.ConditionalSubtractModulus(result)
+
+	// Write result.
+	for i := 0; i < k; i++ {
+		b.MOVQ(result[i], z[i])
+	}
 }

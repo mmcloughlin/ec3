@@ -48,111 +48,201 @@ GLOBL p<>(SB), RODATA|NOPTR, $32
 // func Mul(z *Elt, x *Elt, y *Elt)
 TEXT ·Mul(SB), NOSPLIT, $64-24
 	MOVQ z+0(FP), AX
-	MOVQ x+8(FP), AX
-	MOVQ y+16(FP), CX
+	MOVQ x+8(FP), CX
+	MOVQ y+16(FP), BX
 
 	// y[0]
-	MOVQ (CX), DX
-	XORQ BX, BX
+	MOVQ (BX), DX
+	XORQ BP, BP
 
 	// x[0] * y[0] -> z[0]
-	MULXQ (AX), BP, SI
+	MULXQ (CX), SI, DI
 
 	// x[1] * y[0] -> z[1]
-	MULXQ 8(AX), DI, R8
-	ADCXQ DI, SI
+	MULXQ 8(CX), R8, R9
+	ADCXQ R8, DI
 
 	// x[2] * y[0] -> z[2]
-	MULXQ 16(AX), DI, R9
-	ADCXQ DI, R8
+	MULXQ 16(CX), R8, R11
+	ADCXQ R8, R9
 
 	// x[3] * y[0] -> z[3]
-	MULXQ 24(AX), DX, DI
-	ADCXQ DX, R9
-	ADCXQ BX, DI
-	MOVQ  BP, (SP)
+	MULXQ 24(CX), DX, R8
+	ADCXQ DX, R11
+	ADCXQ BP, R8
+	MOVQ  SI, (SP)
 
 	// y[1]
-	MOVQ 8(CX), DX
-	XORQ BX, BX
+	MOVQ 8(BX), DX
+	XORQ BP, BP
 
 	// x[0] * y[1] -> z[1]
-	MULXQ (AX), BP, R10
-	ADCXQ BP, SI
-	ADOXQ R10, R8
+	MULXQ (CX), SI, R12
+	ADCXQ SI, DI
+	ADOXQ R12, R9
 
 	// x[1] * y[1] -> z[2]
-	MULXQ 8(AX), BP, R10
-	ADCXQ BP, R8
-	ADOXQ R10, R9
+	MULXQ 8(CX), SI, R12
+	ADCXQ SI, R9
+	ADOXQ R12, R11
 
 	// x[2] * y[1] -> z[3]
-	MULXQ 16(AX), BP, R10
-	ADCXQ BP, R9
-	ADOXQ R10, DI
+	MULXQ 16(CX), SI, R12
+	ADCXQ SI, R11
+	ADOXQ R12, R8
 
 	// x[3] * y[1] -> z[4]
-	MULXQ 24(AX), DX, BP
-	ADCXQ DX, DI
-	ADCXQ BX, BP
-	ADOXQ BX, BP
-	MOVQ  SI, 8(SP)
+	MULXQ 24(CX), DX, SI
+	ADCXQ DX, R8
+	ADCXQ BP, SI
+	ADOXQ BP, SI
+	MOVQ  DI, 8(SP)
 
 	// y[2]
-	MOVQ 16(CX), DX
-	XORQ BX, BX
+	MOVQ 16(BX), DX
+	XORQ BP, BP
 
 	// x[0] * y[2] -> z[2]
-	MULXQ (AX), SI, R10
-	ADCXQ SI, R8
-	ADOXQ R10, R9
+	MULXQ (CX), DI, R12
+	ADCXQ DI, R9
+	ADOXQ R12, R11
 
 	// x[1] * y[2] -> z[3]
-	MULXQ 8(AX), SI, R10
-	ADCXQ SI, R9
-	ADOXQ R10, DI
+	MULXQ 8(CX), DI, R12
+	ADCXQ DI, R11
+	ADOXQ R12, R8
 
 	// x[2] * y[2] -> z[4]
-	MULXQ 16(AX), SI, R10
-	ADCXQ SI, DI
-	ADOXQ R10, BP
+	MULXQ 16(CX), DI, R12
+	ADCXQ DI, R8
+	ADOXQ R12, SI
 
 	// x[3] * y[2] -> z[5]
-	MULXQ 24(AX), DX, SI
-	ADCXQ DX, BP
-	ADCXQ BX, SI
-	ADOXQ BX, SI
-	MOVQ  R8, 16(SP)
+	MULXQ 24(CX), DX, DI
+	ADCXQ DX, SI
+	ADCXQ BP, DI
+	ADOXQ BP, DI
+	MOVQ  R9, 16(SP)
 
 	// y[3]
-	MOVQ 24(CX), DX
-	XORQ BX, BX
+	MOVQ 24(BX), DX
+	XORQ BP, BP
 
 	// x[0] * y[3] -> z[3]
-	MULXQ (AX), CX, R8
-	ADCXQ CX, R9
-	ADOXQ R8, DI
+	MULXQ (CX), BX, R9
+	ADCXQ BX, R11
+	ADOXQ R9, R8
 
 	// x[1] * y[3] -> z[4]
-	MULXQ 8(AX), CX, R8
-	ADCXQ CX, DI
-	ADOXQ R8, BP
+	MULXQ 8(CX), BX, R9
+	ADCXQ BX, R8
+	ADOXQ R9, SI
 
 	// x[2] * y[3] -> z[5]
-	MULXQ 16(AX), CX, R8
-	ADCXQ CX, BP
-	ADOXQ R8, SI
+	MULXQ 16(CX), BX, R9
+	ADCXQ BX, SI
+	ADOXQ R9, DI
 
 	// x[3] * y[3] -> z[6]
-	MULXQ 24(AX), AX, CX
-	ADCXQ AX, SI
-	ADCXQ BX, CX
-	ADOXQ BX, CX
-	MOVQ  R9, 24(SP)
-	MOVQ  DI, 32(SP)
-	MOVQ  BP, 40(SP)
-	MOVQ  SI, 48(SP)
-	MOVQ  CX, 56(SP)
+	MULXQ 24(CX), CX, DX
+	ADCXQ CX, DI
+	ADCXQ BP, DX
+	ADOXQ BP, DX
+	MOVQ  R11, 24(SP)
+	MOVQ  R8, 32(SP)
+	MOVQ  SI, 40(SP)
+	MOVQ  DI, 48(SP)
+	MOVQ  DX, 56(SP)
 
 	// Reduction.
+	MOVQ    (SP), CX
+	MOVQ    8(SP), BX
+	MOVQ    16(SP), BP
+	MOVQ    24(SP), SI
+	MOVQ    32(SP), DI
+	MOVQ    40(SP), R8
+	MOVQ    CX, DX
+	XORQ    R10, R10
+	MULXQ   p<>+0(SB), R9, R11
+	ADCXQ   R9, CX
+	ADOXQ   R11, BX
+	MULXQ   p<>+8(SB), CX, R9
+	ADCXQ   CX, BX
+	ADOXQ   R9, BP
+	MULXQ   p<>+16(SB), CX, R9
+	ADCXQ   CX, BP
+	ADOXQ   R9, SI
+	MULXQ   p<>+24(SB), CX, DX
+	ADCXQ   CX, SI
+	ADOXQ   DX, DI
+	ADCXQ   R10, DI
+	ADOXQ   R10, R8
+	MOVQ    48(SP), CX
+	MOVQ    BX, DX
+	XORQ    R10, R10
+	MULXQ   p<>+0(SB), R9, R11
+	ADCXQ   R9, BX
+	ADOXQ   R11, BP
+	MULXQ   p<>+8(SB), BX, R9
+	ADCXQ   BX, BP
+	ADOXQ   R9, SI
+	MULXQ   p<>+16(SB), BX, R9
+	ADCXQ   BX, SI
+	ADOXQ   R9, DI
+	MULXQ   p<>+24(SB), DX, BX
+	ADCXQ   DX, DI
+	ADOXQ   BX, R8
+	ADCXQ   R10, R8
+	ADOXQ   R10, CX
+	MOVQ    56(SP), BX
+	MOVQ    BP, DX
+	XORQ    R10, R10
+	MULXQ   p<>+0(SB), R9, R11
+	ADCXQ   R9, BP
+	ADOXQ   R11, SI
+	MULXQ   p<>+8(SB), BP, R9
+	ADCXQ   BP, SI
+	ADOXQ   R9, DI
+	MULXQ   p<>+16(SB), BP, R9
+	ADCXQ   BP, DI
+	ADOXQ   R9, R8
+	MULXQ   p<>+24(SB), DX, BP
+	ADCXQ   DX, R8
+	ADOXQ   BP, CX
+	ADCXQ   R10, CX
+	ADOXQ   R10, BX
+	MOVQ    $0x00000000, BP
+	MOVQ    SI, DX
+	XORQ    R10, R10
+	MULXQ   p<>+0(SB), R9, R11
+	ADCXQ   R9, SI
+	ADOXQ   R11, DI
+	MULXQ   p<>+8(SB), SI, R9
+	ADCXQ   SI, DI
+	ADOXQ   R9, R8
+	MULXQ   p<>+16(SB), SI, R9
+	ADCXQ   SI, R8
+	ADOXQ   R9, CX
+	MULXQ   p<>+24(SB), DX, SI
+	ADCXQ   DX, CX
+	ADOXQ   SI, BX
+	ADCXQ   R10, BX
+	ADOXQ   R10, BP
+	MOVQ    DI, DX
+	MOVQ    R8, SI
+	MOVQ    CX, R9
+	MOVQ    BX, R10
+	SUBQ    p<>+0(SB), DX
+	SBBQ    p<>+8(SB), SI
+	SBBQ    p<>+16(SB), R9
+	SBBQ    p<>+24(SB), R10
+	SBBQ    $0x00000000, BP
+	CMOVQCC DX, DI
+	CMOVQCC SI, R8
+	CMOVQCC R9, CX
+	CMOVQCC R10, BX
+	MOVQ    DI, (AX)
+	MOVQ    R8, 8(AX)
+	MOVQ    CX, 16(AX)
+	MOVQ    BX, 24(AX)
 	RET
