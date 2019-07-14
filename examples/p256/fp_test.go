@@ -55,6 +55,16 @@ func ExpectAdd(x, y Elt) Elt {
 	return z
 }
 
+func ExpectSub(x, y Elt) Elt {
+	xi := IntFromBytesLittleEndian(x[:])
+	yi := IntFromBytesLittleEndian(y[:])
+	zi := new(big.Int).Sub(xi, yi)
+	zi.Mod(zi, p)
+	var z Elt
+	BytesFromIntLittleEndian(z[:], zi)
+	return z
+}
+
 func ExpectMul(x, y Elt) Elt {
 	xi := IntFromBytesLittleEndian(x[:])
 	yi := IntFromBytesLittleEndian(y[:])
@@ -84,7 +94,28 @@ func TestAdd(t *testing.T) {
 			t.Logf("     y = %x", y)
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
-			t.Fail()
+			t.FailNow()
+		}
+	}
+}
+
+func TestSub(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, y Elt
+		rand.Read(x[:])
+		rand.Read(y[:])
+
+		got := x
+		Sub(&got, &y)
+
+		expect := ExpectSub(x, y)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("     y = %x", y)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
 		}
 	}
 }
@@ -104,7 +135,7 @@ func TestMul(t *testing.T) {
 			t.Logf("     y = %x", y)
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
-			t.Fail()
+			t.FailNow()
 		}
 	}
 }

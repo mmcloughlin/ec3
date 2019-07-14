@@ -56,6 +56,26 @@ func (a Asm) Add() {
 	a.ctx.RET()
 }
 
+func (a Asm) Sub() {
+	a.Function("Sub", "x", "y")
+
+	// Load parameters.
+	xp := mp.Param(a.ctx, "x", a.field.Limbs())
+	yp := mp.Param(a.ctx, "y", a.field.Limbs())
+
+	// Bring into registers.
+	x := mp.CopyIntoRegisters(a.ctx, xp)
+	y := mp.CopyIntoRegisters(a.ctx, yp)
+
+	// Subtract.
+	a.field.Sub(x, y)
+
+	// Write back to registers.
+	mp.Copy(a.ctx, xp, x)
+
+	a.ctx.RET()
+}
+
 func (a Asm) Mul() {
 	a.Function("Mul", "z", "x", "y")
 	k := a.field.Limbs()

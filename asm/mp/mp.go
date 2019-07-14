@@ -18,6 +18,14 @@ func (x Int) Limb(i int) operand.Op {
 	return operand.U32(0)
 }
 
+// Extend returns a new integer with limbs appended to the end.
+func (x Int) Extend(limbs ...operand.Op) Int {
+	ext := Int{}
+	ext = append(ext, x...)
+	ext = append(ext, limbs...)
+	return ext
+}
+
 // NewInt builds an empty integer with k limbs.
 func NewInt(k int) Int {
 	return make(Int, k)

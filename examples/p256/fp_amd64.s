@@ -45,6 +45,43 @@ DATA p<>+16(SB)/8, $0x0000000000000000
 DATA p<>+24(SB)/8, $0xffffffff00000001
 GLOBL p<>(SB), RODATA|NOPTR, $32
 
+// func Sub(x *Elt, y *Elt)
+TEXT ·Sub(SB), NOSPLIT, $0-16
+	MOVQ    x+0(FP), AX
+	MOVQ    y+8(FP), CX
+	MOVQ    (AX), DX
+	MOVQ    8(AX), BX
+	MOVQ    16(AX), BP
+	MOVQ    24(AX), SI
+	MOVQ    (CX), DI
+	MOVQ    8(CX), R8
+	MOVQ    16(CX), R9
+	MOVQ    24(CX), CX
+	XORQ    R10, R10
+	SUBQ    DI, DX
+	SBBQ    R8, BX
+	SBBQ    R9, BP
+	SBBQ    CX, SI
+	SBBQ    $0x00000000, R10
+	MOVQ    DX, CX
+	MOVQ    BX, DI
+	MOVQ    BP, R8
+	MOVQ    SI, R9
+	ADDQ    p<>+0(SB), CX
+	ADCQ    p<>+8(SB), DI
+	ADCQ    p<>+16(SB), R8
+	ADCQ    p<>+24(SB), R9
+	ANDQ    $0x00000001, R10
+	CMOVQNE CX, DX
+	CMOVQNE DI, BX
+	CMOVQNE R8, BP
+	CMOVQNE R9, SI
+	MOVQ    DX, (AX)
+	MOVQ    BX, 8(AX)
+	MOVQ    BP, 16(AX)
+	MOVQ    SI, 24(AX)
+	RET
+
 // func Mul(z *Elt, x *Elt, y *Elt)
 TEXT ·Mul(SB), NOSPLIT, $64-24
 	MOVQ z+0(FP), AX

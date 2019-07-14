@@ -55,6 +55,7 @@ func Package(cfg Config) (gen.Files, error) {
 	// Assembly backend.
 	a := NewAsm(cfg)
 	a.Add()
+	a.Sub()
 	a.Mul()
 
 	if err := fs.CompileAsm(cfg.PackageName, "fp_amd64", a.Context()); err != nil {

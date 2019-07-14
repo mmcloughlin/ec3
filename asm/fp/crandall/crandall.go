@@ -8,6 +8,7 @@ import (
 	"github.com/mmcloughlin/ec3/asm"
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/asm/mp"
+	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/ints"
 	"github.com/mmcloughlin/ec3/prime"
 )
@@ -107,6 +108,11 @@ func (b builder) Add(x, y mp.Int) {
 	// will be no carry.
 	// TODO(mbm): assert d is within an acceptable range
 	b.ADDQ(addend, x[0]) // TODO(mbm): replace with ADCX?
+}
+
+func (b *builder) Sub(x, y mp.Int) {
+	// TODO(mbm): implement subtraction in Crandall fields.
+	panic(errutil.ErrNotImplemented)
 }
 
 // ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.

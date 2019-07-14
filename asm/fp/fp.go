@@ -31,6 +31,10 @@ type Builder interface {
 	//	x ≡ x + y (mod p)
 	Add(x, y mp.Int)
 
+	// Sub generates code to subtract y from x modulo p.
+	//	x ≡ x - y (mod p)
+	Sub(x, y mp.Int)
+
 	// ReduceDouble computes z congruent to x modulo p. Let the element size be 2ˡ.
 	// This function assumes x < 2²ˡ and produces z < 2ˡ. Note that z is not
 	// guaranteed to be less than p.

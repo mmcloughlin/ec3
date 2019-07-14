@@ -66,9 +66,7 @@ func (b *builder) Add(x, y mp.Int) {
 	// Add as multi-precision integers, allowing a carry into a high word.
 	// TODO(mbm): consider case when prime size is not a multiple of 64, so carry would not overflow.
 	carry := asm.Zero64(b.Context)
-	sum := mp.Int{}
-	sum = append(sum, x...)
-	sum = append(sum, carry)
+	sum := x.Extend(carry)
 
 	// TODO(mbm): Add() function in mp package
 	b.ADDQ(y[0], sum[0])
@@ -78,6 +76,35 @@ func (b *builder) Add(x, y mp.Int) {
 	b.ADCQ(operand.U32(0), sum[k])
 
 	b.ConditionalSubtractModulus(sum)
+}
+
+func (b *builder) Sub(x, y mp.Int) {
+	k := b.Limbs()
+
+	// Subtract multi-precision integers, allowing a borrow into a high word.
+	borrow := asm.Zero64(b.Context)
+
+	// TODO(mbm): Sub() function in mp package
+	b.SUBQ(y[0], x[0])
+	for i := 1; i < k; i++ {
+		b.SBBQ(y[i], x[i])
+	}
+	b.SBBQ(operand.U32(0), borrow)
+
+	// Compute x + p.
+	addp := mp.CopyIntoRegisters(b.Context, x)
+
+	p := b.Modulus()
+	b.ADDQ(p[0], addp[0])
+	for i := 1; i < k; i++ {
+		b.ADCQ(p[i], addp[i])
+	}
+
+	// If the borrow is non-zero, that means we need to take x+p.
+	b.ANDQ(operand.U32(1), borrow)
+	for i := 0; i < k; i++ {
+		b.CMOVQNE(addp[i], x[i])
+	}
 }
 
 // ConditionalSubtractModulus subtracts p from x if x ⩾ p in constant time.
