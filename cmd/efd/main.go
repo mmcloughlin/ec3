@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/mmcloughlin/ec3/efd"
+	"github.com/mmcloughlin/ec3/efd/cost"
 	"github.com/mmcloughlin/ec3/efd/op3"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/internal/print"
@@ -70,6 +71,7 @@ func (p *printer) formula(f *efd.Formula) {
 	p.field("repr", f.Representation.Tag)
 	p.field("operation", f.Operation)
 
+	p.cost(f)
 	p.maybe("source", f.Source)
 	p.maybe("appliesto", f.AppliesTo)
 	p.values("params", f.Parameters)
@@ -96,6 +98,20 @@ func (p *printer) values(key string, values []string) {
 	for _, value := range values[1:] {
 		p.field("", value)
 	}
+}
+
+func (p *printer) cost(f *efd.Formula) {
+	if f.Program == nil {
+		return
+	}
+
+	counts, err := cost.Operations(f)
+	if err != nil {
+		p.SetError(err)
+		return
+	}
+
+	p.field("cost", counts.String())
 }
 
 func (p *printer) program(prog *ast.Program) {
