@@ -1,5 +1,6 @@
 package cost
 
+// expected cost summaries scraped from EFD website.
 var expected = map[string]string{
 	"g12o/edwards/w-1/doubling/dbl-2008-blr-1":              "1I + 2S + 1*d1",
 	"g12o/edwards/w-1/doubling/dbl-2008-blr":                "1I + 1M + 2S + 1*d2overd1plus1",

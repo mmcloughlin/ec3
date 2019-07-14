@@ -88,14 +88,25 @@ func (c Counts) Weight(m Model) float64 {
 	return w
 }
 
+// Summary returns a concise string representation of the operation counts,
+// discarding negligible operations.
+func (c Counts) Summary() string {
+	return c.string(Weights{I: 5, M: 4, S: 3, Pow: 2, ParamM: 1})
+}
+
 func (c Counts) String() string {
-	return c.string(precedence)
+	return c.string(Weights{I: 7, M: 6, S: 5, Pow: 4, ParamM: 3, Add: 2, ConstM: 1})
 }
 
 func (c Counts) string(m Model) string {
 	// Clone and sort according to the model.
 	components := append(Counts{}, c...)
 	components.Sort(m)
+
+	// Empty is considered "0M".
+	if len(components) == 0 {
+		components = Counts{{Op: Mul{}}}
+	}
 
 	// Collect counts until the weight is zero.
 	parts := []string{}

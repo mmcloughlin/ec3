@@ -2,16 +2,6 @@ package cost
 
 import "github.com/mmcloughlin/ec3/internal/errutil"
 
-var precedence = Weights{
-	I:      7,
-	M:      6,
-	S:      5,
-	Pow:    4,
-	ParamM: 3,
-	Add:    2,
-	ConstM: 1,
-}
-
 type Model interface {
 	Weight(Operation) float64
 }
