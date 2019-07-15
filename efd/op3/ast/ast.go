@@ -9,6 +9,14 @@ type Program struct {
 	Assignments []Assignment
 }
 
+func (p Program) String() string {
+	var s string
+	for _, a := range p.Assignments {
+		s += a.String() + "\n"
+	}
+	return s
+}
+
 type Assignment struct {
 	LHS Variable
 	RHS Expression
