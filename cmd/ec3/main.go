@@ -8,6 +8,9 @@ import (
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
+	"github.com/mmcloughlin/ec3/efd"
+	"github.com/mmcloughlin/ec3/gen"
+	"github.com/mmcloughlin/ec3/gen/ec"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/prime"
 )
@@ -17,6 +20,8 @@ var (
 
 	directory = flags.String("dir", "", "directory to write to")
 	inverse   = flags.String("inv", "", "addition chain for field inversion")
+
+	repr = flags.String("repr", "", "curve representation")
 )
 
 func main() {
@@ -39,7 +44,8 @@ func main() {
 	// 	ElementTypeName: "Elt",
 	// }
 
-	cfg := fp.Config{
+	// Field config.
+	fieldcfg := fp.Config{
 		Field:        mont.New(prime.NISTP256),
 		InverseChain: p,
 
@@ -47,10 +53,43 @@ func main() {
 		ElementTypeName: "Elt",
 	}
 
-	fs, err := fp.Package(cfg)
+	fieldfiles, err := fp.Package(fieldcfg)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Point config.
+	r := efd.LookupRepresentation(*repr)
+	if r == nil {
+		log.Fatalf("unknown representation %q", *repr)
+	}
+
+	f := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
+	if f == nil {
+		log.Fatalf("unknown formula")
+	}
+
+	pointcfg := ec.Config{
+		Field:          fieldcfg,
+		Representation: r,
+		Functions: []ec.Function{
+			{
+				Name:       "Add",
+				Parameters: []string{"q", "r"},
+				Formula:    f,
+			},
+		},
+		PackageName: "p256",
+		TypeName:    "Jacobian",
+	}
+
+	pointfiles, err := ec.Package(pointcfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Merge and output.
+	fs := gen.Merge(fieldfiles, pointfiles)
 
 	for _, f := range fs {
 		fmt.Printf("## `%s`\n", f.Path)

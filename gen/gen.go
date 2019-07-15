@@ -21,6 +21,14 @@ type File struct {
 
 type Files []File
 
+func Merge(collections ...Files) Files {
+	m := Files{}
+	for _, collection := range collections {
+		m = append(m, collection...)
+	}
+	return m
+}
+
 func (f *Files) Add(path string, src []byte) {
 	*f = append(*f, File{
 		Path:   path,
