@@ -125,6 +125,7 @@ func (p *point) function(fn Function) {
 	// Generate program.
 	p.NL()
 	for _, a := range prog.Assignments {
+		// TODO(mbm): ugly duplication in the switch statement below
 		switch e := a.RHS.(type) {
 		case ast.Pow:
 			if e.N != 2 {
