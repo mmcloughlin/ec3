@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
+	"github.com/mmcloughlin/ec3/addchain/acc/ir"
+	"github.com/mmcloughlin/ec3/asm/fp/crandall"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/gen"
@@ -36,14 +38,45 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// cfg := fp.Config{
-	// 	Field:        crandall.New(prime.P25519),
-	// 	InverseChain: p,
+	// Build file set.
+	//fs := fp25519(p)
+	fs := p256(p)
 
-	// 	PackageName:     "fp25519",
-	// 	ElementTypeName: "Elt",
-	// }
+	for _, f := range fs {
+		fmt.Printf("## `%s`\n", f.Path)
+		fmt.Printf("```\n")
+		if _, err := os.Stdout.Write(f.Source); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("```\n")
+	}
 
+	if *directory != "" {
+		log.Printf("writing to %s", *directory)
+		if err := fs.Output(*directory); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func fp25519(p *ir.Program) gen.Files {
+	cfg := fp.Config{
+		Field:        crandall.New(prime.P25519),
+		InverseChain: p,
+
+		PackageName:     "fp25519",
+		ElementTypeName: "Elt",
+	}
+
+	fs, err := fp.Package(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return fs
+}
+
+func p256(p *ir.Program) gen.Files {
 	// Field config.
 	fieldcfg := fp.Config{
 		Field:        mont.New(prime.NISTP256),
@@ -89,21 +122,5 @@ func main() {
 	}
 
 	// Merge and output.
-	fs := gen.Merge(fieldfiles, pointfiles)
-
-	for _, f := range fs {
-		fmt.Printf("## `%s`\n", f.Path)
-		fmt.Printf("```\n")
-		if _, err := os.Stdout.Write(f.Source); err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("```\n")
-	}
-
-	if *directory != "" {
-		log.Printf("writing to %s", *directory)
-		if err := fs.Output(*directory); err != nil {
-			log.Fatal(err)
-		}
-	}
+	return gen.Merge(fieldfiles, pointfiles)
 }

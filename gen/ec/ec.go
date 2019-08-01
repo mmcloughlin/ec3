@@ -111,14 +111,25 @@ func (p *point) function(fn Function) {
 	p.Printf("func (%s *%s) %s(%s *%s)", p.Receiver(), p.TypeName, fn.Name, strings.Join(fn.Parameters, ", "), p.TypeName)
 	p.EnterBlock()
 
+	// Set of defined names.
+	symbols := map[string]bool{}
+	symbols[p.Receiver()] = true
+	for _, param := range fn.Parameters {
+		symbols[param] = true
+	}
+
 	// Allocate temporaries.
 	p.Linef("var (")
 	for _, v := range op3.Variables(prog) {
 		if _, ok := variables[v]; ok {
 			continue
 		}
-		p.Linef("%s %s", v, p.Field.Type())
-		variables[v] = fmt.Sprintf("&%s", v)
+		name := string(v)
+		if _, ok := symbols[name]; ok {
+			name += "_"
+		}
+		p.Linef("%s %s", name, p.Field.Type())
+		variables[v] = fmt.Sprintf("&%s", name)
 	}
 	p.Linef(")")
 
