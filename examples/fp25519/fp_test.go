@@ -22,14 +22,14 @@ func TestAdd(t *testing.T) {
 		rand.Read(x[:])
 		rand.Read(y[:])
 
-		var xb, yb Elt
+		var xb, yb, got Elt
 		copy(xb[:], x[:])
 		copy(yb[:], y[:])
 
 		fp25519.Add(&expect, &x, &y)
-		Add(&xb, &yb)
+		Add(&got, &xb, &yb)
 
-		if !bytes.Equal(xb[:], expect[:]) {
+		if !bytes.Equal(got[:], expect[:]) {
 			t.Logf(" trial = %d", trial)
 			t.Logf("   got = %x", xb)
 			t.Logf("expect = %x", expect)

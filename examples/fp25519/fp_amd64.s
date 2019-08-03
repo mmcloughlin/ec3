@@ -2,37 +2,38 @@
 
 #include "textflag.h"
 
-// func Add(x *Elt, y *Elt)
-TEXT ·Add(SB), NOSPLIT, $0-16
-	MOVQ    x+0(FP), AX
-	MOVQ    y+8(FP), CX
-	MOVQ    (AX), DX
-	MOVQ    8(AX), BX
-	MOVQ    16(AX), BP
-	MOVQ    24(AX), SI
-	MOVQ    (CX), DI
-	MOVQ    8(CX), R8
-	MOVQ    16(CX), R9
+// func Add(z *Elt, x *Elt, y *Elt)
+TEXT ·Add(SB), NOSPLIT, $0-24
+	MOVQ    z+0(FP), AX
+	MOVQ    x+8(FP), CX
+	MOVQ    y+16(FP), DX
+	MOVQ    (CX), BX
+	MOVQ    8(CX), BP
+	MOVQ    16(CX), SI
 	MOVQ    24(CX), CX
+	MOVQ    (DX), DI
+	MOVQ    8(DX), R8
+	MOVQ    16(DX), R9
+	MOVQ    24(DX), DX
 	XORQ    R10, R10
 	MOVQ    $0x00000026, R11
-	ADDQ    DI, DX
-	ADCXQ   R8, BX
-	ADCXQ   R9, BP
-	ADCXQ   CX, SI
-	MOVQ    R10, CX
-	CMOVQCS R11, CX
-	ADDQ    CX, DX
-	ADCXQ   R10, BX
+	ADDQ    DI, BX
+	ADCXQ   R8, BP
+	ADCXQ   R9, SI
+	ADCXQ   DX, CX
+	MOVQ    R10, DX
+	CMOVQCS R11, DX
+	ADDQ    DX, BX
 	ADCXQ   R10, BP
 	ADCXQ   R10, SI
-	MOVQ    R10, CX
-	CMOVQCS R11, CX
-	ADDQ    CX, DX
-	MOVQ    DX, (AX)
-	MOVQ    BX, 8(AX)
-	MOVQ    BP, 16(AX)
-	MOVQ    SI, 24(AX)
+	ADCXQ   R10, CX
+	MOVQ    R10, DX
+	CMOVQCS R11, DX
+	ADDQ    DX, BX
+	MOVQ    BX, (AX)
+	MOVQ    BP, 8(AX)
+	MOVQ    SI, 16(AX)
+	MOVQ    CX, 24(AX)
 	RET
 
 // func Mul(z *Elt, x *Elt, y *Elt)
@@ -53,12 +54,12 @@ TEXT ·Mul(SB), NOSPLIT, $64-24
 	ADCXQ R8, DI
 
 	// x[2] * y[0] -> z[2]
-	MULXQ 16(CX), R8, R12
+	MULXQ 16(CX), R8, R10
 	ADCXQ R8, R9
 
 	// x[3] * y[0] -> z[3]
 	MULXQ 24(CX), DX, R8
-	ADCXQ DX, R12
+	ADCXQ DX, R10
 	ADCXQ BP, R8
 	MOVQ  SI, (SP)
 
@@ -67,19 +68,19 @@ TEXT ·Mul(SB), NOSPLIT, $64-24
 	XORQ BP, BP
 
 	// x[0] * y[1] -> z[1]
-	MULXQ (CX), SI, R13
+	MULXQ (CX), SI, R11
 	ADCXQ SI, DI
-	ADOXQ R13, R9
+	ADOXQ R11, R9
 
 	// x[1] * y[1] -> z[2]
-	MULXQ 8(CX), SI, R13
+	MULXQ 8(CX), SI, R11
 	ADCXQ SI, R9
-	ADOXQ R13, R12
+	ADOXQ R11, R10
 
 	// x[2] * y[1] -> z[3]
-	MULXQ 16(CX), SI, R13
-	ADCXQ SI, R12
-	ADOXQ R13, R8
+	MULXQ 16(CX), SI, R11
+	ADCXQ SI, R10
+	ADOXQ R11, R8
 
 	// x[3] * y[1] -> z[4]
 	MULXQ 24(CX), DX, SI
@@ -93,19 +94,19 @@ TEXT ·Mul(SB), NOSPLIT, $64-24
 	XORQ BP, BP
 
 	// x[0] * y[2] -> z[2]
-	MULXQ (CX), DI, R13
+	MULXQ (CX), DI, R11
 	ADCXQ DI, R9
-	ADOXQ R13, R12
+	ADOXQ R11, R10
 
 	// x[1] * y[2] -> z[3]
-	MULXQ 8(CX), DI, R13
-	ADCXQ DI, R12
-	ADOXQ R13, R8
+	MULXQ 8(CX), DI, R11
+	ADCXQ DI, R10
+	ADOXQ R11, R8
 
 	// x[2] * y[2] -> z[4]
-	MULXQ 16(CX), DI, R13
+	MULXQ 16(CX), DI, R11
 	ADCXQ DI, R8
-	ADOXQ R13, SI
+	ADOXQ R11, SI
 
 	// x[3] * y[2] -> z[5]
 	MULXQ 24(CX), DX, DI
@@ -120,7 +121,7 @@ TEXT ·Mul(SB), NOSPLIT, $64-24
 
 	// x[0] * y[3] -> z[3]
 	MULXQ (CX), BX, R9
-	ADCXQ BX, R12
+	ADCXQ BX, R10
 	ADOXQ R9, R8
 
 	// x[1] * y[3] -> z[4]
@@ -138,40 +139,39 @@ TEXT ·Mul(SB), NOSPLIT, $64-24
 	ADCXQ CX, DI
 	ADCXQ BP, DX
 	ADOXQ BP, DX
-	MOVQ  R12, 24(SP)
+	MOVQ  R10, 24(SP)
 	MOVQ  R8, 32(SP)
 	MOVQ  SI, 40(SP)
 	MOVQ  DI, 48(SP)
 	MOVQ  DX, 56(SP)
 
 	// Reduction.
-	XORQ    R10, R10
-	MOVQ    $0x00000026, CX
-	MOVQ    CX, DX
-	XORQ    R11, R11
-	MULXQ   32(SP), BP, BX
-	ADCXQ   BP, R11
-	MULXQ   40(SP), SI, BP
-	ADCXQ   SI, BX
-	MULXQ   48(SP), DI, SI
+	XORQ    CX, CX
+	MOVQ    $0x00000026, BX
+	MOVQ    BX, DX
+	XORQ    BP, BP
+	MULXQ   32(SP), DI, SI
 	ADCXQ   DI, BP
-	MULXQ   56(SP), DI, DX
-	ADCXQ   DI, SI
-	ADOXQ   (SP), R11
-	ADOXQ   8(SP), BX
-	ADOXQ   16(SP), BP
-	ADOXQ   24(SP), SI
-	ADOXQ   R10, DX
-	IMULQ   CX, DX
-	ADCXQ   DX, R11
-	ADCXQ   R10, BX
-	ADCXQ   R10, BP
-	ADCXQ   R10, SI
-	MOVQ    R10, DX
-	CMOVQCS CX, DX
-	ADDQ    DX, R11
-	MOVQ    R11, (AX)
-	MOVQ    BX, 8(AX)
-	MOVQ    BP, 16(AX)
-	MOVQ    SI, 24(AX)
+	MULXQ   40(SP), R8, DI
+	ADCXQ   R8, SI
+	MULXQ   48(SP), R9, R8
+	ADCXQ   R9, DI
+	MULXQ   56(SP), R9, DX
+	ADCXQ   R9, R8
+	ADOXQ   (SP), BP
+	ADOXQ   8(SP), SI
+	ADOXQ   16(SP), DI
+	ADOXQ   24(SP), R8
+	ADOXQ   CX, DX
+	IMULQ   BX, DX
+	ADCXQ   DX, BP
+	ADCXQ   CX, SI
+	ADCXQ   CX, DI
+	ADCXQ   CX, R8
+	CMOVQCS BX, CX
+	ADDQ    CX, BP
+	MOVQ    BP, (AX)
+	MOVQ    SI, 8(AX)
+	MOVQ    DI, 16(AX)
+	MOVQ    R8, 24(AX)
 	RET

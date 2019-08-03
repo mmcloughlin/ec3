@@ -37,9 +37,10 @@ func (a Asm) Function(name string, params ...string) {
 }
 
 func (a Asm) Add() {
-	a.Function("Add", "x", "y")
+	a.Function("Add", "z", "x", "y")
 
 	// Load parameters.
+	zp := mp.Param(a.ctx, "z", a.field.Limbs())
 	xp := mp.Param(a.ctx, "x", a.field.Limbs())
 	yp := mp.Param(a.ctx, "y", a.field.Limbs())
 
@@ -50,16 +51,17 @@ func (a Asm) Add() {
 	// Add.
 	a.field.Add(x, y)
 
-	// Write back to registers.
-	mp.Copy(a.ctx, xp, x)
+	// Write back to memory.
+	mp.Copy(a.ctx, zp, x)
 
 	a.ctx.RET()
 }
 
 func (a Asm) Sub() {
-	a.Function("Sub", "x", "y")
+	a.Function("Sub", "z", "x", "y")
 
 	// Load parameters.
+	zp := mp.Param(a.ctx, "z", a.field.Limbs())
 	xp := mp.Param(a.ctx, "x", a.field.Limbs())
 	yp := mp.Param(a.ctx, "y", a.field.Limbs())
 
@@ -70,8 +72,8 @@ func (a Asm) Sub() {
 	// Subtract.
 	a.field.Sub(x, y)
 
-	// Write back to registers.
-	mp.Copy(a.ctx, xp, x)
+	// Write to z.
+	mp.Copy(a.ctx, zp, x)
 
 	a.ctx.RET()
 }
