@@ -103,8 +103,8 @@ func p256(p *ir.Program) gen.Files {
 		Coordinates: r.Variables,
 	}
 
-	f := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
-	if f == nil {
+	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
+	if addf == nil {
 		log.Fatalf("unknown formula")
 	}
 
@@ -115,7 +115,21 @@ func p256(p *ir.Program) gen.Files {
 			{Name: "q", Type: jacobian},
 			{Name: "r", Type: jacobian},
 		},
-		Formula: f,
+		Formula: addf,
+	}
+
+	dblf := efd.LookupFormula("g1p/shortw/jacobian-3/doubling/dbl-2001-b")
+	if dblf == nil {
+		log.Fatalf("unknown formula")
+	}
+
+	dbl := ec.Function{
+		Name:     "Double",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Params: []*ec.Parameter{
+			{Name: "q", Type: jacobian},
+		},
+		Formula: dblf,
 	}
 
 	pointcfg := ec.Config{
@@ -124,6 +138,7 @@ func p256(p *ir.Program) gen.Files {
 		Components: []ec.Component{
 			jacobian,
 			add,
+			dbl,
 		},
 	}
 

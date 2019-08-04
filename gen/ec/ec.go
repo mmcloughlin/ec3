@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"go/types"
 
+	"github.com/mmcloughlin/ec3/internal/ints"
+
 	"golang.org/x/xerrors"
 
 	"github.com/mmcloughlin/ec3/efd"
@@ -81,9 +83,23 @@ func (f Function) Symbols() map[string]bool {
 // Variables builds a map from program variable names to the Go code that
 // references their corresponding function parameters.
 func (f Function) Variables() map[ast.Variable]string {
-	variables := map[ast.Variable]string{}
+	// Assign indicies.
+	byindex := map[int]*Parameter{}
 	n := 1
-	for _, p := range f.Parameters() {
+	for _, p := range f.Params {
+		byindex[n] = p
+		n++
+	}
+
+	n = ints.Max(n, 3)
+	for _, p := range f.Outputs() {
+		byindex[n] = p
+		n++
+	}
+
+	// Create variable map.
+	variables := map[ast.Variable]string{}
+	for n, p := range byindex {
 		for _, v := range p.Type.Coordinates {
 			name := ast.Variable(fmt.Sprintf("%s%d", v, n))
 			code := fmt.Sprintf("&%s.%s", p.Name, v)
@@ -91,6 +107,7 @@ func (f Function) Variables() map[ast.Variable]string {
 		}
 		n++
 	}
+
 	return variables
 }
 
@@ -132,6 +149,7 @@ func (p *point) Generate() ([]byte, error) {
 	p.Package(p.PackageName)
 
 	for _, component := range p.Components {
+		p.NL()
 		switch c := component.(type) {
 		case Type:
 			p.typ(c)

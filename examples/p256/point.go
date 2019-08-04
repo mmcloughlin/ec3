@@ -10,32 +10,32 @@ type Jacobian struct {
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		H    Elt
-		r_   Elt
-		J    Elt
-		t1   Elt
-		V    Elt
-		t11  Elt
-		Z1Z1 Elt
 		U1   Elt
-		t7   Elt
-		t12  Elt
-		t14  Elt
+		t2   Elt
 		t3   Elt
-		t4   Elt
-		t9   Elt
-		t13  Elt
-		Z2Z2 Elt
+		t6   Elt
+		t12  Elt
+		t8   Elt
 		t0   Elt
 		I    Elt
-		t6   Elt
+		t4   Elt
+		t10  Elt
+		t11  Elt
 		U2   Elt
-		t2   Elt
+		H    Elt
+		r_   Elt
+		t7   Elt
+		t13  Elt
+		t9   Elt
+		J    Elt
+		t5   Elt
+		Z2Z2 Elt
+		t14  Elt
+		Z1Z1 Elt
+		t1   Elt
 		S2   Elt
 		S1   Elt
-		t5   Elt
-		t8   Elt
-		t10  Elt
+		V    Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -67,4 +67,53 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	Sub(&t13, &t12, &Z1Z1)
 	Sub(&t14, &t13, &Z2Z2)
 	Mul(&p.Z, &t14, &H)
+}
+
+func (p *Jacobian) Double(q *Jacobian) {
+	var (
+		gamma Elt
+		t2    Elt
+		beta  Elt
+		t9    Elt
+		t12   Elt
+		delta Elt
+		t0    Elt
+		t1    Elt
+		t3    Elt
+		t6    Elt
+		t8    Elt
+		alpha Elt
+		t11   Elt
+		t4    Elt
+		t5    Elt
+		t7    Elt
+		t10   Elt
+	)
+
+	Sqr(&delta, &q.Z)
+	Sqr(&gamma, &q.Y)
+	Mul(&beta, &q.X, &gamma)
+	Sub(&t0, &q.X, &delta)
+	Add(&t1, &q.X, &delta)
+	Mul(&t2, &t0, &t1)
+	Add(&alpha, &t2, &t2)
+	Add(&alpha, &alpha, &t2)
+	Sqr(&t3, &alpha)
+	Add(&t4, &beta, &beta)
+	Add(&t4, &t4, &t4)
+	Add(&t4, &t4, &t4)
+	Sub(&p.X, &t3, &t4)
+	Add(&t5, &q.Y, &q.Z)
+	Sqr(&t6, &t5)
+	Sub(&t7, &t6, &gamma)
+	Sub(&p.Z, &t7, &delta)
+	Add(&t8, &beta, &beta)
+	Add(&t8, &t8, &t8)
+	Sub(&t9, &t8, &p.X)
+	Sqr(&t10, &gamma)
+	Add(&t11, &t10, &t10)
+	Add(&t11, &t11, &t11)
+	Add(&t11, &t11, &t11)
+	Mul(&t12, &alpha, &t9)
+	Sub(&p.Y, &t12, &t11)
 }
