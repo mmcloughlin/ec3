@@ -3,7 +3,6 @@ package ec
 import (
 	"fmt"
 	"go/types"
-	"strings"
 
 	"golang.org/x/xerrors"
 
@@ -16,19 +15,19 @@ import (
 	"github.com/mmcloughlin/ec3/internal/gocode"
 )
 
+type Component interface {
+	private()
+}
+
+// TODO(mbm): Type and Function have similarities with corresponding go/types structs. Use them instead?
+
 type Type struct {
 	Name        string
 	ElementType types.Type
 	Coordinates []string
 }
 
-func (t Type) Print(p *gocode.Generator) {
-	p.Linef("type %s struct {", t.Name)
-	for _, c := range t.Coordinates {
-		p.Linef("\t%s %s", c, t.ElementType)
-	}
-	p.Linef("}")
-}
+func (Type) private() {}
 
 type Parameter struct {
 	Name string
@@ -42,6 +41,8 @@ type Function struct {
 	Results  []*Parameter
 	Formula  *efd.Formula
 }
+
+func (Function) private() {}
 
 // PrimitiveProgram lower the formula program to a primitive.
 func (f Function) PrimitiveProgram() (*ast.Program, error) {
@@ -68,99 +69,36 @@ func (f Function) Parameters() []*Parameter {
 	return append(params, f.Outputs()...)
 }
 
-func (f Function) Print(p *gocode.Generator) {
-	// Setup input and outputs.
-	points := append([]string{}, fn.Parameters...)
-	points = append(points, p.Receiver())
+// Symbols returns the set of names defined by the function parameters.
+func (f Function) Symbols() map[string]bool {
+	symbols := map[string]bool{}
+	for _, p := range f.Parameters() {
+		symbols[p.Name] = true
+	}
+	return symbols
+}
 
+// Variables builds a map from program variable names to the Go code that
+// references their corresponding function parameters.
+func (f Function) Variables() map[ast.Variable]string {
 	variables := map[ast.Variable]string{}
 	n := 1
-	for _, point := range points {
-		for _, v := range p.Representation.Variables {
+	for _, p := range f.Parameters() {
+		for _, v := range p.Type.Coordinates {
 			name := ast.Variable(fmt.Sprintf("%s%d", v, n))
-			code := fmt.Sprintf("&%s.%s", point, v)
+			code := fmt.Sprintf("&%s.%s", p.Name, v)
 			variables[name] = code
 		}
 		n++
 	}
-
-	// Function header.
-	p.Printf("func (%s *%s) %s(%s *%s)", p.Receiver(), p.TypeName, fn.Name, strings.Join(fn.Parameters, ", "), p.TypeName)
-	p.EnterBlock()
-
-	// Set of defined names.
-	symbols := map[string]bool{}
-	symbols[p.Receiver()] = true
-	for _, param := range fn.Parameters {
-		symbols[param] = true
-	}
-
-	// Allocate temporaries.
-	p.Linef("var (")
-	for _, v := range op3.Variables(prog) {
-		if _, ok := variables[v]; ok {
-			continue
-		}
-		name := string(v)
-		if _, ok := symbols[name]; ok {
-			name += "_"
-		}
-		p.Linef("%s %s", name, p.Field.Type())
-		variables[v] = fmt.Sprintf("&%s", name)
-	}
-	p.Linef(")")
-
-	// Generate program.
-	p.NL()
-	for _, a := range prog.Assignments {
-		// TODO(mbm): ugly duplication in the switch statement below
-		switch e := a.RHS.(type) {
-		case ast.Pow:
-			if e.N != 2 {
-				p.SetError(errutil.AssertionFailure("power expected to be square"))
-				return
-			}
-			p.Linef("Sqr(%s, %s)", variables[a.LHS], variables[e.X])
-		case ast.Mul:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Mul(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
-		case ast.Sub:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Sub(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
-		case ast.Add:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Add(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
-		default:
-			p.SetError(errutil.UnexpectedType(e))
-			return
-		}
-	}
-
-	p.LeaveBlock()
+	return variables
 }
 
 type Config struct {
-	Field          fp.Config
-	Representation *efd.Representation
-	Functions      []Function
-
 	PackageName string
-	TypeName    string
+	Field       fp.Config
+	Components  []Component
 }
-
-func (c Config) Receiver() string { return "p" }
 
 func Package(cfg Config) (gen.Files, error) {
 	fs := gen.Files{}
@@ -193,69 +131,58 @@ func (p *point) Generate() ([]byte, error) {
 	p.CodeGenerationWarning(gen.GeneratedBy)
 	p.Package(p.PackageName)
 
-	// Type definition.
-	p.Linef("type %s struct {", p.TypeName)
-	for _, v := range p.Representation.Variables {
-		p.Linef("\t%s %s", v, p.Field.Type())
-	}
-	p.Linef("}")
-
-	// Formulae.
-	for _, fn := range p.Functions {
-		p.function(fn)
+	for _, component := range p.Components {
+		switch c := component.(type) {
+		case Type:
+			p.typ(c)
+		case Function:
+			p.function(c)
+		default:
+			return nil, errutil.UnexpectedType(c)
+		}
 	}
 
 	return p.Formatted()
 }
 
-func (p *point) function(fn Function) {
-	// Lower the formula program to a primitive.
-	original := fn.Formula.Program
-	if original == nil {
-		p.SetError(xerrors.Errorf("function %s: missing op3 program", fn.Name))
-		return
+func (p *point) typ(t Type) {
+	p.Linef("type %s struct {", t.Name)
+	for _, c := range t.Coordinates {
+		p.Linef("\t%s %s", c, t.ElementType)
 	}
+	p.Linef("}")
+}
 
-	prog, err := op3.Lower(original)
+func (p *point) function(f Function) {
+	// Determine program.
+	prog, err := f.PrimitiveProgram()
 	if err != nil {
 		p.SetError(err)
 		return
 	}
 
-	// Setup input and outputs.
-	points := append([]string{}, fn.Parameters...)
-	points = append(points, p.Receiver())
-
-	variables := map[ast.Variable]string{}
-	n := 1
-	for _, point := range points {
-		for _, v := range p.Representation.Variables {
-			name := ast.Variable(fmt.Sprintf("%s%d", v, n))
-			code := fmt.Sprintf("&%s.%s", point, v)
-			variables[name] = code
-		}
-		n++
-	}
-
 	// Function header.
-	p.Printf("func (%s *%s) %s(%s *%s)", p.Receiver(), p.TypeName, fn.Name, strings.Join(fn.Parameters, ", "), p.TypeName)
+	p.Printf("func ")
+	if f.Receiver != nil {
+		p.tuple([]*Parameter{f.Receiver})
+	}
+	p.Printf("%s", f.Name)
+	p.tuple(f.Params)
+	p.tuple(f.Results)
 	p.EnterBlock()
 
-	// Set of defined names.
-	symbols := map[string]bool{}
-	symbols[p.Receiver()] = true
-	for _, param := range fn.Parameters {
-		symbols[param] = true
-	}
+	// Setup mapping from formula variables to code, and allocate any necessary
+	// temporaries.
+	variables := f.Variables()
+	defined := f.Symbols()
 
-	// Allocate temporaries.
 	p.Linef("var (")
 	for _, v := range op3.Variables(prog) {
 		if _, ok := variables[v]; ok {
 			continue
 		}
 		name := string(v)
-		if _, ok := symbols[name]; ok {
+		if _, conflict := defined[name]; conflict {
 			name += "_"
 		}
 		p.Linef("%s %s", name, p.Field.Type())
@@ -302,4 +229,18 @@ func (p *point) function(fn Function) {
 	}
 
 	p.LeaveBlock()
+}
+
+func (p *point) tuple(params []*Parameter) {
+	if len(params) == 0 {
+		return
+	}
+	p.Printf("(")
+	for i, param := range params {
+		if i > 0 {
+			p.Printf(", ")
+		}
+		p.Printf("%s *%s", param.Name, param.Type.Name)
+	}
+	p.Printf(")")
 }

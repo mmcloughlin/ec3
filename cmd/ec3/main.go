@@ -39,7 +39,7 @@ func main() {
 	}
 
 	// Build file set.
-	//fs := fp25519(p)
+	// fs := fp25519(p)
 	fs := p256(p)
 
 	for _, f := range fs {
@@ -97,23 +97,34 @@ func p256(p *ir.Program) gen.Files {
 		log.Fatalf("unknown representation %q", *repr)
 	}
 
+	jacobian := ec.Type{
+		Name:        "Jacobian",
+		ElementType: fieldcfg.Type(),
+		Coordinates: r.Variables,
+	}
+
 	f := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
 	if f == nil {
 		log.Fatalf("unknown formula")
 	}
 
-	pointcfg := ec.Config{
-		Field:          fieldcfg,
-		Representation: r,
-		Functions: []ec.Function{
-			{
-				Name:       "Add",
-				Parameters: []string{"q", "r"},
-				Formula:    f,
-			},
+	add := ec.Function{
+		Name:     "Add",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Params: []*ec.Parameter{
+			{Name: "q", Type: jacobian},
+			{Name: "r", Type: jacobian},
 		},
+		Formula: f,
+	}
+
+	pointcfg := ec.Config{
 		PackageName: "p256",
-		TypeName:    "Jacobian",
+		Field:       fieldcfg,
+		Components: []ec.Component{
+			jacobian,
+			add,
+		},
 	}
 
 	pointfiles, err := ec.Package(pointcfg)

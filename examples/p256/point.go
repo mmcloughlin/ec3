@@ -8,34 +8,34 @@ type Jacobian struct {
 	Z Elt
 }
 
-func (p *Jacobian) Add(q, r *Jacobian) {
+func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		Z1Z1 Elt
-		t5   Elt
-		t9   Elt
+		H    Elt
+		r_   Elt
+		J    Elt
 		t1   Elt
 		V    Elt
-		t10  Elt
-		t13  Elt
-		r_   Elt
-		t4   Elt
 		t11  Elt
-		Z2Z2 Elt
+		Z1Z1 Elt
 		U1   Elt
-		H    Elt
-		t12  Elt
-		S2   Elt
-		t3   Elt
-		t6   Elt
-		t14  Elt
-		t2   Elt
-		S1   Elt
-		t8   Elt
 		t7   Elt
+		t12  Elt
+		t14  Elt
+		t3   Elt
+		t4   Elt
+		t9   Elt
+		t13  Elt
+		Z2Z2 Elt
 		t0   Elt
 		I    Elt
-		J    Elt
+		t6   Elt
 		U2   Elt
+		t2   Elt
+		S2   Elt
+		S1   Elt
+		t5   Elt
+		t8   Elt
+		t10  Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
