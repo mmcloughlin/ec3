@@ -8,6 +8,86 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
+func TestPare(t *testing.T) {
+	a := ast.Variable("a")
+	b := ast.Variable("b")
+	c := ast.Variable("c")
+	cases := []struct {
+		Assignments []ast.Assignment
+		Outputs     []ast.Variable
+		Expect      []ast.Assignment
+	}{
+		// No outputs.
+		{
+			Assignments: []ast.Assignment{
+				{LHS: a, RHS: b},
+			},
+			Outputs: []ast.Variable{}, // none
+			Expect:  []ast.Assignment{},
+		},
+		// Trivial case.
+		{
+			Assignments: []ast.Assignment{
+				{LHS: a, RHS: b},
+			},
+			Outputs: []ast.Variable{a},
+			Expect: []ast.Assignment{
+				{LHS: a, RHS: b},
+			},
+		},
+		// Dependency chain.
+		{
+			Assignments: []ast.Assignment{
+				{LHS: b, RHS: ast.Add{X: a, Y: a}}, // b = a+a
+				{LHS: c, RHS: ast.Add{X: b, Y: b}}, // c = b+b
+			},
+			Outputs: []ast.Variable{c},
+			Expect: []ast.Assignment{
+				{LHS: b, RHS: ast.Add{X: a, Y: a}},
+				{LHS: c, RHS: ast.Add{X: b, Y: b}},
+			},
+		},
+		// Unnecessary instruction.
+		{
+			Assignments: []ast.Assignment{
+				{LHS: b, RHS: ast.Add{X: a, Y: a}}, // b = a+a
+				{LHS: c, RHS: ast.Add{X: a, Y: a}}, // c = a+a
+			},
+			Outputs: []ast.Variable{c},
+			Expect: []ast.Assignment{
+				{LHS: c, RHS: ast.Add{X: a, Y: a}},
+			},
+		},
+		// Multiple assignment to the output variable.
+		{
+			Assignments: []ast.Assignment{
+				{LHS: c, RHS: ast.Add{X: a, Y: a}}, // c = a+a
+				{LHS: c, RHS: ast.Add{X: a, Y: a}}, // c = a+a
+				{LHS: c, RHS: ast.Add{X: a, Y: a}}, // c = a+a
+				{LHS: c, RHS: ast.Add{X: b, Y: b}}, // c = b+b
+				{LHS: c, RHS: ast.Add{X: a, Y: a}}, // c = a+a
+			},
+			Outputs: []ast.Variable{c},
+			Expect: []ast.Assignment{
+				{LHS: c, RHS: ast.Add{X: a, Y: a}},
+			},
+		},
+	}
+	for _, c := range cases {
+		p := &ast.Program{Assignments: c.Assignments}
+		expect := &ast.Program{Assignments: c.Expect}
+		got, err := Pare(p, c.Outputs)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(got, expect) {
+			t.Logf("got:\n%s", got)
+			t.Logf("expect:\n%s", expect)
+			t.Fatalf("mismatch")
+		}
+	}
+}
+
 func TestIsPrimitive(t *testing.T) {
 	p := &ast.Program{
 		Assignments: []ast.Assignment{

@@ -62,6 +62,47 @@ func IsSSA(p *ast.Program) bool {
 	return true
 }
 
+// Pare down the given program to only the operations required to produce given
+// outputs.
+func Pare(p *ast.Program, outputs []ast.Variable) (*ast.Program, error) {
+	// This is essentially liveness analysis for a single basic block.
+
+	// Initially, the required outputs are live.
+	live := map[ast.Variable]bool{}
+	for _, output := range outputs {
+		live[output] = true
+	}
+
+	// Process the program in reverse order.
+	n := len(p.Assignments)
+	required := make([]ast.Assignment, 0, n)
+	for i := n - 1; i >= 0; i-- {
+		a := p.Assignments[i]
+
+		// If the variable written to is live, then this operation is required.
+		if live[a.LHS] {
+			required = append(required, a)
+		}
+
+		// Kill the variable that's written.
+		delete(live, a.LHS)
+
+		// Input variables are live.
+		for _, v := range ast.Variables(a.RHS.Inputs()) {
+			live[v] = true
+		}
+	}
+
+	// Required assignments list was created in reverse order.
+	for l, r := 0, len(required)-1; l < r; l, r = l+1, r-1 {
+		required[l], required[r] = required[r], required[l]
+	}
+
+	return &ast.Program{
+		Assignments: required,
+	}, nil
+}
+
 // IsPrimitive reports whether p consists of only primitive operations.
 func IsPrimitive(p *ast.Program) bool {
 	for _, a := range p.Assignments {
