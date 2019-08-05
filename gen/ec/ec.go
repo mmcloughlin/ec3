@@ -3,8 +3,7 @@ package ec
 import (
 	"fmt"
 	"go/types"
-
-	"github.com/mmcloughlin/ec3/internal/ints"
+	"strings"
 
 	"golang.org/x/xerrors"
 
@@ -15,6 +14,7 @@ import (
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/gocode"
+	"github.com/mmcloughlin/ec3/internal/ints"
 )
 
 type Component interface {
@@ -148,6 +148,8 @@ func (p *point) Generate() ([]byte, error) {
 	p.CodeGenerationWarning(gen.GeneratedBy)
 	p.Package(p.PackageName)
 
+	p.Import("math/big")
+
 	for _, component := range p.Components {
 		p.NL()
 		switch c := component.(type) {
@@ -164,11 +166,33 @@ func (p *point) Generate() ([]byte, error) {
 }
 
 func (p *point) typ(t Type) {
+	// type declaration.
 	p.Linef("type %s struct {", t.Name)
 	for _, c := range t.Coordinates {
 		p.Linef("\t%s %s", c, t.ElementType)
 	}
 	p.Linef("}")
+
+	// Constructor.
+	p.NL()
+	p.Printf("func New%s(%s *big.Int) *%s", t.Name, strings.Join(t.Coordinates, ", "), t.Name)
+	p.EnterBlock()
+	p.Linef("p := new(%s)", t.Name)
+	for _, v := range t.Coordinates {
+		p.Linef("p.%s.SetInt(%s)", v, v)
+	}
+	p.Linef("return p")
+	p.LeaveBlock()
+
+	// Conversion to big.Ints.
+	p.NL()
+	p.Printf("func (p *%s) Coordinates() (%s *big.Int)", t.Name, strings.Join(t.Coordinates, ", "))
+	p.EnterBlock()
+	for _, v := range t.Coordinates {
+		p.Linef("%s = p.%s.Int()", v, v)
+	}
+	p.Linef("return")
+	p.LeaveBlock()
 }
 
 func (p *point) function(f Function) {

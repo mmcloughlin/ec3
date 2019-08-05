@@ -2,40 +2,57 @@
 
 package p256
 
+import "math/big"
+
 type Jacobian struct {
 	X Elt
 	Y Elt
 	Z Elt
 }
 
+func NewJacobian(X, Y, Z *big.Int) *Jacobian {
+	p := new(Jacobian)
+	p.X.SetInt(X)
+	p.Y.SetInt(Y)
+	p.Z.SetInt(Z)
+	return p
+}
+
+func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
+	X = p.X.Int()
+	Y = p.Y.Int()
+	Z = p.Z.Int()
+	return
+}
+
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		U1   Elt
-		t2   Elt
-		t3   Elt
-		t6   Elt
-		t12  Elt
-		t8   Elt
-		t0   Elt
-		I    Elt
-		t4   Elt
-		t10  Elt
-		t11  Elt
-		U2   Elt
-		H    Elt
-		r_   Elt
-		t7   Elt
-		t13  Elt
-		t9   Elt
-		J    Elt
-		t5   Elt
-		Z2Z2 Elt
 		t14  Elt
 		Z1Z1 Elt
-		t1   Elt
-		S2   Elt
-		S1   Elt
 		V    Elt
+		t6   Elt
+		t13  Elt
+		t2   Elt
+		S2   Elt
+		t7   Elt
+		Z2Z2 Elt
+		U2   Elt
+		U1   Elt
+		t5   Elt
+		t8   Elt
+		S1   Elt
+		t4   Elt
+		t10  Elt
+		t9   Elt
+		t12  Elt
+		t0   Elt
+		H    Elt
+		t11  Elt
+		t1   Elt
+		r_   Elt
+		J    Elt
+		I    Elt
+		t3   Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -72,22 +89,22 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 func (p *Jacobian) Double(q *Jacobian) {
 	var (
 		gamma Elt
-		t2    Elt
-		beta  Elt
-		t9    Elt
-		t12   Elt
-		delta Elt
-		t0    Elt
-		t1    Elt
-		t3    Elt
-		t6    Elt
-		t8    Elt
 		alpha Elt
-		t11   Elt
 		t4    Elt
 		t5    Elt
-		t7    Elt
 		t10   Elt
+		t9    Elt
+		t0    Elt
+		t1    Elt
+		t6    Elt
+		t11   Elt
+		beta  Elt
+		t7    Elt
+		t12   Elt
+		delta Elt
+		t2    Elt
+		t3    Elt
+		t8    Elt
 	)
 
 	Sqr(&delta, &q.Z)
