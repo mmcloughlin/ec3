@@ -80,13 +80,11 @@ func ExpectMul(x, y Elt) Elt {
 
 func TestAdd(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
-		var x, y Elt
+		var x, y, got Elt
 		rand.Read(x[:])
 		rand.Read(y[:])
 
-		got := x
-		Add(&got, &y)
-
+		Add(&got, &x, &y)
 		expect := ExpectAdd(x, y)
 
 		if got != expect {
@@ -101,13 +99,11 @@ func TestAdd(t *testing.T) {
 
 func TestSub(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
-		var x, y Elt
+		var x, y, got Elt
 		rand.Read(x[:])
 		rand.Read(y[:])
 
-		got := x
-		Sub(&got, &y)
-
+		Sub(&got, &x, &y)
 		expect := ExpectSub(x, y)
 
 		if got != expect {

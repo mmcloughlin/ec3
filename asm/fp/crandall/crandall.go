@@ -1,6 +1,8 @@
 package crandall
 
 import (
+	"math/big"
+
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
 	"github.com/mmcloughlin/avo/reg"
@@ -19,6 +21,10 @@ func New(p prime.Crandall) fp.Field {
 
 type field struct {
 	p prime.Crandall
+}
+
+func (f field) Prime() *big.Int {
+	return f.p.Int()
 }
 
 func (f field) ElementBits() int {

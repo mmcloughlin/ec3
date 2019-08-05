@@ -1,12 +1,17 @@
 package fp
 
 import (
+	"math/big"
+
 	"github.com/mmcloughlin/avo/build"
 
 	"github.com/mmcloughlin/ec3/asm/mp"
 )
 
 type Properties interface {
+	// Prime returns the field modulus.
+	Prime() *big.Int
+
 	// ElementBits returns the number of bits used to represent a field element.
 	// This will be larger than the size of the prime if it's not on a word boundary.
 	ElementBits() int

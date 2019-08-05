@@ -82,6 +82,13 @@ func (a *api) Generate() ([]byte, error) {
 	a.CodeGenerationWarning(gen.GeneratedBy)
 	a.Package(a.Config.PackageName)
 
+	a.Import("math/big")
+
+	// Variables.
+	a.NL()
+	a.Commentf("modulus is the field prime modulus.")
+	a.Linef("var modulus, _ = new(big.Int).SetString(\"%d\", 10)", a.Field.Prime())
+
 	// Define element type.
 	a.NL()
 	a.Comment("Size of a field element in bytes.")
@@ -91,11 +98,57 @@ func (a *api) Generate() ([]byte, error) {
 	a.Commentf("%s is a field element.", a.ElementTypeName)
 	a.Linef("type %s %s", a.Type(), a.Type().Underlying())
 
+	// Conversion to/from big.Int.
+	a.SetInt()
+	a.Int()
+
 	// Implement field operations.
 	a.Square()
 	a.Inverse()
 
 	return a.Formatted()
+}
+
+// SetInt generates a function to construct a field element from a big integer.
+func (a *api) SetInt() {
+	a.Comment("SetInt constructs a field element from a big integer.")
+	a.Printf("func (x %s) SetInt(y *big.Int)", a.PointerType())
+	a.EnterBlock()
+
+	a.Comment("Reduce if outside range.")
+	a.Linef("if y.Sign() < 0 || y.Cmp(modulus) >= 0 {")
+	a.Linef("y = new(big.Int).Mod(y, modulus)")
+	a.Linef("}")
+
+	a.Comment("Copy bytes into field element.")
+	a.Linef("b := y.Bytes()")
+	a.Linef("i := 0")
+	a.Linef("for ; i < len(b); i++ {")
+	a.Linef("x[i] = b[len(b)-1-i]")
+	a.Linef("}")
+	a.Linef("for ; i < Size; i++ {")
+	a.Linef("x[i] = 0")
+	a.Linef("}")
+
+	a.LeaveBlock()
+}
+
+// Int generates a function to convert to a big integer.
+func (a *api) Int() {
+	a.Comment("Int converts to a big integer.")
+	a.Printf("func (x %s) Int() *big.Int", a.PointerType())
+	a.EnterBlock()
+
+	a.Comment("Endianness swap.")
+	a.Linef("var be %s", a.Type())
+	a.Linef("for i := 0; i < Size; i++ {")
+	a.Linef("be[Size-1-i] = x[i]")
+	a.Linef("}")
+
+	a.Comment("Build big.Int.")
+	a.Linef("return new(big.Int).SetBytes(be[:])")
+
+	a.LeaveBlock()
 }
 
 // Square generates a square function. This is currently implemented naively

@@ -32,6 +32,10 @@ type field struct {
 	p prime.Prime
 }
 
+func (f field) Prime() *big.Int {
+	return f.p.Int()
+}
+
 func (f field) ElementBits() int {
 	n := f.p.Bits()
 	return ints.NextMultiple(n, 64)

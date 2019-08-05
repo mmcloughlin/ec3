@@ -2,8 +2,8 @@
 
 package p256
 
-func Add(x *Elt, y *Elt)
+func Add(z *Elt, x *Elt, y *Elt)
 
-func Sub(x *Elt, y *Elt)
+func Sub(z *Elt, x *Elt, y *Elt)
 
 func Mul(z *Elt, x *Elt, y *Elt)

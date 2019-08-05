@@ -2,11 +2,44 @@
 
 package fp25519
 
+import "math/big"
+
+// modulus is the field prime modulus.
+var modulus, _ = new(big.Int).SetString("57896044618658097711785492504343953926634992332820282019728792003956564819949", 10)
+
 // Size of a field element in bytes.
 const Size = 32
 
 // Elt is a field element.
 type Elt [32]uint8
+
+// SetInt constructs a field element from a big integer.
+func (x *Elt) SetInt(y *big.Int) {
+	// Reduce if outside range.
+	if y.Sign() < 0 || y.Cmp(modulus) >= 0 {
+		y = new(big.Int).Mod(y, modulus)
+	}
+	// Copy bytes into field element.
+	b := y.Bytes()
+	i := 0
+	for ; i < len(b); i++ {
+		x[i] = b[len(b)-1-i]
+	}
+	for ; i < Size; i++ {
+		x[i] = 0
+	}
+}
+
+// Int converts to a big integer.
+func (x *Elt) Int() *big.Int {
+	// Endianness swap.
+	var be Elt
+	for i := 0; i < Size; i++ {
+		be[Size-1-i] = x[i]
+	}
+	// Build big.Int.
+	return new(big.Int).SetBytes(be[:])
+}
 
 // Sqr computes z = x^2 (mod p).
 func Sqr(z *Elt, x *Elt) {
