@@ -3,6 +3,7 @@ package ec
 import (
 	"fmt"
 	"go/types"
+	"log"
 	"strings"
 
 	"golang.org/x/xerrors"
@@ -37,11 +38,12 @@ type Parameter struct {
 }
 
 type Function struct {
-	Name     string
-	Receiver *Parameter
-	Params   []*Parameter
-	Results  []*Parameter
-	Formula  *efd.Formula
+	Name          string
+	Receiver      *Parameter
+	WriteReceiver bool
+	Params        []*Parameter
+	Results       []*Parameter
+	Formula       *efd.Formula
 }
 
 func (Function) private() {}
@@ -54,15 +56,35 @@ func (f Function) Program() (*ast.Program, error) {
 		return nil, xerrors.Errorf("function %s: missing op3 program", f.Name)
 	}
 
-	// Pare down to the outputs we care about.
+	// Restrict to variables used in this function.
+	outputs := []ast.Variable{}
+	log.Print(f.Formula.Tag, f.Variables())
+	for v := range f.Variables() {
+		outputs = append(outputs, v)
+	}
 
-	return op3.Lower(original)
+	p, err := op3.Pare(original, outputs)
+	if err != nil {
+		return nil, err
+	}
+
+	return op3.Lower(p)
+}
+
+// Inputs returns all input parameters.
+func (f Function) Inputs() []*Parameter {
+	inputs := []*Parameter{}
+	if f.Receiver != nil && !f.WriteReceiver {
+		inputs = append(inputs, f.Receiver)
+	}
+	inputs = append(inputs, f.Params...)
+	return inputs
 }
 
 // Outputs returns all output parameters. The receiver is considered an output, if present.
 func (f Function) Outputs() []*Parameter {
 	outputs := []*Parameter{}
-	if f.Receiver != nil {
+	if f.Receiver != nil && f.WriteReceiver {
 		outputs = append(outputs, f.Receiver)
 	}
 	outputs = append(outputs, f.Results...)
@@ -71,8 +93,7 @@ func (f Function) Outputs() []*Parameter {
 
 // Parameters returns all input and output parameters.
 func (f Function) Parameters() []*Parameter {
-	params := append([]*Parameter{}, f.Params...)
-	return append(params, f.Outputs()...)
+	return append(f.Inputs(), f.Outputs()...)
 }
 
 // Symbols returns the set of names defined by the function parameters.
@@ -90,7 +111,7 @@ func (f Function) Variables() map[ast.Variable]string {
 	// Assign indicies.
 	byindex := map[int]*Parameter{}
 	n := 1
-	for _, p := range f.Params {
+	for _, p := range f.Inputs() {
 		byindex[n] = p
 		n++
 	}
@@ -170,7 +191,7 @@ func (p *point) Generate() ([]byte, error) {
 }
 
 func (p *point) typ(t Type) {
-	// type declaration.
+	// Type declaration.
 	p.Linef("type %s struct {", t.Name)
 	for _, c := range t.Coordinates {
 		p.Linef("\t%s %s", c, t.ElementType)
@@ -214,8 +235,15 @@ func (p *point) function(f Function) {
 	}
 	p.Printf("%s", f.Name)
 	p.tuple(f.Params)
-	p.tuple(f.Results)
+	if len(f.Results) > 0 {
+		p.tuple(f.Results)
+	}
 	p.EnterBlock()
+
+	// Setup return variables.
+	for _, r := range f.Results {
+		p.Linef("%s = new(%s)", r.Name, r.Type.Name)
+	}
 
 	// Setup mapping from formula variables to code, and allocate any necessary
 	// temporaries.
@@ -280,13 +308,13 @@ func (p *point) function(f Function) {
 		}
 	}
 
+	if len(f.Results) > 0 {
+		p.Linef("return")
+	}
 	p.LeaveBlock()
 }
 
 func (p *point) tuple(params []*Parameter) {
-	if len(params) == 0 {
-		return
-	}
 	p.Printf("(")
 	for i, param := range params {
 		if i > 0 {

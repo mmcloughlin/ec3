@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/addchain/acc/ir"
@@ -97,10 +98,15 @@ func p256(p *ir.Program) gen.Files {
 		log.Fatalf("unknown representation %q", *repr)
 	}
 
+	affinecoords := []string{}
+	for _, v := range r.Shape.Coordinates {
+		affinecoords = append(affinecoords, strings.ToUpper(v))
+	}
+
 	affine := ec.Type{
 		Name:        "Affine",
 		ElementType: fieldcfg.Type(),
-		Coordinates: r.Shape.Coordinates,
+		Coordinates: affinecoords,
 	}
 
 	jacobian := ec.Type{
@@ -129,8 +135,9 @@ func p256(p *ir.Program) gen.Files {
 	}
 
 	add := ec.Function{
-		Name:     "Add",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Name:          "Add",
+		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
+		WriteReceiver: true,
 		Params: []*ec.Parameter{
 			{Name: "q", Type: jacobian},
 			{Name: "r", Type: jacobian},
@@ -144,8 +151,9 @@ func p256(p *ir.Program) gen.Files {
 	}
 
 	dbl := ec.Function{
-		Name:     "Double",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Name:          "Double",
+		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
+		WriteReceiver: true,
 		Params: []*ec.Parameter{
 			{Name: "q", Type: jacobian},
 		},

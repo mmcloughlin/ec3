@@ -4,6 +4,24 @@ package p256
 
 import "math/big"
 
+type Affine struct {
+	X Elt
+	Y Elt
+}
+
+func NewAffine(X, Y *big.Int) *Affine {
+	p := new(Affine)
+	p.X.SetInt(X)
+	p.Y.SetInt(Y)
+	return p
+}
+
+func (p *Affine) Coordinates() (X, Y *big.Int) {
+	X = p.X.Int()
+	Y = p.Y.Int()
+	return
+}
+
 type Jacobian struct {
 	X Elt
 	Y Elt
@@ -25,34 +43,50 @@ func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
 	return
 }
 
+func (p *Jacobian) Affine() (a *Affine) {
+	a = new(Affine)
+	var (
+		A  Elt
+		AA Elt
+		t0 Elt
+	)
+
+	Inv(&A, &p.Z)
+	Sqr(&AA, &A)
+	Mul(&a.X, &p.X, &AA)
+	Mul(&t0, &AA, &A)
+	Mul(&a.Y, &p.Y, &t0)
+	return
+}
+
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		t14  Elt
-		Z1Z1 Elt
-		V    Elt
-		t6   Elt
-		t13  Elt
-		t2   Elt
-		S2   Elt
 		t7   Elt
-		Z2Z2 Elt
-		U2   Elt
-		U1   Elt
-		t5   Elt
-		t8   Elt
-		S1   Elt
-		t4   Elt
-		t10  Elt
-		t9   Elt
-		t12  Elt
-		t0   Elt
-		H    Elt
 		t11  Elt
-		t1   Elt
+		t14  Elt
+		S1   Elt
 		r_   Elt
-		J    Elt
+		t13  Elt
+		U2   Elt
+		t8   Elt
+		t4   Elt
+		H    Elt
 		I    Elt
 		t3   Elt
+		V    Elt
+		t6   Elt
+		t5   Elt
+		t9   Elt
+		Z1Z1 Elt
+		t1   Elt
+		Z2Z2 Elt
+		t12  Elt
+		t2   Elt
+		S2   Elt
+		J    Elt
+		t10  Elt
+		U1   Elt
+		t0   Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -88,23 +122,23 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 
 func (p *Jacobian) Double(q *Jacobian) {
 	var (
-		gamma Elt
-		alpha Elt
-		t4    Elt
-		t5    Elt
-		t10   Elt
-		t9    Elt
-		t0    Elt
-		t1    Elt
-		t6    Elt
 		t11   Elt
-		beta  Elt
-		t7    Elt
 		t12   Elt
-		delta Elt
-		t2    Elt
-		t3    Elt
+		t5    Elt
+		t6    Elt
 		t8    Elt
+		delta Elt
+		t0    Elt
+		t7    Elt
+		beta  Elt
+		t4    Elt
+		t3    Elt
+		t10   Elt
+		gamma Elt
+		t1    Elt
+		t2    Elt
+		alpha Elt
+		t9    Elt
 	)
 
 	Sqr(&delta, &q.Z)
