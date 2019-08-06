@@ -8,6 +8,47 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
+func TestRenameVariables(t *testing.T) {
+	a := ast.Variable("a")
+	b := ast.Variable("b")
+	c := ast.Variable("c")
+	d := ast.Variable("d")
+	p := &ast.Program{
+		Assignments: []ast.Assignment{
+			{LHS: b, RHS: ast.Add{X: a, Y: a}}, // b = a+a
+			{LHS: c, RHS: ast.Add{X: b, Y: b}}, // c = b+b
+		},
+	}
+	replacements := map[ast.Variable]ast.Variable{
+		b: d,
+	}
+	expect := &ast.Program{
+		Assignments: []ast.Assignment{
+			{LHS: d, RHS: ast.Add{X: a, Y: a}}, // d = a+a
+			{LHS: c, RHS: ast.Add{X: d, Y: d}}, // c = d+d
+		},
+	}
+	r := RenameVariables(p, replacements)
+	if !reflect.DeepEqual(r, expect) {
+		t.Fail()
+	}
+}
+
+func TestRenameVariablesAllFormulae(t *testing.T) {
+	// Verify that RenameVariables with an empty replacement map is a no-op.
+	noop := map[ast.Variable]ast.Variable{}
+	for _, f := range efd.All {
+		p := f.Program
+		if p == nil {
+			continue
+		}
+		r := RenameVariables(p, noop)
+		if !reflect.DeepEqual(p, r) {
+			t.Fatal("expected noop")
+		}
+	}
+}
+
 func TestPare(t *testing.T) {
 	a := ast.Variable("a")
 	b := ast.Variable("b")

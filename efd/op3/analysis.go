@@ -62,6 +62,66 @@ func IsSSA(p *ast.Program) bool {
 	return true
 }
 
+// RenameVariables applies the given variable replacements to the program p.
+func RenameVariables(p *ast.Program, replacements map[ast.Variable]ast.Variable) *ast.Program {
+	r := &ast.Program{}
+	for _, a := range p.Assignments {
+		var expr ast.Expression
+		switch e := a.RHS.(type) {
+		case ast.Pow:
+			expr = ast.Pow{
+				X: renamevariable(e.X, replacements),
+				N: e.N,
+			}
+		case ast.Inv:
+			expr = ast.Inv{X: renameoperand(e.X, replacements)}
+		case ast.Mul:
+			expr = ast.Mul{
+				X: renameoperand(e.X, replacements),
+				Y: renameoperand(e.Y, replacements),
+			}
+		case ast.Neg:
+			expr = ast.Neg{X: renameoperand(e.X, replacements)}
+		case ast.Add:
+			expr = ast.Add{
+				X: renameoperand(e.X, replacements),
+				Y: renameoperand(e.Y, replacements),
+			}
+		case ast.Sub:
+			expr = ast.Sub{
+				X: renameoperand(e.X, replacements),
+				Y: renameoperand(e.Y, replacements),
+			}
+		case ast.Variable:
+			expr = renamevariable(e, replacements)
+		case ast.Constant:
+			expr = e
+		default:
+			panic(errutil.UnexpectedType(e))
+		}
+		r.Assignments = append(r.Assignments, ast.Assignment{
+			LHS: renamevariable(a.LHS, replacements),
+			RHS: expr,
+		})
+	}
+	return r
+}
+
+func renameoperand(op ast.Operand, replacements map[ast.Variable]ast.Variable) ast.Operand {
+	v, ok := op.(ast.Variable)
+	if !ok {
+		return op
+	}
+	return renamevariable(v, replacements)
+}
+
+func renamevariable(v ast.Variable, replacements map[ast.Variable]ast.Variable) ast.Variable {
+	if r, ok := replacements[v]; ok {
+		return r
+	}
+	return v
+}
+
 // Pare down the given program to only the operations required to produce given
 // outputs.
 func Pare(p *ast.Program, outputs []ast.Variable) (*ast.Program, error) {
