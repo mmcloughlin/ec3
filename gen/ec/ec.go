@@ -46,12 +46,16 @@ type Function struct {
 
 func (Function) private() {}
 
-// PrimitiveProgram lower the formula program to a primitive.
-func (f Function) PrimitiveProgram() (*ast.Program, error) {
+// Program returns the program to be implemented by this function.
+func (f Function) Program() (*ast.Program, error) {
+	// Fetch from the formula.
 	original := f.Formula.Program
 	if original == nil {
 		return nil, xerrors.Errorf("function %s: missing op3 program", f.Name)
 	}
+
+	// Pare down to the outputs we care about.
+
 	return op3.Lower(original)
 }
 
@@ -197,7 +201,7 @@ func (p *point) typ(t Type) {
 
 func (p *point) function(f Function) {
 	// Determine program.
-	prog, err := f.PrimitiveProgram()
+	prog, err := f.Program()
 	if err != nil {
 		p.SetError(err)
 		return
@@ -243,6 +247,12 @@ func (p *point) function(f Function) {
 				return
 			}
 			p.Linef("Sqr(%s, %s)", variables[a.LHS], variables[e.X])
+		case ast.Inv:
+			x, ok := e.X.(ast.Variable)
+			if !ok {
+				p.SetError(errutil.AssertionFailure("operand should be variable"))
+			}
+			p.Linef("Inv(%s, %s)", variables[a.LHS], variables[x])
 		case ast.Mul:
 			vx, okx := e.X.(ast.Variable)
 			vy, oky := e.Y.(ast.Variable)

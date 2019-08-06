@@ -97,10 +97,30 @@ func p256(p *ir.Program) gen.Files {
 		log.Fatalf("unknown representation %q", *repr)
 	}
 
+	affine := ec.Type{
+		Name:        "Affine",
+		ElementType: fieldcfg.Type(),
+		Coordinates: r.Shape.Coordinates,
+	}
+
 	jacobian := ec.Type{
 		Name:        "Jacobian",
 		ElementType: fieldcfg.Type(),
 		Coordinates: r.Variables,
+	}
+
+	scalef := efd.LookupFormula("g1p/shortw/jacobian-3/scaling/z")
+	if scalef == nil {
+		log.Fatalf("unknown formula")
+	}
+
+	toaffine := ec.Function{
+		Name:     "Affine",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Results: []*ec.Parameter{
+			{Name: "a", Type: affine},
+		},
+		Formula: scalef,
 	}
 
 	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
@@ -136,7 +156,9 @@ func p256(p *ir.Program) gen.Files {
 		PackageName: "p256",
 		Field:       fieldcfg,
 		Components: []ec.Component{
+			affine,
 			jacobian,
+			toaffine,
 			add,
 			dbl,
 		},
