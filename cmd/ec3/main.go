@@ -12,6 +12,7 @@ import (
 	"github.com/mmcloughlin/ec3/asm/fp/crandall"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/efd"
+	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/gen/ec"
 	"github.com/mmcloughlin/ec3/gen/fp"
@@ -115,6 +116,23 @@ func p256(p *ir.Program) gen.Files {
 		Coordinates: r.Variables,
 	}
 
+	fromaffine := ec.Function{
+		Name: "NewFromAffine",
+		Params: []*ec.Parameter{
+			{Name: "a", Type: affine},
+		},
+		Results: []*ec.Parameter{
+			{Name: "p", Type: jacobian},
+		},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "X3", RHS: ast.Variable("X1")},
+				{LHS: "Y3", RHS: ast.Variable("Y1")},
+				{LHS: "Z3", RHS: ast.Constant(1)},
+			},
+		},
+	}
+
 	scalef := efd.LookupFormula("g1p/shortw/jacobian-3/scaling/z")
 	if scalef == nil {
 		log.Fatalf("unknown formula")
@@ -126,7 +144,7 @@ func p256(p *ir.Program) gen.Files {
 		Results: []*ec.Parameter{
 			{Name: "a", Type: affine},
 		},
-		Formula: scalef,
+		Formula: scalef.Program,
 	}
 
 	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
@@ -142,7 +160,7 @@ func p256(p *ir.Program) gen.Files {
 			{Name: "q", Type: jacobian},
 			{Name: "r", Type: jacobian},
 		},
-		Formula: addf,
+		Formula: addf.Program,
 	}
 
 	dblf := efd.LookupFormula("g1p/shortw/jacobian-3/doubling/dbl-2001-b")
@@ -157,7 +175,7 @@ func p256(p *ir.Program) gen.Files {
 		Params: []*ec.Parameter{
 			{Name: "q", Type: jacobian},
 		},
-		Formula: dblf,
+		Formula: dblf.Program,
 	}
 
 	pointcfg := ec.Config{
@@ -166,6 +184,7 @@ func p256(p *ir.Program) gen.Files {
 		Components: []ec.Component{
 			affine,
 			jacobian,
+			fromaffine,
 			toaffine,
 			add,
 			dbl,

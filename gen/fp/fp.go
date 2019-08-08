@@ -98,7 +98,8 @@ func (a *api) Generate() ([]byte, error) {
 	a.Commentf("%s is a field element.", a.ElementTypeName)
 	a.Linef("type %s %s", a.Type(), a.Type().Underlying())
 
-	// Conversion to/from big.Int.
+	// Conversion to/from integer types.
+	a.SetInt64()
 	a.SetInt()
 	a.Int()
 
@@ -107,6 +108,15 @@ func (a *api) Generate() ([]byte, error) {
 	a.Inverse()
 
 	return a.Formatted()
+}
+
+// SetInt64 generates a function to construct a field element from an int64.
+func (a *api) SetInt64() {
+	a.Comment("SetInt64 constructs a field element from an integer.")
+	a.Printf("func (x %s) SetInt64(y int64)", a.PointerType())
+	a.EnterBlock()
+	a.Linef("x.SetInt(big.NewInt(y))")
+	a.LeaveBlock()
 }
 
 // SetInt generates a function to construct a field element from a big integer.

@@ -3,12 +3,8 @@ package ec
 import (
 	"fmt"
 	"go/types"
-	"log"
 	"strings"
 
-	"golang.org/x/xerrors"
-
-	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/efd/op3"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
@@ -43,27 +39,20 @@ type Function struct {
 	WriteReceiver bool
 	Params        []*Parameter
 	Results       []*Parameter
-	Formula       *efd.Formula
+	Formula       *ast.Program
 }
 
 func (Function) private() {}
 
 // Program returns the program to be implemented by this function.
 func (f Function) Program() (*ast.Program, error) {
-	// Fetch from the formula.
-	original := f.Formula.Program
-	if original == nil {
-		return nil, xerrors.Errorf("function %s: missing op3 program", f.Name)
-	}
-
 	// Restrict to variables used in this function.
 	outputs := []ast.Variable{}
-	log.Print(f.Formula.Tag, f.Variables())
 	for v := range f.Variables() {
 		outputs = append(outputs, v)
 	}
 
-	p, err := op3.Pare(original, outputs)
+	p, err := op3.Pare(f.Formula, outputs)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +116,7 @@ func (f Function) Variables() map[ast.Variable]string {
 	for n, p := range byindex {
 		for _, v := range p.Type.Coordinates {
 			name := ast.Variable(fmt.Sprintf("%s%d", v, n))
-			code := fmt.Sprintf("&%s.%s", p.Name, v)
+			code := fmt.Sprintf("%s.%s", p.Name, v)
 			variables[name] = code
 		}
 		n++
@@ -249,8 +238,8 @@ func (p *point) function(f Function) {
 	// temporaries.
 	variables := f.Variables()
 	defined := f.Symbols()
+	tmps := []string{}
 
-	p.Linef("var (")
 	for _, v := range op3.Variables(prog) {
 		if _, ok := variables[v]; ok {
 			continue
@@ -259,49 +248,60 @@ func (p *point) function(f Function) {
 		if _, conflict := defined[name]; conflict {
 			name += "_"
 		}
-		p.Linef("%s %s", name, p.Field.Type())
-		variables[v] = fmt.Sprintf("&%s", name)
+		tmps = append(tmps, name)
+		variables[v] = name
 	}
-	p.Linef(")")
+
+	if len(tmps) > 0 {
+		p.Linef("var (")
+		for _, name := range tmps {
+			p.Linef("%s %s", name, p.Field.Type())
+		}
+		p.Linef(")")
+		p.NL()
+	}
 
 	// Generate program.
-	p.NL()
 	for _, a := range prog.Assignments {
 		// TODO(mbm): ugly duplication in the switch statement below
 		switch e := a.RHS.(type) {
+		case ast.Variable:
+			p.Linef("%s = %s", variables[a.LHS], variables[e])
+		case ast.Constant:
+			p.Linef("%s.SetInt64(%d)", variables[a.LHS], e)
 		case ast.Pow:
 			if e.N != 2 {
 				p.SetError(errutil.AssertionFailure("power expected to be square"))
 				return
 			}
-			p.Linef("Sqr(%s, %s)", variables[a.LHS], variables[e.X])
+			p.Linef("Sqr(&%s, &%s)", variables[a.LHS], variables[e.X])
 		case ast.Inv:
 			x, ok := e.X.(ast.Variable)
 			if !ok {
 				p.SetError(errutil.AssertionFailure("operand should be variable"))
 			}
-			p.Linef("Inv(%s, %s)", variables[a.LHS], variables[x])
+			p.Linef("Inv(&%s, &%s)", variables[a.LHS], variables[x])
 		case ast.Mul:
 			vx, okx := e.X.(ast.Variable)
 			vy, oky := e.Y.(ast.Variable)
 			if !okx || !oky {
 				p.SetError(errutil.AssertionFailure("operands should be variables"))
 			}
-			p.Linef("Mul(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
+			p.Linef("Mul(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
 		case ast.Sub:
 			vx, okx := e.X.(ast.Variable)
 			vy, oky := e.Y.(ast.Variable)
 			if !okx || !oky {
 				p.SetError(errutil.AssertionFailure("operands should be variables"))
 			}
-			p.Linef("Sub(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
+			p.Linef("Sub(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
 		case ast.Add:
 			vx, okx := e.X.(ast.Variable)
 			vy, oky := e.Y.(ast.Variable)
 			if !okx || !oky {
 				p.SetError(errutil.AssertionFailure("operands should be variables"))
 			}
-			p.Linef("Add(%s, %s, %s)", variables[a.LHS], variables[vx], variables[vy])
+			p.Linef("Add(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
 		default:
 			p.SetError(errutil.UnexpectedType(e))
 			return

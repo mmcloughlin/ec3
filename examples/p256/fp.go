@@ -13,6 +13,11 @@ const Size = 32
 // Elt is a field element.
 type Elt [32]uint8
 
+// SetInt64 constructs a field element from an integer.
+func (x *Elt) SetInt64(y int64) {
+	x.SetInt(big.NewInt(y))
+}
+
 // SetInt constructs a field element from a big integer.
 func (x *Elt) SetInt(y *big.Int) {
 	// Reduce if outside range.

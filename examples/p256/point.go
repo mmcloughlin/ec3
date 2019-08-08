@@ -43,6 +43,14 @@ func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
 	return
 }
 
+func NewFromAffine(a *Affine) (p *Jacobian) {
+	p = new(Jacobian)
+	p.X = a.X
+	p.Y = a.Y
+	p.Z.SetInt64(1)
+	return
+}
+
 func (p *Jacobian) Affine() (a *Affine) {
 	a = new(Affine)
 	var (
@@ -61,32 +69,32 @@ func (p *Jacobian) Affine() (a *Affine) {
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		t7   Elt
-		t11  Elt
-		t14  Elt
-		S1   Elt
-		r_   Elt
-		t13  Elt
-		U2   Elt
-		t8   Elt
-		t4   Elt
-		H    Elt
-		I    Elt
-		t3   Elt
-		V    Elt
-		t6   Elt
-		t5   Elt
 		t9   Elt
-		Z1Z1 Elt
-		t1   Elt
-		Z2Z2 Elt
-		t12  Elt
-		t2   Elt
+		t11  Elt
+		t13  Elt
+		t3   Elt
+		U1   Elt
+		I    Elt
 		S2   Elt
 		J    Elt
+		t8   Elt
+		Z2Z2 Elt
+		U2   Elt
+		V    Elt
 		t10  Elt
-		U1   Elt
+		t5   Elt
+		r_   Elt
+		t4   Elt
+		t12  Elt
+		t14  Elt
 		t0   Elt
+		t1   Elt
+		S1   Elt
+		t7   Elt
+		H    Elt
+		t2   Elt
+		t6   Elt
+		Z1Z1 Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -122,22 +130,22 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 
 func (p *Jacobian) Double(q *Jacobian) {
 	var (
-		t11   Elt
-		t12   Elt
-		t5    Elt
-		t6    Elt
-		t8    Elt
-		delta Elt
-		t0    Elt
-		t7    Elt
-		beta  Elt
-		t4    Elt
-		t3    Elt
-		t10   Elt
 		gamma Elt
+		t0    Elt
 		t1    Elt
+		t4    Elt
+		t11   Elt
 		t2    Elt
+		t3    Elt
+		t7    Elt
+		t8    Elt
+		t10   Elt
+		delta Elt
 		alpha Elt
+		t6    Elt
+		t12   Elt
+		beta  Elt
+		t5    Elt
 		t9    Elt
 	)
 
