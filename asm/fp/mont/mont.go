@@ -25,39 +25,39 @@ import (
 //	                     http://cacr.uwaterloo.ca/hac/about/chap14.pdf
 
 func New(p prime.Prime) fp.Field {
-	return field{p: p}
+	return Field{p: p}
 }
 
-type field struct {
+type Field struct {
 	p prime.Prime
 }
 
-func (f field) Prime() *big.Int {
+func (f Field) Prime() *big.Int {
 	return f.p.Int()
 }
 
-func (f field) ElementBits() int {
+func (f Field) ElementBits() int {
 	n := f.p.Bits()
 	return ints.NextMultiple(n, 64)
 }
 
-func (f field) ElementSize() int {
+func (f Field) ElementSize() int {
 	return f.ElementBits() / 8
 }
 
-func (f field) Limbs() int {
+func (f Field) Limbs() int {
 	return f.ElementBits() / 64
 }
 
-func (f field) Build(ctx *build.Context) fp.Builder {
+func (f Field) Build(ctx *build.Context) fp.Builder {
 	return &builder{
-		field:   f,
+		Field:   f,
 		Context: ctx,
 	}
 }
 
 type builder struct {
-	field
+	Field
 	*build.Context
 
 	modulus mp.Int
