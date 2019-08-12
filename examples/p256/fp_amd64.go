@@ -7,5 +7,3 @@ func Add(z *Elt, x *Elt, y *Elt)
 func Sub(z *Elt, x *Elt, y *Elt)
 
 func Mul(z *Elt, x *Elt, y *Elt)
-
-func Adhoc(z *[72]byte, x *[32]byte, y *[32]byte)

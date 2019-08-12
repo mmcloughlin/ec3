@@ -281,16 +281,6 @@ func TestMulEdgeCases(t *testing.T) {
 			Mul(&z, &x, &y)
 			got := IntFromBytesLittleEndian(z[:])
 
-			var full [72]byte
-			var xb, yb [32]byte
-			copy(xb[:], x[:])
-			copy(yb[:], y[:])
-			Adhoc(&full, &xb, &yb)
-
-			t.Logf("  full = %x", full)
-			ReverseBytes(full[:])
-			t.Logf("   rev = %x", full)
-
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
 
