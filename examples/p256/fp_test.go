@@ -319,7 +319,7 @@ func TestInv(t *testing.T) {
 }
 
 func TestInvProperty(t *testing.T) {
-	for trial := 0; trial < 1; trial++ {
+	for trial := 0; trial < NumTrials(); trial++ {
 		var xm, xminv, p, got Elt
 		x := RandElt()
 
@@ -328,18 +328,8 @@ func TestInvProperty(t *testing.T) {
 		Mul(&p, &xm, &xminv)
 		Decode(&got, &p)
 
-		a := xm.Int()
-		b := xminv.Int()
-		m := new(big.Int).Mul(a, b)
-		m.Mul(m, RInv())
-		m.Mod(m, modulus)
-		t.Logf("expectp = %x", m)
-		m.Mul(m, RInv())
-		m.Mod(m, modulus)
-
 		one := Elt{1}
 		if one != got {
-			t.Logf("     m = %d", m)
 			t.Logf("     x = %x", x)
 			t.Logf("    xm = %x", xm)
 			t.Logf(" xminv = %x", xminv)
