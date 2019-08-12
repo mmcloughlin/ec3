@@ -9,20 +9,16 @@ import (
 
 // Variables returns all variables used in the program.
 func Variables(p *ast.Program) []ast.Variable {
-	// Build a set of all variables.
-	set := map[ast.Variable]bool{}
+	seen := map[ast.Variable]bool{}
+	vs := []ast.Variable{}
 	for _, a := range p.Assignments {
 		for _, v := range ast.Variables(a.RHS.Inputs()) {
-			set[v] = true
+			if !seen[v] {
+				vs = append(vs, v)
+				seen[v] = true
+			}
 		}
 	}
-
-	// Convert to slice.
-	vs := make([]ast.Variable, 0, len(set))
-	for v := range set {
-		vs = append(vs, v)
-	}
-
 	return vs
 }
 

@@ -67,9 +67,9 @@ func NewFromAffine(a *Affine) (p *Jacobian) {
 func (p *Jacobian) Affine() (a *Affine) {
 	a = new(Affine)
 	var (
-		t0 Elt
 		A  Elt
 		AA Elt
+		t0 Elt
 	)
 
 	Inv(&A, &p.Z)
@@ -82,32 +82,32 @@ func (p *Jacobian) Affine() (a *Affine) {
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		t11  Elt
-		t4   Elt
-		t9   Elt
 		Z2Z2 Elt
-		t7   Elt
-		t13  Elt
-		t5   Elt
-		H    Elt
-		J    Elt
-		t8   Elt
 		Z1Z1 Elt
-		U1   Elt
-		t6   Elt
-		t1   Elt
-		r_   Elt
-		t10  Elt
-		t12  Elt
 		t0   Elt
-		I    Elt
-		t3   Elt
+		t1   Elt
 		U2   Elt
-		V    Elt
-		t14  Elt
+		U1   Elt
+		H    Elt
 		t2   Elt
+		I    Elt
 		S2   Elt
 		S1   Elt
+		t3   Elt
+		r_   Elt
+		V    Elt
+		t4   Elt
+		J    Elt
+		t6   Elt
+		t5   Elt
+		t8   Elt
+		t7   Elt
+		t10  Elt
+		t9   Elt
+		t11  Elt
+		t12  Elt
+		t13  Elt
+		t14  Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -145,21 +145,21 @@ func (p *Jacobian) Double(q *Jacobian) {
 	var (
 		gamma Elt
 		delta Elt
+		t0    Elt
 		t1    Elt
+		t2    Elt
+		alpha Elt
+		beta  Elt
 		t4    Elt
 		t3    Elt
-		alpha Elt
-		t7    Elt
 		t5    Elt
+		t6    Elt
+		t7    Elt
+		t8    Elt
 		t10   Elt
 		t11   Elt
 		t9    Elt
 		t12   Elt
-		t0    Elt
-		t2    Elt
-		beta  Elt
-		t6    Elt
-		t8    Elt
 	)
 
 	Sqr(&delta, &q.Z)
