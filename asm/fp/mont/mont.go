@@ -179,13 +179,15 @@ func (b builder) ReduceDouble(z, x mp.Int) {
 	k := b.Limbs()
 
 	// We'll need a zero register.
-	zero := b.GP64()
+	zero := asm.Zero64(b.Context)
 
 	// Set up accumulator registers.
 	acc := mp.NewIntLimb64(b.Context, 2*k+1)
-	mp.Copy(b.Context, acc, x[:k+1])
+	mp.Copy(b.Context, acc, x[:k])
 
 	// Step 2: iterate over limbs
+	pending := mp.NewIntLimb64(b.Context, 2*k+1)
+	pending[k] = zero
 	for i := 0; i < k; i++ {
 		// Step 2.1: u_i = x_i * m' (mod b)
 		var u operand.Op
@@ -200,19 +202,21 @@ func (b builder) ReduceDouble(z, x mp.Int) {
 		}
 
 		// Step 2.2: x += u_i * m * b^i
-		b.MOVQ(x.Limb(i+k+1), acc[i+k+1])
+		b.MOVQ(x.Limb(i+k), acc[i+k])
 		b.MOVQ(u, reg.RDX)
 		m := b.Modulus()
-		b.XORQ(zero, zero) // clears flags
+		b.XORQ(pending[i+k+1], pending[i+k+1]) // also clears flags
 		for j := 0; j < k; j++ {
 			lo, hi := b.GP64(), b.GP64()
 			b.MULXQ(m[j], lo, hi)
 			b.ADCXQ(lo, acc[i+j])
 			b.ADOXQ(hi, acc[i+j+1])
 		}
-		b.ADCXQ(zero, acc[i+k])
-		b.ADOXQ(zero, acc[i+k+1])
+		b.ADCXQ(pending[i+k], acc[i+k])
+		b.ADCXQ(zero, pending[i+k+1])
+		b.ADOXQ(zero, pending[i+k+1])
 	}
+	acc[2*k] = pending[2*k]
 
 	// Step 4: if x ⩾ m subtract m
 	result := acc[k:]

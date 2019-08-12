@@ -1,6 +1,7 @@
 package p256
 
 import (
+	"fmt"
 	"math/big"
 	"math/rand"
 	"testing"
@@ -133,6 +134,66 @@ func TestMul(t *testing.T) {
 			t.Logf("expect = %x", expect)
 			t.FailNow()
 		}
+	}
+}
+
+func TestMulEdgeCases(t *testing.T) {
+	// Values that might exercise edge cases.
+	interesting := map[string]*big.Int{
+		"0":     big.NewInt(0),
+		"1":     big.NewInt(1),
+		"R":     R(),
+		"(1/R)": RInv(),
+		"(p-1)": new(big.Int).Sub(p, big.NewInt(1)),
+	}
+
+	// Test cases for every pair of interesting numbers.
+	type testcase struct {
+		Name string
+		X, Y *big.Int
+	}
+	cases := []testcase{}
+	for nx, x := range interesting {
+		for ny, y := range interesting {
+			cases = append(cases, testcase{
+				Name: fmt.Sprintf("%s*%s", nx, ny),
+				X:    new(big.Int).Set(x),
+				Y:    new(big.Int).Set(y),
+			})
+		}
+	}
+
+	for _, c := range cases {
+		c := c
+		t.Run(c.Name, func(t *testing.T) {
+			t.Logf("     x = %x", c.X)
+			t.Logf("     y = %x", c.Y)
+
+			// Montgomery encode.
+			c.X.Mul(c.X, R())
+			c.X.Mod(c.X, p)
+
+			c.Y.Mul(c.Y, R())
+			c.Y.Mod(c.Y, p)
+
+			// Compute expectation.
+			expect := new(big.Int).Mul(c.X, c.Y)
+			expect.Mul(expect, RInv())
+			expect.Mod(expect, p)
+
+			// What do we get?
+			var x, y, z Elt
+			BytesFromIntLittleEndian(x[:], c.X)
+			BytesFromIntLittleEndian(y[:], c.Y)
+			Mul(&z, &x, &y)
+			got := IntFromBytesLittleEndian(z[:])
+
+			if expect.Cmp(got) != 0 {
+				t.Logf("   got = %x", got)
+				t.Logf("expect = %x", expect)
+				t.Fail()
+			}
+		})
 	}
 }
 
