@@ -16,27 +16,27 @@ import (
 )
 
 func New(p prime.Crandall) fp.Field {
-	return field{p: p}
+	return Field{p: p}
 }
 
-type field struct {
+type Field struct {
 	p prime.Crandall
 }
 
-func (f field) Prime() *big.Int {
+func (f Field) Prime() *big.Int {
 	return f.p.Int()
 }
 
-func (f field) ElementBits() int {
+func (f Field) ElementBits() int {
 	n := f.p.Bits()
 	return ints.NextMultiple(n, 64)
 }
 
-func (f field) ElementSize() int {
+func (f Field) ElementSize() int {
 	return f.ElementBits() / 8
 }
 
-func (f field) Limbs() int {
+func (f Field) Limbs() int {
 	return f.ElementBits() / 64
 }
 
@@ -51,22 +51,22 @@ func (f field) Limbs() int {
 //	2ˡ ≡ 2ˡ⁻ⁿ * c (mod p)
 //
 // We'll call this the reduction multiplier.
-func (f field) ReductionMultiplier() uint32 {
+func (f Field) ReductionMultiplier() uint32 {
 	n := f.p.Bits()
 	l := f.ElementBits()
 	// TODO(mbm): check for overflow
 	return uint32((1 << uint(l-n)) * f.p.C)
 }
 
-func (f field) Build(ctx *build.Context) fp.Builder {
+func (f Field) Build(ctx *build.Context) fp.Builder {
 	return &builder{
-		field:   f,
+		Field:   f,
 		Context: ctx,
 	}
 }
 
 type builder struct {
-	field
+	Field
 	*build.Context
 }
 

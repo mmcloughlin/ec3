@@ -13,8 +13,14 @@ const Size = 32
 // Elt is a field element.
 type Elt [32]uint8
 
+// SetInt64 constructs a field element from an integer.
+func (x *Elt) SetInt64(y int64) *Elt {
+	x.SetInt(big.NewInt(y))
+	return x
+}
+
 // SetInt constructs a field element from a big integer.
-func (x *Elt) SetInt(y *big.Int) {
+func (x *Elt) SetInt(y *big.Int) *Elt {
 	// Reduce if outside range.
 	if y.Sign() < 0 || y.Cmp(modulus) >= 0 {
 		y = new(big.Int).Mod(y, modulus)
@@ -28,6 +34,7 @@ func (x *Elt) SetInt(y *big.Int) {
 	for ; i < Size; i++ {
 		x[i] = 0
 	}
+	return x
 }
 
 // Int converts to a big integer.
@@ -39,6 +46,22 @@ func (x *Elt) Int() *big.Int {
 	}
 	// Build big.Int.
 	return new(big.Int).SetBytes(be[:])
+}
+
+// one is the field element 1.
+var one = new(Elt).SetInt64(1)
+
+// Decode from the Montgomery domain.
+func Decode(z *Elt, x *Elt) {
+	Mul(z, x, one)
+}
+
+// r2 is the multiplier R^2 for encoding into the Montgomery domain.
+var r2 = new(Elt).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*256))
+
+// Encode into the Montgomery domain.
+func Encode(z *Elt, x *Elt) {
+	Mul(z, x, r2)
 }
 
 // Sqr computes z = x^2 (mod p).

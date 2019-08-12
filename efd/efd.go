@@ -44,3 +44,21 @@ func WithRepresentation(repr string) Predicate {
 func WithOperation(op string) Predicate {
 	return func(f *Formula) bool { return f.Operation == op }
 }
+
+func LookupRepresentation(id string) *Representation {
+	for _, r := range representations {
+		if r.ID == id {
+			return r
+		}
+	}
+	return nil
+}
+
+func LookupFormula(id string) *Formula {
+	for _, f := range formulae {
+		if f.ID == id {
+			return f
+		}
+	}
+	return nil
+}

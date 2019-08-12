@@ -79,14 +79,95 @@ func ExpectMul(x, y Elt) Elt {
 	return z
 }
 
+func ExpectEncode(x Elt) Elt {
+	xi := IntFromBytesLittleEndian(x[:])
+
+	zi := new(big.Int).Mul(xi, R())
+	zi.Mod(zi, p)
+
+	var z Elt
+	BytesFromIntLittleEndian(z[:], zi)
+	return z
+}
+
+func ExpectDecode(x Elt) Elt {
+	xi := IntFromBytesLittleEndian(x[:])
+
+	zi := new(big.Int).Mul(xi, RInv())
+	zi.Mod(zi, p)
+
+	var z Elt
+	BytesFromIntLittleEndian(z[:], zi)
+	return z
+}
+
+func TestSetInt64(t *testing.T) {
+	got := new(Elt).SetInt64(1)
+	expect := &Elt{1}
+	if *got != *expect {
+		t.Fatal("SetInt64(1) failed")
+	}
+}
+
+func TestEncode(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, got Elt
+		rand.Read(x[:])
+
+		Encode(&got, &x)
+		expect := ExpectEncode(x)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestDecode(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, got Elt
+		rand.Read(x[:])
+
+		Decode(&got, &x)
+		expect := ExpectDecode(x)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestEncodeDecodeRoundTrip(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, m, got Elt
+		rand.Read(x[:])
+		Encode(&m, &x)
+		Decode(&got, &m)
+		if got != x {
+			t.Fatal("failed roundtrip")
+		}
+	}
+}
+
 func TestAdd(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, y, got Elt
 		rand.Read(x[:])
 		rand.Read(y[:])
 
+		px, py := x, y
 		Add(&got, &x, &y)
 		expect := ExpectAdd(x, y)
+
+		if px != x || py != y {
+			t.Fatal("changed inputs")
+		}
 
 		if got != expect {
 			t.Logf("     x = %x", x)
@@ -104,8 +185,13 @@ func TestSub(t *testing.T) {
 		rand.Read(x[:])
 		rand.Read(y[:])
 
+		px, py := x, y
 		Sub(&got, &x, &y)
 		expect := ExpectSub(x, y)
+
+		if px != x || py != y {
+			t.Fatal("changed inputs")
+		}
 
 		if got != expect {
 			t.Logf("     x = %x", x)
@@ -121,15 +207,43 @@ func TestMul(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		x := RandElt()
 		y := RandElt()
+		px, py := x, y
 
 		var got Elt
 		Mul(&got, &x, &y)
 
 		expect := ExpectMul(x, y)
 
+		if px != x || py != y {
+			t.Fatal("changed inputs")
+		}
+
 		if got != expect {
 			t.Logf("     x = %x", x)
 			t.Logf("     y = %x", y)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestSqr(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		x := RandElt()
+		px := x
+
+		var got Elt
+		Sqr(&got, &x)
+
+		expect := ExpectMul(x, x)
+
+		if px != x {
+			t.Fatal("changed input")
+		}
+
+		if got != expect {
+			t.Logf("     x = %x", x)
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
 			t.FailNow()
@@ -166,9 +280,6 @@ func TestMulEdgeCases(t *testing.T) {
 	for _, c := range cases {
 		c := c
 		t.Run(c.Name, func(t *testing.T) {
-			t.Logf("     x = %x", c.X)
-			t.Logf("     y = %x", c.Y)
-
 			// Montgomery encode.
 			c.X.Mul(c.X, R())
 			c.X.Mod(c.X, p)
@@ -189,11 +300,57 @@ func TestMulEdgeCases(t *testing.T) {
 			got := IntFromBytesLittleEndian(z[:])
 
 			if expect.Cmp(got) != 0 {
+				t.Logf("     x = %x", c.X)
+				t.Logf("     y = %x", c.Y)
 				t.Logf("   got = %x", got)
 				t.Logf("expect = %x", expect)
 				t.Fail()
 			}
 		})
+	}
+}
+
+func TestInv(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		x := RandElt()
+
+		var m, minv, got Elt
+		Encode(&m, &x)
+		Inv(&minv, &m)
+		Decode(&got, &minv)
+
+		// Expect.
+		xi := IntFromBytesLittleEndian(x[:])
+		xi.ModInverse(xi, p)
+		var expect Elt
+		BytesFromIntLittleEndian(expect[:], xi)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestInvProperty(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		x := RandElt()
+
+		var xm, xminv, p, got Elt
+		Encode(&xm, &x)
+		Inv(&xminv, &xm)
+		Mul(&p, &xm, &xminv)
+		Decode(&got, &p)
+
+		one := Elt{1}
+		if one != got {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", one)
+			t.Fatal("invalid inverse")
+		}
 	}
 }
 
