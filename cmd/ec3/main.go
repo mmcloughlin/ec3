@@ -116,6 +116,7 @@ func p256(p *ir.Program) gen.Files {
 		Coordinates: r.Variables,
 	}
 
+	// TODO(mbm): automatically generate conversion formulae
 	fromaffine := ec.Function{
 		Name: "NewFromAffine",
 		Params: []*ec.Parameter{
