@@ -129,7 +129,6 @@ func (b *builder) ConditionalSubtractModulus(x mp.Int) {
 	// Conditionally move.
 	for i := 0; i < b.Limbs(); i++ {
 		b.CMOVQCC(subp[i], x[i])
-		//b.MOVQ(subp[i], x[i])
 	}
 }
 
