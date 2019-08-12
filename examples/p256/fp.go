@@ -52,107 +52,103 @@ func Inv(z *Elt, x *Elt) {
 	//
 	// _10     = 2*1
 	// _11     = 1 + _10
-	// _1100   = _11 << 2
-	// _1111   = _11 + _1100
-	// _111100 = _1111 << 2
-	// _111111 = _11 + _111100
+	// _110    = 2*_11
+	// _111    = 1 + _110
+	// _111000 = _111 << 3
+	// _111111 = _111 + _111000
 	// x12     = _111111 << 6 + _111111
-	// x24     = x12 << 12 + x12
-	// x30     = x24 << 6 + _111111
-	// x32     = x30 << 2 + _11
-	// i232    = ((x32 << 32 + 1) << 128 + x32) << 32
-	// return    ((x32 + i232) << 30 + x30) << 2
+	// x15     = x12 << 3 + _111
+	// x16     = 2*x15 + 1
+	// x32     = x16 << 16 + x16
+	// i53     = x32 << 15
+	// x47     = x15 + i53
+	// i263    = ((i53 << 17 + 1) << 143 + x47) << 47
+	// return    (x47 + i263) << 2 + 1
 	//
-	// Operations: 255 squares 11 multiplies
+	// Operations: 255 squares 12 multiplies
 
-	// Allocate 3 temporaries.
-	var t [3]Elt
+	// Allocate 2 temporaries.
+	var t [2]Elt
 
 	// Step 1: z = x^0x2.
 	Sqr(z, x)
 
-	// Step 2: &t[0] = x^0x3.
-	Mul(&t[0], x, z)
+	// Step 2: z = x^0x3.
+	Mul(z, x, z)
 
-	// Step 4: z = x^0xc.
-	Sqr(z, &t[0])
-	for s := 1; s < 2; s++ {
-		Sqr(z, z)
+	// Step 3: z = x^0x6.
+	Sqr(z, z)
+
+	// Step 4: z = x^0x7.
+	Mul(z, x, z)
+
+	// Step 7: &t[0] = x^0x38.
+	Sqr(&t[0], z)
+	for s := 1; s < 3; s++ {
+		Sqr(&t[0], &t[0])
 	}
 
-	// Step 5: z = x^0xf.
-	Mul(z, &t[0], z)
-
-	// Step 7: z = x^0x3c.
-	for s := 0; s < 2; s++ {
-		Sqr(z, z)
-	}
-
-	// Step 8: z = x^0x3f.
-	Mul(z, &t[0], z)
+	// Step 8: &t[0] = x^0x3f.
+	Mul(&t[0], z, &t[0])
 
 	// Step 14: &t[1] = x^0xfc0.
-	Sqr(&t[1], z)
+	Sqr(&t[1], &t[0])
 	for s := 1; s < 6; s++ {
 		Sqr(&t[1], &t[1])
 	}
 
-	// Step 15: &t[1] = x^0xfff.
-	Mul(&t[1], z, &t[1])
+	// Step 15: &t[0] = x^0xfff.
+	Mul(&t[0], &t[0], &t[1])
 
-	// Step 27: &t[2] = x^0xfff000.
-	Sqr(&t[2], &t[1])
-	for s := 1; s < 12; s++ {
-		Sqr(&t[2], &t[2])
+	// Step 18: &t[0] = x^0x7ff8.
+	for s := 0; s < 3; s++ {
+		Sqr(&t[0], &t[0])
 	}
 
-	// Step 28: &t[1] = x^0xffffff.
-	Mul(&t[1], &t[1], &t[2])
+	// Step 19: z = x^0x7fff.
+	Mul(z, z, &t[0])
 
-	// Step 34: &t[1] = x^0x3fffffc0.
-	for s := 0; s < 6; s++ {
-		Sqr(&t[1], &t[1])
-	}
+	// Step 20: &t[0] = x^0xfffe.
+	Sqr(&t[0], z)
 
-	// Step 35: z = x^0x3fffffff.
-	Mul(z, z, &t[1])
+	// Step 21: &t[0] = x^0xffff.
+	Mul(&t[0], x, &t[0])
 
-	// Step 37: &t[1] = x^0xfffffffc.
-	Sqr(&t[1], z)
-	for s := 1; s < 2; s++ {
+	// Step 37: &t[1] = x^0xffff0000.
+	Sqr(&t[1], &t[0])
+	for s := 1; s < 16; s++ {
 		Sqr(&t[1], &t[1])
 	}
 
 	// Step 38: &t[0] = x^0xffffffff.
 	Mul(&t[0], &t[0], &t[1])
 
-	// Step 70: &t[1] = x^0xffffffff00000000.
-	Sqr(&t[1], &t[0])
-	for s := 1; s < 32; s++ {
-		Sqr(&t[1], &t[1])
+	// Step 53: &t[0] = x^0x7fffffff8000.
+	for s := 0; s < 15; s++ {
+		Sqr(&t[0], &t[0])
 	}
 
-	// Step 71: &t[1] = x^0xffffffff00000001.
-	Mul(&t[1], x, &t[1])
+	// Step 54: z = x^0x7fffffffffff.
+	Mul(z, z, &t[0])
 
-	// Step 199: &t[1] = x^0xffffffff0000000100000000000000000000000000000000.
-	for s := 0; s < 128; s++ {
-		Sqr(&t[1], &t[1])
+	// Step 71: &t[0] = x^0xffffffff00000000.
+	for s := 0; s < 17; s++ {
+		Sqr(&t[0], &t[0])
 	}
 
-	// Step 200: &t[1] = x^0xffffffff00000001000000000000000000000000ffffffff.
-	Mul(&t[1], &t[0], &t[1])
+	// Step 72: &t[0] = x^0xffffffff00000001.
+	Mul(&t[0], x, &t[0])
 
-	// Step 232: &t[1] = x^0xffffffff00000001000000000000000000000000ffffffff00000000.
-	for s := 0; s < 32; s++ {
-		Sqr(&t[1], &t[1])
+	// Step 215: &t[0] = x^0x7fffffff80000000800000000000000000000000000000000000.
+	for s := 0; s < 143; s++ {
+		Sqr(&t[0], &t[0])
 	}
 
-	// Step 233: &t[0] = x^0xffffffff00000001000000000000000000000000ffffffffffffffff.
-	Mul(&t[0], &t[0], &t[1])
+	// Step 216: &t[0] = x^0x7fffffff800000008000000000000000000000007fffffffffff.
+	Mul(&t[0], z, &t[0])
 
-	// Step 263: &t[0] = x^0x3fffffffc00000004000000000000000000000003fffffffffffffffc0000000.
-	for s := 0; s < 30; s++ {
+	// Step 263: &t[0] = x^0x3fffffffc00000004000000000000000000000003fffffffffff800000000000.
+	for s := 0; s < 47; s++ {
 		Sqr(&t[0], &t[0])
 	}
 
@@ -163,4 +159,7 @@ func Inv(z *Elt, x *Elt) {
 	for s := 0; s < 2; s++ {
 		Sqr(z, z)
 	}
+
+	// Step 267: z = x^0xffffffff00000001000000000000000000000000fffffffffffffffffffffffd.
+	Mul(z, x, z)
 }
