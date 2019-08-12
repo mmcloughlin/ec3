@@ -312,10 +312,8 @@ func TestMulEdgeCases(t *testing.T) {
 
 func TestInv(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
-		var x Elt
-		rand.Read(x[:])
+		x := RandElt()
 
-		// Compute via.
 		var m, minv, got Elt
 		Encode(&m, &x)
 		Inv(&minv, &m)
@@ -338,9 +336,9 @@ func TestInv(t *testing.T) {
 
 func TestInvProperty(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
-		var xm, xminv, p, got Elt
 		x := RandElt()
 
+		var xm, xminv, p, got Elt
 		Encode(&xm, &x)
 		Inv(&xminv, &xm)
 		Mul(&p, &xm, &xminv)
