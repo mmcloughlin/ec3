@@ -274,7 +274,6 @@ func (p *point) function(f Function) {
 
 	// Generate program.
 	for _, a := range prog.Assignments {
-		// TODO(mbm): ugly duplication in the switch statement below
 		switch e := a.RHS.(type) {
 		case ast.Variable:
 			p.Linef("%s = %s", variables[a.LHS], variables[e])
@@ -285,34 +284,15 @@ func (p *point) function(f Function) {
 				p.SetError(errutil.AssertionFailure("power expected to be square"))
 				return
 			}
-			p.Linef("Sqr(&%s, &%s)", variables[a.LHS], variables[e.X])
+			p.call("Sqr", a.LHS, e, variables)
 		case ast.Inv:
-			x, ok := e.X.(ast.Variable)
-			if !ok {
-				p.SetError(errutil.AssertionFailure("operand should be variable"))
-			}
-			p.Linef("Inv(&%s, &%s)", variables[a.LHS], variables[x])
+			p.call("Inv", a.LHS, e, variables)
 		case ast.Mul:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Mul(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
+			p.call("Mul", a.LHS, e, variables)
 		case ast.Sub:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Sub(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
+			p.call("Sub", a.LHS, e, variables)
 		case ast.Add:
-			vx, okx := e.X.(ast.Variable)
-			vy, oky := e.Y.(ast.Variable)
-			if !okx || !oky {
-				p.SetError(errutil.AssertionFailure("operands should be variables"))
-			}
-			p.Linef("Add(&%s, &%s, &%s)", variables[a.LHS], variables[vx], variables[vy])
+			p.call("Add", a.LHS, e, variables)
 		default:
 			p.SetError(errutil.UnexpectedType(e))
 			return
@@ -323,6 +303,19 @@ func (p *point) function(f Function) {
 		p.Linef("return")
 	}
 	p.LeaveBlock()
+}
+
+func (p *point) call(fn, lhs ast.Variable, expr ast.Expression, vars map[ast.Variable]string) {
+	p.Printf("%s(&%s", fn, vars[lhs])
+	for _, operand := range expr.Inputs() {
+		v, ok := operand.(ast.Variable)
+		if !ok {
+			p.SetError(errutil.AssertionFailure("operand must be variable"))
+			return
+		}
+		p.Printf(", &%s", vars[v])
+	}
+	p.Linef(")")
 }
 
 func (p *point) tuple(params []*Parameter) {
