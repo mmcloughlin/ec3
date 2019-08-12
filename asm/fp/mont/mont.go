@@ -129,6 +129,7 @@ func (b *builder) ConditionalSubtractModulus(x mp.Int) {
 	// Conditionally move.
 	for i := 0; i < b.Limbs(); i++ {
 		b.CMOVQCC(subp[i], x[i])
+		//b.MOVQ(subp[i], x[i])
 	}
 }
 
@@ -225,5 +226,56 @@ func (b builder) ReduceDouble(z, x mp.Int) {
 	// Write result.
 	for i := 0; i < k; i++ {
 		b.MOVQ(result[i], z[i])
+	}
+}
+
+func (b builder) MontReduce(z, x mp.Int) {
+	k := b.Limbs()
+
+	// We'll need a zero register.
+	zero := b.GP64()
+
+	// Set up accumulator registers.
+	acc := mp.NewIntLimb64(b.Context, 2*k+1)
+	mp.Copy(b.Context, acc, x[:k])
+
+	// Step 2: iterate over limbs
+	pending := zero
+	for i := 0; i < k; i++ {
+		// Step 2.1: u_i = x_i * m' (mod b)
+		var u operand.Op
+		if b.IsFriendly() {
+			u = acc[i]
+		} else {
+			mprime := b.ModulusPrime()
+			b.MOVQ(mprime, reg.RDX)
+			lo, hi := b.GP64(), b.GP64()
+			b.MULXQ(acc[i], lo, hi)
+			u = lo
+		}
+
+		// Step 2.2: x += u_i * m * b^i
+		b.MOVQ(x.Limb(i+k), acc[i+k])
+		b.MOVQ(u, reg.RDX)
+		m := b.Modulus()
+		b.XORQ(zero, zero) // clears flags
+		for j := 0; j < k; j++ {
+			lo, hi := b.GP64(), b.GP64()
+			b.MULXQ(m[j], lo, hi)
+			b.ADCXQ(lo, acc[i+j])
+			b.ADOXQ(hi, acc[i+j+1])
+		}
+		b.ADCXQ(pending, acc[i+k])
+
+		pending = b.GP64()
+		b.XORQ(pending, pending)
+		b.ADCXQ(zero, pending)
+		b.ADOXQ(zero, pending)
+	}
+	acc[2*k] = pending
+
+	// Write result.
+	for i := 0; i < 2*k+1; i++ {
+		b.MOVQ(acc[i], z[i])
 	}
 }

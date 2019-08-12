@@ -99,3 +99,30 @@ func (a Asm) Mul() {
 
 	a.ctx.RET()
 }
+
+func (a Asm) Adhoc() {
+	a.ctx.Function("Adhoc")
+	a.ctx.SignatureExpr("func(z *[72]byte, x, y *[32]byte)")
+	k := a.field.Limbs()
+
+	// Load parameters.
+	z := mp.Param(a.ctx, "z", 2*k+1)
+	x := mp.Param(a.ctx, "x", k)
+	y := mp.Param(a.ctx, "y", k)
+
+	// Perform multiplication.
+	// TODO(mbm): is it possible to store the intermediate result in registers?
+	stack := a.ctx.AllocLocal(8 * 2 * k)
+	m := mp.NewIntFromMem(stack, 2*k)
+	mp.Mul(a.ctx, m, x, y)
+
+	// Reduce.
+	a.ctx.Comment("Reduction.")
+
+	fld := a.field.(interface {
+		MontReduce(z, x mp.Int)
+	})
+	fld.MontReduce(z, m)
+
+	a.ctx.RET()
+}

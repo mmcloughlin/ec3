@@ -195,6 +195,9 @@ func (p *point) typ(t Type) {
 	for _, v := range t.Coordinates {
 		p.Linef("p.%s.SetInt(%s)", v, v)
 	}
+	for _, v := range t.Coordinates {
+		p.encode("&p." + v)
+	}
 	p.Linef("return p")
 	p.LeaveBlock()
 
@@ -202,8 +205,16 @@ func (p *point) typ(t Type) {
 	p.NL()
 	p.Printf("func (p *%s) Coordinates() (%s *big.Int)", t.Name, strings.Join(t.Coordinates, ", "))
 	p.EnterBlock()
+	prefix := "p."
+	if p.Field.Montgomery() {
+		prefix = "d"
+		p.Linef("var d%s %s", strings.Join(t.Coordinates, ", d"), p.Field.Type())
+		for _, v := range t.Coordinates {
+			p.Linef("Decode(&d%s, &p.%s)", v, v)
+		}
+	}
 	for _, v := range t.Coordinates {
-		p.Linef("%s = p.%s.Int()", v, v)
+		p.Linef("%s = %s%s.Int()", v, prefix, v)
 	}
 	p.Linef("return")
 	p.LeaveBlock()
@@ -268,7 +279,7 @@ func (p *point) function(f Function) {
 		case ast.Variable:
 			p.Linef("%s = %s", variables[a.LHS], variables[e])
 		case ast.Constant:
-			p.Linef("%s.SetInt64(%d)", variables[a.LHS], e)
+			p.constant(variables[a.LHS], int(e))
 		case ast.Pow:
 			if e.N != 2 {
 				p.SetError(errutil.AssertionFailure("power expected to be square"))
@@ -323,4 +334,15 @@ func (p *point) tuple(params []*Parameter) {
 		p.Printf("%s *%s", param.Name, param.Type.Name)
 	}
 	p.Printf(")")
+}
+
+func (p *point) constant(v string, x int) {
+	p.Linef("%s.SetInt64(%d)", v, x)
+	p.encode("&" + v)
+}
+
+func (p *point) encode(v string) {
+	if p.Field.Montgomery() {
+		p.Linef("Encode(%s, %s)", v, v)
+	}
 }

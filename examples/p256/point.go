@@ -13,12 +13,17 @@ func NewAffine(X, Y *big.Int) *Affine {
 	p := new(Affine)
 	p.X.SetInt(X)
 	p.Y.SetInt(Y)
+	Encode(&p.X, &p.X)
+	Encode(&p.Y, &p.Y)
 	return p
 }
 
 func (p *Affine) Coordinates() (X, Y *big.Int) {
-	X = p.X.Int()
-	Y = p.Y.Int()
+	var dX, dY Elt
+	Decode(&dX, &p.X)
+	Decode(&dY, &p.Y)
+	X = dX.Int()
+	Y = dY.Int()
 	return
 }
 
@@ -33,13 +38,20 @@ func NewJacobian(X, Y, Z *big.Int) *Jacobian {
 	p.X.SetInt(X)
 	p.Y.SetInt(Y)
 	p.Z.SetInt(Z)
+	Encode(&p.X, &p.X)
+	Encode(&p.Y, &p.Y)
+	Encode(&p.Z, &p.Z)
 	return p
 }
 
 func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
-	X = p.X.Int()
-	Y = p.Y.Int()
-	Z = p.Z.Int()
+	var dX, dY, dZ Elt
+	Decode(&dX, &p.X)
+	Decode(&dY, &p.Y)
+	Decode(&dZ, &p.Z)
+	X = dX.Int()
+	Y = dY.Int()
+	Z = dZ.Int()
 	return
 }
 
@@ -48,15 +60,16 @@ func NewFromAffine(a *Affine) (p *Jacobian) {
 	p.X = a.X
 	p.Y = a.Y
 	p.Z.SetInt64(1)
+	Encode(&p.Z, &p.Z)
 	return
 }
 
 func (p *Jacobian) Affine() (a *Affine) {
 	a = new(Affine)
 	var (
-		AA Elt
 		t0 Elt
 		A  Elt
+		AA Elt
 	)
 
 	Inv(&A, &p.Z)
@@ -69,32 +82,32 @@ func (p *Jacobian) Affine() (a *Affine) {
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		t13  Elt
-		t14  Elt
-		t2   Elt
-		r_   Elt
-		t5   Elt
+		t1   Elt
 		S2   Elt
-		t3   Elt
-		t12  Elt
-		I    Elt
-		t6   Elt
-		t11  Elt
-		Z2Z2 Elt
-		U1   Elt
-		H    Elt
 		V    Elt
-		U2   Elt
+		t6   Elt
 		t7   Elt
 		t10  Elt
-		t9   Elt
-		Z1Z1 Elt
-		t0   Elt
-		S1   Elt
+		U2   Elt
 		t4   Elt
 		t8   Elt
-		t1   Elt
+		Z2Z2 Elt
+		U1   Elt
+		t2   Elt
+		H    Elt
+		t3   Elt
 		J    Elt
+		t11  Elt
+		t14  Elt
+		Z1Z1 Elt
+		r_   Elt
+		t9   Elt
+		S1   Elt
+		t12  Elt
+		t0   Elt
+		I    Elt
+		t13  Elt
+		t5   Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -130,23 +143,23 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 
 func (p *Jacobian) Double(q *Jacobian) {
 	var (
-		delta Elt
-		t0    Elt
+		t12   Elt
 		t1    Elt
-		alpha Elt
-		t6    Elt
-		gamma Elt
-		t10   Elt
-		t11   Elt
-		t2    Elt
-		t3    Elt
 		beta  Elt
 		t4    Elt
-		t5    Elt
+		t9    Elt
+		t3    Elt
+		t6    Elt
 		t7    Elt
 		t8    Elt
-		t9    Elt
-		t12   Elt
+		t10   Elt
+		t2    Elt
+		alpha Elt
+		t11   Elt
+		delta Elt
+		t0    Elt
+		t5    Elt
+		gamma Elt
 	)
 
 	Sqr(&delta, &q.Z)
