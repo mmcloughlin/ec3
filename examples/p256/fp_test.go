@@ -101,6 +101,60 @@ func ExpectDecode(x Elt) Elt {
 	return z
 }
 
+func TestSetInt64(t *testing.T) {
+	got := new(Elt).SetInt64(1)
+	expect := &Elt{1}
+	if *got != *expect {
+		t.Fatal("SetInt64(1) failed")
+	}
+}
+
+func TestEncode(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, got Elt
+		rand.Read(x[:])
+
+		Encode(&got, &x)
+		expect := ExpectEncode(x)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestDecode(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, got Elt
+		rand.Read(x[:])
+
+		Decode(&got, &x)
+		expect := ExpectDecode(x)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestEncodeDecodeRoundTrip(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, m, got Elt
+		rand.Read(x[:])
+		Encode(&m, &x)
+		Decode(&got, &m)
+		if got != x {
+			t.Fatal("failed roundtrip")
+		}
+	}
+}
+
 func TestAdd(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, y, got Elt
@@ -197,47 +251,17 @@ func TestSqr(t *testing.T) {
 	}
 }
 
-func DebugMontMul(t *testing.T, x, y *big.Int) {
-	m := new(big.Int).Mul(x, y)
-	acc := m
-	for i := uint(0); i < 256; i += 64 {
-		t.Logf("step %3d: acc = %0129x", i, acc)
-
-		// Step 2.1: u_i = x_i * m' (mod b)
-		u := new(big.Int).Rsh(acc, i)
-		u.And(u, bigint.Ones(64))
-
-		// Step 2.2: x += u_i * m * b^i
-		u.Mul(u, p)
-		u.Lsh(u, i)
-		acc.Add(acc, u)
-	}
-
-	t.Logf("  reduced acc = %0129x", acc)
-
-	acc.Rsh(acc, 256)
-	t.Logf("    shift acc = %0129x", acc)
-
-	t.Logf("        cmp p = %d", acc.Cmp(p))
-	if acc.Cmp(p) >= 0 {
-		acc.Sub(acc, p)
-	}
-
-	t.Logf("    final acc = %0129x", acc)
-}
-
 func TestMulEdgeCases(t *testing.T) {
-	zero := big.NewInt(0)
-	one := big.NewInt(1)
-	p1 := new(big.Int).Sub(p, one)
-
+	// Values that might exercise edge cases.
 	interesting := map[string]*big.Int{
-		"0":     zero,
-		"1":     one,
+		"0":     big.NewInt(0),
+		"1":     big.NewInt(1),
 		"R":     R(),
 		"(1/R)": RInv(),
-		"(p-1)": p1,
+		"(p-1)": new(big.Int).Sub(p, big.NewInt(1)),
 	}
+
+	// Test cases for every pair of interesting numbers.
 	type testcase struct {
 		Name string
 		X, Y *big.Int
@@ -256,18 +280,12 @@ func TestMulEdgeCases(t *testing.T) {
 	for _, c := range cases {
 		c := c
 		t.Run(c.Name, func(t *testing.T) {
-			t.Logf("     x = %x", c.X)
-			t.Logf("     y = %x", c.Y)
-
 			// Montgomery encode.
 			c.X.Mul(c.X, R())
 			c.X.Mod(c.X, p)
 
 			c.Y.Mul(c.Y, R())
 			c.Y.Mod(c.Y, p)
-
-			t.Logf("     x = %x (encoded)", c.X)
-			t.Logf("     y = %x (encoded)", c.Y)
 
 			// Compute expectation.
 			expect := new(big.Int).Mul(c.X, c.Y)
@@ -281,11 +299,11 @@ func TestMulEdgeCases(t *testing.T) {
 			Mul(&z, &x, &y)
 			got := IntFromBytesLittleEndian(z[:])
 
-			t.Logf("   got = %x", got)
-			t.Logf("expect = %x", expect)
-
 			if expect.Cmp(got) != 0 {
-				DebugMontMul(t, c.X, c.Y)
+				t.Logf("     x = %x", c.X)
+				t.Logf("     y = %x", c.Y)
+				t.Logf("   got = %x", got)
+				t.Logf("expect = %x", expect)
 				t.Fail()
 			}
 		})
@@ -331,66 +349,9 @@ func TestInvProperty(t *testing.T) {
 		one := Elt{1}
 		if one != got {
 			t.Logf("     x = %x", x)
-			t.Logf("    xm = %x", xm)
-			t.Logf(" xminv = %x", xminv)
-			t.Logf("     p = %x", p)
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", one)
 			t.Fatal("invalid inverse")
-		}
-	}
-}
-
-func TestSetInt64(t *testing.T) {
-	got := new(Elt).SetInt64(1)
-	expect := &Elt{1}
-	if *got != *expect {
-		t.Fatal("SetInt64(1) failed")
-	}
-}
-
-func TestEncode(t *testing.T) {
-	for trial := 0; trial < NumTrials(); trial++ {
-		var x, got Elt
-		rand.Read(x[:])
-
-		Encode(&got, &x)
-		expect := ExpectEncode(x)
-
-		if got != expect {
-			t.Logf("     x = %x", x)
-			t.Logf("   got = %x", got)
-			t.Logf("expect = %x", expect)
-			t.FailNow()
-		}
-	}
-}
-
-func TestDecode(t *testing.T) {
-	for trial := 0; trial < NumTrials(); trial++ {
-		var x, got Elt
-		rand.Read(x[:])
-
-		Decode(&got, &x)
-		expect := ExpectDecode(x)
-
-		if got != expect {
-			t.Logf("     x = %x", x)
-			t.Logf("   got = %x", got)
-			t.Logf("expect = %x", expect)
-			t.FailNow()
-		}
-	}
-}
-
-func TestEncodeDecodeRoundTrip(t *testing.T) {
-	for trial := 0; trial < NumTrials(); trial++ {
-		var x, m, got Elt
-		rand.Read(x[:])
-		Encode(&m, &x)
-		Decode(&got, &m)
-		if got != x {
-			t.Fatal("failed roundtrip")
 		}
 	}
 }
