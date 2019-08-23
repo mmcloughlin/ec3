@@ -1,6 +1,9 @@
 package fp
 
 import (
+	"go/token"
+	"go/types"
+
 	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/gotypes"
@@ -34,6 +37,37 @@ func (a Asm) Function(name string, params ...string) {
 
 	sig := a.cfg.Signature(params...)
 	a.ctx.Signature(gotypes.NewSignature(nil, sig))
+}
+
+func (a Asm) CMov() {
+	// Declare the function. We can't use the standard helper here since this
+	// doesn't only take field element arguments.
+	a.ctx.Function("CMov")
+	a.ctx.Attributes(attr.NOSPLIT)
+	params := types.NewTuple(
+		a.cfg.Param("y"),
+		a.cfg.Param("x"),
+		types.NewParam(token.NoPos, nil, "c", types.Typ[types.Uint]),
+	)
+	sig := types.NewSignature(nil, params, nil, false)
+	a.ctx.Signature(gotypes.NewSignature(nil, sig))
+
+	// Load parameters.
+	yp := mp.Param(a.ctx, "y", a.field.Limbs())
+	xp := mp.Param(a.ctx, "x", a.field.Limbs())
+	c := a.ctx.Load(a.ctx.Param("c"), a.ctx.GP64())
+
+	// Bring into registers.
+	y := mp.CopyIntoRegisters(a.ctx, yp)
+	x := mp.CopyIntoRegisters(a.ctx, xp)
+
+	// Do the conditional move.
+	mp.ConditionalMove(a.ctx, y, x, c)
+
+	// Write back to memory.
+	mp.Copy(a.ctx, yp, y)
+
+	a.ctx.RET()
 }
 
 func (a Asm) Add() {

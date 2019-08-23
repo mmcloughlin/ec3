@@ -2,6 +2,30 @@
 
 #include "textflag.h"
 
+// func CMov(y *Elt, x *Elt, c uint)
+TEXT ·CMov(SB), NOSPLIT, $0-24
+	MOVQ    y+0(FP), AX
+	MOVQ    x+8(FP), CX
+	MOVQ    c+16(FP), DX
+	MOVQ    (AX), BX
+	MOVQ    8(AX), BP
+	MOVQ    16(AX), SI
+	MOVQ    24(AX), DI
+	MOVQ    (CX), R8
+	MOVQ    8(CX), R9
+	MOVQ    16(CX), R10
+	MOVQ    24(CX), CX
+	TESTQ   DX, DX
+	CMOVQNE R8, BX
+	CMOVQNE R9, BP
+	CMOVQNE R10, SI
+	CMOVQNE CX, DI
+	MOVQ    BX, (AX)
+	MOVQ    BP, 8(AX)
+	MOVQ    SI, 16(AX)
+	MOVQ    DI, 24(AX)
+	RET
+
 // func Add(z *Elt, x *Elt, y *Elt)
 TEXT ·Add(SB), NOSPLIT, $0-24
 	MOVQ    z+0(FP), AX

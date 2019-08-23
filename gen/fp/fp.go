@@ -34,13 +34,21 @@ func (c Config) PointerType() *types.Pointer {
 	return types.NewPointer(c.Type())
 }
 
-func (c Config) Signature(params ...string) *types.Signature {
-	ptr := c.PointerType()
+func (c Config) Param(name string) *types.Var {
+	return types.NewParam(token.NoPos, nil, name, c.PointerType())
+}
+
+func (c Config) Params(params ...string) []*types.Var {
 	vars := []*types.Var{}
 	for _, param := range params {
-		vars = append(vars, types.NewParam(token.NoPos, nil, param, ptr))
+		vars = append(vars, c.Param(param))
 	}
-	return types.NewSignature(nil, types.NewTuple(vars...), nil, false)
+	return vars
+}
+
+func (c Config) Signature(params ...string) *types.Signature {
+	tuple := types.NewTuple(c.Params(params...)...)
+	return types.NewSignature(nil, tuple, nil, false)
 }
 
 func Package(cfg Config) (gen.Files, error) {
@@ -56,6 +64,7 @@ func Package(cfg Config) (gen.Files, error) {
 
 	// Assembly backend.
 	a := NewAsm(cfg)
+	a.CMov()
 	a.Add()
 	a.Sub()
 	a.Mul()

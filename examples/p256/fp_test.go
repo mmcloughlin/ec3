@@ -109,6 +109,28 @@ func TestSetInt64(t *testing.T) {
 	}
 }
 
+func TestCMov(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, y Elt
+		rand.Read(x[:])
+		rand.Read(y[:])
+
+		// c ≡ 0: expect no move.
+		expect := y
+		CMov(&y, &x, 0)
+		if y != expect {
+			t.FailNow()
+		}
+
+		// c ≡ 1: expect no move.
+		expect = x
+		CMov(&y, &x, 1)
+		if y != expect {
+			t.FailNow()
+		}
+	}
+}
+
 func TestEncode(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, got Elt

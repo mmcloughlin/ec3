@@ -84,6 +84,14 @@ func StaticGlobal(ctx *build.Context, name string, limbs []uint64) Int {
 	return NewIntFromMem(addr, len(limbs))
 }
 
+// ConditionalMove copies x into y if c ≡ 1.
+func ConditionalMove(ctx *build.Context, y, x Int, c operand.Op) {
+	ctx.TESTQ(c, c)
+	for i := 0; i < len(x) && i < len(y); i++ {
+		ctx.CMOVQNE(x[i], y[i])
+	}
+}
+
 // Mul does a full multiply z = x*y.
 func Mul(ctx *build.Context, z, x, y Int) {
 	// TODO(mbm): multi-precision multiply is ugly

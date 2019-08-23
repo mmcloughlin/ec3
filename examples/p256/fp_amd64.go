@@ -2,6 +2,8 @@
 
 package p256
 
+func CMov(y *Elt, x *Elt, c uint)
+
 func Add(z *Elt, x *Elt, y *Elt)
 
 func Sub(z *Elt, x *Elt, y *Elt)
