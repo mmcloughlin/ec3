@@ -148,9 +148,27 @@ func p256(p *ir.Program) gen.Files {
 		Formula: scalef.Program,
 	}
 
+	// TODO(mbm): automatically generate cmov formulae
+	cmov := ec.Function{
+		Name:          "CMov",
+		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
+		WriteReceiver: true,
+		Params: []*ec.Parameter{
+			{Name: "q", Type: jacobian},
+		},
+		Conditions: []string{"c"},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "X3", RHS: ast.Cond{X: ast.Variable("X1"), C: ast.Variable("c")}},
+				{LHS: "Y3", RHS: ast.Cond{X: ast.Variable("Y1"), C: ast.Variable("c")}},
+				{LHS: "Z3", RHS: ast.Cond{X: ast.Variable("Z1"), C: ast.Variable("c")}},
+			},
+		},
+	}
+
 	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
 	if addf == nil {
-		log.Fatalf("unknown formula")
+		log.Fatal("unknown formula")
 	}
 
 	add := ec.Function{
@@ -166,7 +184,7 @@ func p256(p *ir.Program) gen.Files {
 
 	dblf := efd.LookupFormula("g1p/shortw/jacobian-3/doubling/dbl-2001-b")
 	if dblf == nil {
-		log.Fatalf("unknown formula")
+		log.Fatal("unknown formula")
 	}
 
 	dbl := ec.Function{
@@ -187,6 +205,7 @@ func p256(p *ir.Program) gen.Files {
 			jacobian,
 			fromaffine,
 			toaffine,
+			cmov,
 			add,
 			dbl,
 		},

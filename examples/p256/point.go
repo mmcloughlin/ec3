@@ -80,6 +80,12 @@ func (p *Jacobian) Affine() (a *Affine) {
 	return
 }
 
+func (p *Jacobian) CMov(q *Jacobian, c uint) {
+	CMov(&p.X, &q.X, c)
+	CMov(&p.Y, &q.Y, c)
+	CMov(&p.Z, &q.Z, c)
+}
+
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
 		Z2Z2 Elt

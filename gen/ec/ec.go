@@ -19,6 +19,7 @@ type Component interface {
 }
 
 // TODO(mbm): Type and Function have similarities with corresponding go/types structs. Use them instead?
+// TODO(mbm): Handling of conditional program variables feels "bolted on". Revisit after more use?
 
 type Type struct {
 	Name        string
@@ -38,6 +39,7 @@ type Function struct {
 	Receiver      *Parameter
 	WriteReceiver bool
 	Params        []*Parameter
+	Conditions    []string
 	Results       []*Parameter
 	Formula       *ast.Program
 }
@@ -120,6 +122,11 @@ func (f Function) Variables() map[ast.Variable]string {
 			variables[name] = code
 		}
 		n++
+	}
+
+	// Add conditional variables.
+	for _, cond := range f.Conditions {
+		variables[ast.Variable(cond)] = cond
 	}
 
 	return variables
@@ -231,12 +238,12 @@ func (p *point) function(f Function) {
 	// Function header.
 	p.Printf("func ")
 	if f.Receiver != nil {
-		p.tuple([]*Parameter{f.Receiver})
+		p.tuple([]*Parameter{f.Receiver}, nil)
 	}
 	p.Printf("%s", f.Name)
-	p.tuple(f.Params)
+	p.tuple(f.Params, f.Conditions)
 	if len(f.Results) > 0 {
-		p.tuple(f.Results)
+		p.tuple(f.Results, nil)
 	}
 	p.EnterBlock()
 
@@ -293,6 +300,8 @@ func (p *point) function(f Function) {
 			p.call("Sub", a.LHS, e, variables)
 		case ast.Add:
 			p.call("Add", a.LHS, e, variables)
+		case ast.Cond:
+			p.Linef("CMov(&%s, &%s, %s)", variables[a.LHS], variables[e.X], variables[e.C])
 		default:
 			p.SetError(errutil.UnexpectedType(e))
 			return
@@ -318,15 +327,15 @@ func (p *point) call(fn, lhs ast.Variable, expr ast.Expression, vars map[ast.Var
 	p.Linef(")")
 }
 
-func (p *point) tuple(params []*Parameter) {
-	p.Printf("(")
-	for i, param := range params {
-		if i > 0 {
-			p.Printf(", ")
-		}
-		p.Printf("%s *%s", param.Name, param.Type.Name)
+func (p *point) tuple(params []*Parameter, conds []string) {
+	args := []string{}
+	for _, param := range params {
+		args = append(args, fmt.Sprintf("%s *%s", param.Name, param.Type.Name))
 	}
-	p.Printf(")")
+	for _, cond := range conds {
+		args = append(args, cond+" uint")
+	}
+	p.Printf("(%s)", strings.Join(args, ", "))
 }
 
 func (p *point) constant(v string, x int) {
