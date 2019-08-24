@@ -86,6 +86,12 @@ func (p *Jacobian) CMov(q *Jacobian, c uint) {
 	CMov(&p.Z, &q.Z, c)
 }
 
+func (p *Jacobian) CNeg(c uint) {
+	var t Elt
+	Neg(&t, &p.Y)
+	CMov(&p.Y, &t, c)
+}
+
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
 		Z2Z2 Elt

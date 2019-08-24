@@ -319,14 +319,7 @@ func (p *point) function(f Function) {
 		variables[v] = name
 	}
 
-	if len(tmps) > 0 {
-		p.Linef("var (")
-		for _, name := range tmps {
-			p.Linef("%s %s", name, p.Field.Type())
-		}
-		p.Linef(")")
-		p.NL()
-	}
+	p.declare(tmps)
 
 	// Generate program.
 	for _, a := range prog.Assignments {
@@ -349,6 +342,8 @@ func (p *point) function(f Function) {
 			p.call("Sub", a.LHS, e, variables)
 		case ast.Add:
 			p.call("Add", a.LHS, e, variables)
+		case ast.Neg:
+			p.call("Neg", a.LHS, e, variables)
 		case ast.Cond:
 			p.Linef("CMov(&%s, &%s, %s)", variables[a.LHS], variables[e.X], variables[e.C])
 		default:
@@ -361,6 +356,22 @@ func (p *point) function(f Function) {
 		p.Linef("return")
 	}
 	p.LeaveBlock()
+}
+
+func (p *point) declare(vars []string) {
+	switch len(vars) {
+	case 0:
+		return
+	case 1:
+		p.Linef("var %s %s", vars[0], p.Field.Type())
+	default:
+		p.Linef("var (")
+		for _, name := range vars {
+			p.Linef("%s %s", name, p.Field.Type())
+		}
+		p.Linef(")")
+		p.NL()
+	}
 }
 
 func (p *point) call(fn, lhs ast.Variable, expr ast.Expression, vars map[ast.Variable]string) {

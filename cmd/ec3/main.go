@@ -165,6 +165,19 @@ func p256(p *ir.Program) gen.Files {
 		},
 	}
 
+	// TODO(mbm): automatically generate negation formulae
+	cneg := ec.Function{
+		Name:       "CNeg",
+		Receiver:   &ec.Parameter{Name: "p", Type: jacobian, Action: ec.RW},
+		Conditions: []string{"c"},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "t", RHS: ast.Neg{X: ast.Variable("Y1")}},
+				{LHS: "Y3", RHS: ast.Cond{X: ast.Variable("t"), C: ast.Variable("c")}},
+			},
+		},
+	}
+
 	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
 	if addf == nil {
 		log.Fatal("unknown formula")
@@ -203,6 +216,7 @@ func p256(p *ir.Program) gen.Files {
 			fromaffine,
 			toaffine,
 			cmov,
+			cneg,
 			add,
 			dbl,
 		},
