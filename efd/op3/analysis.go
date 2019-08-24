@@ -88,6 +88,11 @@ func RenameVariables(p *ast.Program, replacements map[ast.Variable]ast.Variable)
 				X: renameoperand(e.X, replacements),
 				Y: renameoperand(e.Y, replacements),
 			}
+		case ast.Cond:
+			expr = ast.Cond{
+				X: renamevariable(e.X, replacements),
+				C: renamevariable(e.C, replacements),
+			}
 		case ast.Variable:
 			expr = renamevariable(e, replacements)
 		case ast.Constant:
@@ -180,7 +185,7 @@ func IsPrimitive(p *ast.Program) bool {
 // multiplies, they are typically best replaced with additions.
 func IsPrimitiveExpression(expr ast.Expression) bool {
 	switch e := expr.(type) {
-	case ast.Inv, ast.Neg, ast.Add, ast.Sub, ast.Variable, ast.Constant:
+	case ast.Inv, ast.Neg, ast.Add, ast.Sub, ast.Cond, ast.Variable, ast.Constant:
 		return true
 	case ast.Pow:
 		return e.N == 2

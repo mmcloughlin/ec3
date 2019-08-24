@@ -8,6 +8,32 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
+// Corpus returns a suite of test programs.
+func Corpus() map[string]*ast.Program {
+	corpus := map[string]*ast.Program{}
+
+	// Include everything from the EFD.
+	for _, f := range efd.All {
+		p := f.Program
+		if p == nil {
+			continue
+		}
+		corpus[f.ID] = p
+	}
+
+	// Conditionals do not appear in the EFD. Include a simple program that uses them.
+	corpus["cond"] = &ast.Program{
+		Assignments: []ast.Assignment{
+			{
+				LHS: ast.Variable("a"),
+				RHS: ast.Cond{X: ast.Variable("b"), C: ast.Variable("c")},
+			},
+		},
+	}
+
+	return corpus
+}
+
 func TestRenameVariables(t *testing.T) {
 	a := ast.Variable("a")
 	b := ast.Variable("b")
@@ -34,14 +60,10 @@ func TestRenameVariables(t *testing.T) {
 	}
 }
 
-func TestRenameVariablesAllFormulae(t *testing.T) {
+func TestRenameVariablesCorpus(t *testing.T) {
 	// Verify that RenameVariables with an empty replacement map is a no-op.
 	noop := map[ast.Variable]ast.Variable{}
-	for _, f := range efd.All {
-		p := f.Program
-		if p == nil {
-			continue
-		}
+	for _, p := range Corpus() {
 		r := RenameVariables(p, noop)
 		if !reflect.DeepEqual(p, r) {
 			t.Fatal("expected noop")
@@ -139,6 +161,10 @@ func TestIsPrimitive(t *testing.T) {
 			{
 				LHS: "c",
 				RHS: ast.Add{X: ast.Variable("a"), Y: ast.Variable("b")},
+			},
+			{
+				LHS: "d",
+				RHS: ast.Cond{X: ast.Variable("a"), C: ast.Variable("C")},
 			},
 		},
 	}
@@ -291,20 +317,15 @@ func TestLowerCases(t *testing.T) {
 	}
 }
 
-func TestLowerAllFormulae(t *testing.T) {
-	for _, f := range efd.All {
-		p := f.Program
-		if p == nil || IsPrimitive(p) {
-			continue
-		}
-
+func TestLowerCorpus(t *testing.T) {
+	for id, p := range Corpus() {
 		low, err := Lower(p)
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		if !IsPrimitive(low) {
-			t.Errorf("%s: lowered program is not primitive", f.ID)
+			t.Errorf("%s: lowered program is not primitive", id)
 		}
 	}
 }

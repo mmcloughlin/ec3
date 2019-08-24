@@ -70,6 +70,12 @@ func (s Sub) Inputs() []Operand { return []Operand{s.X, s.Y} }
 
 func (s Sub) String() string { return fmt.Sprintf("%s-%s", s.X, s.Y) }
 
+type Cond struct{ X, C Variable }
+
+func (c Cond) Inputs() []Operand { return []Operand{c.X, c.C} }
+
+func (c Cond) String() string { return fmt.Sprintf("%s?%s", c.X, c.C) }
+
 type Operand interface {
 	fmt.Stringer
 }

@@ -233,6 +233,16 @@ func TestParseCases(t *testing.T) {
 				},
 			},
 		},
+		{
+			Source: "a = b?c",
+			Expect: ast.Assignment{
+				LHS: "a",
+				RHS: ast.Cond{
+					X: ast.Variable("b"),
+					C: ast.Variable("c"),
+				},
+			},
+		},
 	}
 
 	// Build one source from all the cases.

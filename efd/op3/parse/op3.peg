@@ -25,7 +25,7 @@ Assignment <- v:Variable _ '=' _ e:Expression _ EOL {
 
 // Operators
 
-Expression <- Pow / Inv / Mul / Neg / Add / Sub / Operand
+Expression <- Pow / Inv / Mul / Neg / Add / Sub / Cond / Operand
 
 Pow <- x:Variable _ '^' _ n:Constant {
     return ast.Pow{
@@ -64,6 +64,13 @@ Sub <- x:Operand _ '-' _ y:Operand {
     return ast.Sub{
         X: x.(ast.Operand),
         Y: y.(ast.Operand),
+    }, nil
+}
+
+Cond <- x:Variable _ '?' _ cond:Variable {
+    return ast.Cond{
+        X: x.(ast.Variable),
+        C: cond.(ast.Variable),
     }, nil
 }
 
