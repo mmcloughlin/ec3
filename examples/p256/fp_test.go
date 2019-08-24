@@ -16,12 +16,6 @@ func NumTrials() int {
 	return 1 << 20
 }
 
-var p *big.Int
-
-func init() {
-	p, _ = new(big.Int).SetString("115792089210356248762697446949407573530086143415290314195533631308867097853951", 10)
-}
-
 func R() *big.Int {
 	r := bigint.Pow2(256)
 	r.Mod(r, p)
@@ -60,6 +54,15 @@ func ExpectSub(x, y Elt) Elt {
 	xi := IntFromBytesLittleEndian(x[:])
 	yi := IntFromBytesLittleEndian(y[:])
 	zi := new(big.Int).Sub(xi, yi)
+	zi.Mod(zi, p)
+	var z Elt
+	BytesFromIntLittleEndian(z[:], zi)
+	return z
+}
+
+func ExpectNeg(x Elt) Elt {
+	xi := IntFromBytesLittleEndian(x[:])
+	zi := new(big.Int).Neg(xi)
 	zi.Mod(zi, p)
 	var z Elt
 	BytesFromIntLittleEndian(z[:], zi)
@@ -218,6 +221,23 @@ func TestSub(t *testing.T) {
 		if got != expect {
 			t.Logf("     x = %x", x)
 			t.Logf("     y = %x", y)
+			t.Logf("   got = %x", got)
+			t.Logf("expect = %x", expect)
+			t.FailNow()
+		}
+	}
+}
+
+func TestNeg(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		var x, got Elt
+		rand.Read(x[:])
+
+		Neg(&got, &x)
+		expect := ExpectNeg(x)
+
+		if got != expect {
+			t.Logf("     x = %x", x)
 			t.Logf("   got = %x", got)
 			t.Logf("expect = %x", expect)
 			t.FailNow()

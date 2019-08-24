@@ -75,6 +75,18 @@ func (g *Generator) Function(name string, s *types.Signature) {
 	g.EnterBlock()
 }
 
+func (g *Generator) ByteArrayValue(b []byte) {
+	g.EnterBlock()
+	for i, x := range b {
+		g.Printf("%#02x, ", x)
+		if (i+1)%8 == 0 {
+			g.NL()
+		}
+	}
+	g.NL()
+	g.LeaveBlock()
+}
+
 func (g *Generator) Formatted() ([]byte, error) {
 	b, err := g.Result()
 	if err != nil {

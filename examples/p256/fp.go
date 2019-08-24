@@ -4,14 +4,22 @@ package p256
 
 import "math/big"
 
-// modulus is the field prime modulus.
-var modulus, _ = new(big.Int).SetString("115792089210356248762697446949407573530086143415290314195533631308867097853951", 10)
-
 // Size of a field element in bytes.
 const Size = 32
 
 // Elt is a field element.
 type Elt [32]uint8
+
+// p is the field prime modulus as a big integer.
+var p, _ = new(big.Int).SetString("115792089210356248762697446949407573530086143415290314195533631308867097853951", 10)
+
+// prime is the prime field modulus as a field element.
+var prime = Elt{
+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+	0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x01, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff,
+}
 
 // SetInt64 constructs a field element from an integer.
 func (x *Elt) SetInt64(y int64) *Elt {
@@ -22,8 +30,8 @@ func (x *Elt) SetInt64(y int64) *Elt {
 // SetInt constructs a field element from a big integer.
 func (x *Elt) SetInt(y *big.Int) *Elt {
 	// Reduce if outside range.
-	if y.Sign() < 0 || y.Cmp(modulus) >= 0 {
-		y = new(big.Int).Mod(y, modulus)
+	if y.Sign() < 0 || y.Cmp(p) >= 0 {
+		y = new(big.Int).Mod(y, p)
 	}
 	// Copy bytes into field element.
 	b := y.Bytes()
@@ -62,6 +70,11 @@ var r2 = new(Elt).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*256))
 // Encode into the Montgomery domain.
 func Encode(z *Elt, x *Elt) {
 	Mul(z, x, r2)
+}
+
+// Neg computes z = -x (mod p).
+func Neg(z *Elt, x *Elt) {
+	Sub(z, &prime, x)
 }
 
 // Sqr computes z = x^2 (mod p).

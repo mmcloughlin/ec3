@@ -7,6 +7,7 @@ import (
 	"github.com/mmcloughlin/ec3/addchain/acc/ir"
 	"github.com/mmcloughlin/ec3/addchain/acc/pass"
 	"github.com/mmcloughlin/ec3/gen"
+	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/gocode"
 )
@@ -30,11 +31,6 @@ func (a *api) Generate() ([]byte, error) {
 
 	a.Import("math/big")
 
-	// Variables.
-	a.NL()
-	a.Commentf("modulus is the field prime modulus.")
-	a.Linef("var modulus, _ = new(big.Int).SetString(\"%d\", 10)", a.Field.Prime())
-
 	// Define element type.
 	a.NL()
 	a.Comment("Size of a field element in bytes.")
@@ -43,6 +39,17 @@ func (a *api) Generate() ([]byte, error) {
 	a.NL()
 	a.Commentf("%s is a field element.", a.ElementTypeName)
 	a.Linef("type %s %s", a.Type(), a.Type().Underlying())
+
+	// Variables.
+	a.NL()
+
+	p := a.Field.Prime()
+	a.Commentf("p is the field prime modulus as a big integer.")
+	a.Linef("var p, _ = new(big.Int).SetString(\"%d\", 10)", p)
+
+	a.Commentf("prime is the prime field modulus as a field element.")
+	a.Printf("var prime = %s", a.Type())
+	a.ByteArrayValue(bigint.BytesLittleEndian(p))
 
 	// Conversion to/from integer types.
 	a.SetInt64()
@@ -56,6 +63,7 @@ func (a *api) Generate() ([]byte, error) {
 	}
 
 	// Implement field operations.
+	a.Negate()
 	a.Square()
 	a.Inverse()
 
@@ -79,8 +87,8 @@ func (a *api) SetInt() {
 	a.EnterBlock()
 
 	a.Comment("Reduce if outside range.")
-	a.Linef("if y.Sign() < 0 || y.Cmp(modulus) >= 0 {")
-	a.Linef("y = new(big.Int).Mod(y, modulus)")
+	a.Linef("if y.Sign() < 0 || y.Cmp(p) >= 0 {")
+	a.Linef("y = new(big.Int).Mod(y, p)")
 	a.Linef("}")
 
 	a.Comment("Copy bytes into field element.")
@@ -136,6 +144,15 @@ func (a *api) Encode() {
 	a.Comment("Encode into the Montgomery domain.")
 	a.Function("Encode", a.Signature("z", "x"))
 	a.Linef("Mul(z, x, r2)")
+	a.LeaveBlock()
+}
+
+// Negate generates a negation function. This is currently implemented using
+// subtraction.
+func (a *api) Negate() {
+	a.Comment("Neg computes z = -x (mod p).")
+	a.Function("Neg", a.Signature("z", "x"))
+	a.Linef("Sub(z, &prime, x)")
 	a.LeaveBlock()
 }
 
