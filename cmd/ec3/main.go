@@ -120,10 +120,10 @@ func p256(p *ir.Program) gen.Files {
 	fromaffine := ec.Function{
 		Name: "NewFromAffine",
 		Params: []*ec.Parameter{
-			{Name: "a", Type: affine},
+			{Name: "a", Type: affine, Action: ec.R},
 		},
 		Results: []*ec.Parameter{
-			{Name: "p", Type: jacobian},
+			{Name: "p", Type: jacobian, Action: ec.W},
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -141,20 +141,19 @@ func p256(p *ir.Program) gen.Files {
 
 	toaffine := ec.Function{
 		Name:     "Affine",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian},
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.R},
 		Results: []*ec.Parameter{
-			{Name: "a", Type: affine},
+			{Name: "a", Type: affine, Action: ec.W},
 		},
 		Formula: scalef.Program,
 	}
 
 	// TODO(mbm): automatically generate cmov formulae
 	cmov := ec.Function{
-		Name:          "CMov",
-		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
-		WriteReceiver: true,
+		Name:     "CMov",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
 		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian},
+			{Name: "q", Type: jacobian, Action: ec.R},
 		},
 		Conditions: []string{"c"},
 		Formula: &ast.Program{
@@ -172,12 +171,11 @@ func p256(p *ir.Program) gen.Files {
 	}
 
 	add := ec.Function{
-		Name:          "Add",
-		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
-		WriteReceiver: true,
+		Name:     "Add",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
 		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian},
-			{Name: "r", Type: jacobian},
+			{Name: "q", Type: jacobian, Action: ec.R},
+			{Name: "r", Type: jacobian, Action: ec.R},
 		},
 		Formula: addf.Program,
 	}
@@ -188,11 +186,10 @@ func p256(p *ir.Program) gen.Files {
 	}
 
 	dbl := ec.Function{
-		Name:          "Double",
-		Receiver:      &ec.Parameter{Name: "p", Type: jacobian},
-		WriteReceiver: true,
+		Name:     "Double",
+		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
 		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian},
+			{Name: "q", Type: jacobian, Action: ec.R},
 		},
 		Formula: dblf.Program,
 	}

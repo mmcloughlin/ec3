@@ -5,6 +5,8 @@ import (
 	"go/types"
 	"strings"
 
+	"golang.org/x/xerrors"
+
 	"github.com/mmcloughlin/ec3/efd/op3"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
@@ -29,22 +31,56 @@ type Type struct {
 
 func (Type) private() {}
 
+// Action specifies the read/write operation of a function parameter.
+type Action uint8
+
+// Possible Action types.
+const (
+	R  Action = 0x1
+	W  Action = 0x2
+	RW Action = R | W
+)
+
+// Contains reports whether a supports all actions in s.
+func (a Action) Contains(s Action) bool {
+	return (a & s) == s
+}
+
 type Parameter struct {
-	Name string
-	Type Type
+	Name   string
+	Type   Type
+	Action Action
 }
 
 type Function struct {
-	Name          string
-	Receiver      *Parameter
-	WriteReceiver bool
-	Params        []*Parameter
-	Conditions    []string
-	Results       []*Parameter
-	Formula       *ast.Program
+	Name       string
+	Receiver   *Parameter
+	Params     []*Parameter
+	Conditions []string
+	Results    []*Parameter
+	Formula    *ast.Program
 }
 
 func (Function) private() {}
+
+// Validate checks properties of the function.
+func (f Function) Validate() error {
+	// All parameters should have an action specified.
+	for _, param := range f.Parameters() {
+		if param.Action == 0 {
+			return xerrors.Errorf("function %q: parameter %q missing action", f.Name, param.Name)
+		}
+	}
+
+	// All parameters should have an action specified.
+	for _, result := range f.Results {
+		if result.Action != W {
+			return xerrors.Errorf("function %q: result %q must have write action", f.Name, result.Name)
+		}
+	}
+
+	return nil
+}
 
 // Program returns the program to be implemented by this function.
 func (f Function) Program() (*ast.Program, error) {
@@ -62,29 +98,36 @@ func (f Function) Program() (*ast.Program, error) {
 	return op3.Lower(p)
 }
 
-// Inputs returns all input parameters.
-func (f Function) Inputs() []*Parameter {
-	inputs := []*Parameter{}
-	if f.Receiver != nil && !f.WriteReceiver {
-		inputs = append(inputs, f.Receiver)
-	}
-	inputs = append(inputs, f.Params...)
-	return inputs
-}
-
-// Outputs returns all output parameters. The receiver is considered an output, if present.
-func (f Function) Outputs() []*Parameter {
-	outputs := []*Parameter{}
-	if f.Receiver != nil && f.WriteReceiver {
-		outputs = append(outputs, f.Receiver)
-	}
-	outputs = append(outputs, f.Results...)
-	return outputs
-}
-
-// Parameters returns all input and output parameters.
+// Parameters returns all parameters.
 func (f Function) Parameters() []*Parameter {
-	return append(f.Inputs(), f.Outputs()...)
+	params := []*Parameter{}
+	if f.Receiver != nil {
+		params = append(params, f.Receiver)
+	}
+	params = append(params, f.Params...)
+	params = append(params, f.Results...)
+	return params
+}
+
+// ParametersWithAction returns all parameters supporting action a.
+func (f Function) ParametersWithAction(a Action) []*Parameter {
+	params := []*Parameter{}
+	for _, param := range f.Parameters() {
+		if param.Action.Contains(a) {
+			params = append(params, param)
+		}
+	}
+	return params
+}
+
+// Inputs returns all read parameters.
+func (f Function) Inputs() []*Parameter {
+	return f.ParametersWithAction(R)
+}
+
+// Outputs returns all write parameters.
+func (f Function) Outputs() []*Parameter {
+	return f.ParametersWithAction(W)
 }
 
 // Symbols returns the set of names defined by the function parameters.
@@ -228,6 +271,12 @@ func (p *point) typ(t Type) {
 }
 
 func (p *point) function(f Function) {
+	// Validate.
+	if err := f.Validate(); err != nil {
+		p.SetError(err)
+		return
+	}
+
 	// Determine program.
 	prog, err := f.Program()
 	if err != nil {
