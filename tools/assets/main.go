@@ -1,3 +1,4 @@
+// Command assets embeds static assets into Go source code.
 package main
 
 import (
