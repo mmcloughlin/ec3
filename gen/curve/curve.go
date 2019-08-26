@@ -28,10 +28,16 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 		return nil, err
 	}
 
+	typename := strings.ToUpper(c.ShortName)
+	varname := strings.ToLower(c.ShortName)
+
 	err = t.Apply(
 		tmpl.SetPackageName(c.PackageName),
-		tmpl.Rename("CURVENAME", strings.ToUpper(c.ShortName)),
-		tmpl.Rename("curvename", strings.ToLower(c.ShortName)),
+		tmpl.Rename("CURVENAME", typename),
+		tmpl.CommentReplace("CURVENAME", typename),
+		tmpl.CommentReplace("CanonicalName", c.Params.Name),
+
+		tmpl.Rename("curvename", varname),
 
 		tmpl.DefineString("ConstCanonicalName", c.Params.Name),
 		tmpl.DefineString("ConstPDecimal", c.Params.P.Text(10)),

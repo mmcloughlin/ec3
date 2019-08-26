@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-// CURVENAME returns a Curve which implements P-384.
+// CURVENAME returns a Curve which implements CanonicalName.
 func CURVENAME() elliptic.Curve { return curvename }
 
 type curve struct{ *elliptic.CurveParams }

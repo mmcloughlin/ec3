@@ -5,7 +5,7 @@ import (
 	"math/big"
 )
 
-// CURVENAME returns a Curve which implements P-384.
+// P256 returns a Curve which implements P-256.
 func P256() elliptic.Curve { return p256 }
 
 type curve struct{ *elliptic.CurveParams }
