@@ -68,6 +68,20 @@ func Foo(x int) int { return (x+42)/0x37 }
 `,
 	},
 	{
+		Name: "comment_replace",
+		Source: `package pkg
+// Foo adds NUMBER.
+func Foo(x int) int { return x+1 }
+`,
+		Transforms: []Transform{
+			CommentReplace("NUMBER", "one"),
+		},
+		Expect: `package pkg
+// Foo adds one.
+func Foo(x int) int { return x+1 }
+`,
+	},
+	{
 		// Regression test for a bug in earlier versions where variable replacement
 		// would cause field references to be formatted incorrectly.
 		Name: "rename_variable_formatting",

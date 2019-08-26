@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"strings"
 
 	"golang.org/x/tools/go/ast/astutil"
 	"golang.org/x/xerrors"
@@ -96,4 +97,19 @@ func DefineIntDecimal(name string, value int) Transform {
 
 func DefineIntHex(name string, value int) Transform {
 	return DefineLiteralf(name, token.INT, "%#x", value)
+}
+
+func CommentReplace(old, new string) Transform {
+	return visitor{
+		Post: func(c *astutil.Cursor) bool {
+			if comment, ok := c.Node().(*ast.Comment); ok {
+				c.Replace(&ast.Comment{
+					Slash: comment.Slash,
+					Text:  strings.ReplaceAll(comment.Text, old, new),
+				})
+			}
+			return true
+		},
+		Error: func() error { return nil },
+	}
 }
