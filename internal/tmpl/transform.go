@@ -46,12 +46,12 @@ func SetPackageName(name string) Transform {
 	}
 }
 
-func replace(name string, replacement ast.Node) Transform {
+func replace(name string, sub func(*ast.Ident) ast.Node) Transform {
 	n := 0
 	return visitor{
 		Post: func(c *astutil.Cursor) bool {
 			if i, ok := c.Node().(*ast.Ident); ok && i.Name == name {
-				c.Replace(replacement)
+				c.Replace(sub(i))
 				n++
 			}
 			return true
@@ -66,13 +66,20 @@ func replace(name string, replacement ast.Node) Transform {
 }
 
 func Rename(from, to string) Transform {
-	return replace(from, &ast.Ident{Name: to})
+	return replace(from, func(i *ast.Ident) ast.Node {
+		r := &ast.Ident{}
+		*r = *i
+		r.Name = to
+		return r
+	})
 }
 
 func DefineLiteral(name string, kind token.Token, value string) Transform {
-	return replace(name, &ast.BasicLit{
-		Kind:  kind,
-		Value: value,
+	return replace(name, func(*ast.Ident) ast.Node {
+		return &ast.BasicLit{
+			Kind:  kind,
+			Value: value,
+		}
 	})
 }
 

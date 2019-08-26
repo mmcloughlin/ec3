@@ -67,6 +67,26 @@ func Foo(x int) int { return (x+ConstAdditive) / ConstDivisor }
 func Foo(x int) int { return (x+42)/0x37 }
 `,
 	},
+	{
+		// Regression test for a bug in earlier versions where variable replacement
+		// would cause field references to be formatted incorrectly.
+		Name: "rename_variable_formatting",
+		Source: `package pkg
+var x Thing
+func init() {
+	x.Field = 12
+}
+`,
+		Transforms: []Transform{
+			Rename("x", "baz"),
+		},
+		Expect: `package pkg
+var baz Thing
+func init() {
+	baz.Field = 12
+}
+`,
+	},
 }
 
 func TestTransforms(t *testing.T) {
