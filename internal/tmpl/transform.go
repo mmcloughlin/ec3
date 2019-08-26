@@ -6,7 +6,6 @@ import (
 	"go/token"
 
 	"golang.org/x/tools/go/ast/astutil"
-
 	"golang.org/x/xerrors"
 )
 

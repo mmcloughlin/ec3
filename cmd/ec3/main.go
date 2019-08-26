@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/elliptic"
 	"flag"
 	"fmt"
 	"log"
@@ -14,6 +15,7 @@ import (
 	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
+	"github.com/mmcloughlin/ec3/gen/curve"
 	"github.com/mmcloughlin/ec3/gen/ec"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/prime"
@@ -227,6 +229,18 @@ func p256(p *ir.Program) gen.Files {
 		log.Fatal(err)
 	}
 
+	// Curve operations.
+	shortw := curve.ShortWeierstrass{
+		PackageName: "p256",
+		Params:      elliptic.P256().Params(),
+		ShortName:   "p256",
+	}
+
+	curvefiles, err := shortw.Generate()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Merge and output.
-	return gen.Merge(fieldfiles, pointfiles)
+	return gen.Merge(fieldfiles, pointfiles, curvefiles)
 }
