@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Git Status
           command: |
-            git status
+            git diff
             test -z "$(git status --porcelain)"
       - run:
           name: Format
@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Git Status
           command: |
-            git status
+            git diff
             test -z "$(git status --porcelain)"
 
 workflows:
