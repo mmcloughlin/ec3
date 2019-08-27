@@ -11,6 +11,10 @@ fmt:
 lint:
 	golangci-lint run ./...
 
+.PHONY: generate
+generate:
+	go generate -x ./...
+
 .PHONY: bootstrap
 bootstrap:
 	go get -v -t ./...
