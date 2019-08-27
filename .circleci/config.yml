@@ -31,10 +31,20 @@ jobs:
           command: make bootstrap
       - run:
           name: Generate
-          command: go generate -x ./...
+          command: make generate
       - run:
           name: Git Status
-          command: test -z "$(git status --porcelain)"
+          command: |
+            git status
+            test -z "$(git status --porcelain)"
+      - run:
+          name: Format
+          command: make fmt
+      - run:
+          name: Git Status
+          command: |
+            git status
+            test -z "$(git status --porcelain)"
 
 workflows:
   version: 2
