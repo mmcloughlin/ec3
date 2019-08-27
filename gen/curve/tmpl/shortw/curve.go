@@ -10,10 +10,11 @@ func CURVENAME() elliptic.Curve { return curvename }
 
 type curve struct{ *elliptic.CurveParams }
 
-var curvename curve
+var curvename = curve{
+	CurveParams: &elliptic.CurveParams{Name: ConstCanonicalName},
+}
 
 func init() {
-	curvename.CurveParams = &elliptic.CurveParams{Name: ConstCanonicalName}
 	curvename.P, _ = new(big.Int).SetString(ConstPDecimal, 10)
 	curvename.N, _ = new(big.Int).SetString(ConstNDecimal, 10)
 	curvename.B, _ = new(big.Int).SetString(ConstBHex, 16)

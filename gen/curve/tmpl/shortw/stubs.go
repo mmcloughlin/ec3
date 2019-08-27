@@ -12,30 +12,32 @@ const (
 	ConstBitSize       = 384
 )
 
-type Affine struct{}
-
-func NewAffine(x, y *big.Int) *Affine {
-	return &Affine{}
+type Affine struct {
+	X, Y *big.Int
 }
 
-func (p *Affine) Coordinates() (X, Y *big.Int) {
-	X = new(big.Int)
-	Y = new(big.Int)
-	return
+func NewAffine(x, y *big.Int) Affine {
+	return Affine{X: x, Y: y}
 }
 
-type Jacobian struct{}
-
-func NewFromAffine(a *Affine) *Jacobian {
-	return &Jacobian{}
+func (p Affine) Coordinates() (X, Y *big.Int) {
+	return p.X, p.Y
 }
 
-func (p *Jacobian) Affine() *Affine {
-	return &Affine{}
+type Jacobian Affine
+
+func NewFromAffine(a Affine) Jacobian {
+	return Jacobian(a)
 }
 
-func (p *Jacobian) Add(q, r *Jacobian) {
+func (p Jacobian) Affine() Affine {
+	return Affine(p)
 }
 
-func (p *Jacobian) Double(q *Jacobian) {
+func (p *Jacobian) Add(q, r Jacobian) {
+	p.X, p.Y = curvename.Params().Add(q.X, q.Y, r.X, r.Y)
+}
+
+func (p *Jacobian) Double(q Jacobian) {
+	p.X, p.Y = curvename.Params().Double(q.X, q.Y)
 }
