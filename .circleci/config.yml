@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/golang:1.12
     working_directory: /go/src/github.com/mmcloughlin/ec3
@@ -13,18 +13,6 @@ jobs:
       - run:
           name: Build
           command: go build ./...
-      - persist_to_workspace:
-          root: /go
-          paths:
-            - src
-            - bin
-  test:
-    docker:
-      - image: circleci/golang:1.12
-    working_directory: /go/src/github.com/mmcloughlin/ec3
-    steps:
-      - attach_workspace:
-          at: /go
       - run:
           name: Test
           command: go test -coverprofile=coverage.out -covermode=count ./...
@@ -32,12 +20,25 @@ jobs:
           name: Upload Coverage
           command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
           when: on_success
+  generate:
+    docker:
+      - image: circleci/golang:1.12
+    working_directory: /go/src/github.com/mmcloughlin/ec3
+    steps:
+      - checkout
+      - run:
+          name: Bootstrap
+          command: make bootstrap
+      - run:
+          name: Generate
+          command: go generate -x ./...
+      - run:
+          name: Git Status
+          command: test -z "$(git status --porcelain)"
 
 workflows:
   version: 2
   ci:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - test
+      - generate
