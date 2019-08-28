@@ -1,10 +1,20 @@
 version: 2
 
-jobs:
-  test:
+aliases:
+  env: &env
     docker:
       - image: circleci/golang:1.12
     working_directory: /go/src/github.com/mmcloughlin/ec3
+  checkdirty: &checkdirty
+    name: Git Status
+    command: |
+      git diff
+      test -z "$(git status --porcelain)"
+
+
+jobs:
+  test:
+    <<: *env
     steps:
       - checkout
       - run:
@@ -21,9 +31,7 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
           when: on_success
   generate:
-    docker:
-      - image: circleci/golang:1.12
-    working_directory: /go/src/github.com/mmcloughlin/ec3
+    <<: *env
     steps:
       - checkout
       - run:
@@ -32,19 +40,11 @@ jobs:
       - run:
           name: Generate
           command: make generate
-      - run:
-          name: Git Status
-          command: |
-            git diff
-            test -z "$(git status --porcelain)"
+      - run: *checkdirty
       - run:
           name: Format
           command: make fmt
-      - run:
-          name: Git Status
-          command: |
-            git diff
-            test -z "$(git status --porcelain)"
+      - run: *checkdirty
 
 workflows:
   version: 2
