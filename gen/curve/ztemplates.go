@@ -7,7 +7,9 @@ import "fmt"
 func loadtemplate(name string) ([]byte, error) {
 	switch name {
 	case "tmpl/shortw/curve.go":
-		return []byte(`package shortw
+		return []byte(`// CodeGenerationWarning
+
+package shortw
 
 import (
 	"crypto/elliptic"

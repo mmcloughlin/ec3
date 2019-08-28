@@ -32,6 +32,7 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 	varname := strings.ToLower(c.ShortName)
 
 	err = t.Apply(
+		tmpl.GeneratedBy(gen.GeneratedBy),
 		tmpl.SetPackageName(c.PackageName),
 		tmpl.Rename("CURVENAME", typename),
 		tmpl.CommentReplace("CURVENAME", typename),

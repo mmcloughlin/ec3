@@ -1,3 +1,5 @@
+// CodeGenerationWarning
+
 package shortw
 
 import (
