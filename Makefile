@@ -18,7 +18,7 @@ generate:
 .PHONY: bootstrap
 bootstrap:
 	go get -v -t ./...
-	go get \
+	go get -u \
 		mvdan.cc/gofumpt/gofumports \
 		github.com/mna/pigeon
 	go install \
