@@ -118,6 +118,59 @@ package pkg
 `,
 	},
 	{
+		Name: "preprocessor",
+		Source: `package pkg
+
+func Foo(x int) int {
+	x += 1
+	if true {
+		x += 2
+		x += 3
+	}
+	x += 4
+	x += 5
+	if x > 100 {
+		x += 6
+		x += 7
+	}
+	x += 8
+	x += 9
+	if false {
+		x += 10
+		x += 11
+	}
+	x += 12
+	x += 13
+	return x
+}
+`,
+		Transforms: []Transform{
+			Preprocessor(),
+		},
+		Expect: `package pkg
+
+func Foo(x int) int {
+	x += 1
+
+	x += 2
+	x += 3
+
+	x += 4
+	x += 5
+	if x > 100 {
+		x += 6
+		x += 7
+	}
+	x += 8
+	x += 9
+
+	x += 12
+	x += 13
+	return x
+}
+`,
+	},
+	{
 		// Regression test for a bug in earlier versions where variable replacement
 		// would cause field references to be formatted incorrectly.
 		Name: "rename_variable_formatting",
