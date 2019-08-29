@@ -68,6 +68,28 @@ func Foo(x int) int { return (x+42)/0x37 }
 `,
 	},
 	{
+		Name: "define_bool",
+		Source: `package pkg
+func Foo(x int) int {
+	if debug {
+		println(x)
+	}
+	return x + 1
+}
+`,
+		Transforms: []Transform{
+			DefineBool("debug", true),
+		},
+		Expect: `package pkg
+func Foo(x int) int {
+	if true {
+		println(x)
+	}
+	return x + 1
+}
+`,
+	},
+	{
 		Name: "comment_replace",
 		Source: `package pkg
 // Foo adds NUMBER.

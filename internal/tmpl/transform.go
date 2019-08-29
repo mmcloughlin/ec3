@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"strconv"
 	"strings"
 
 	"golang.org/x/tools/go/ast/astutil"
@@ -97,6 +98,10 @@ func DefineIntDecimal(name string, value int) Transform {
 
 func DefineIntHex(name string, value int) Transform {
 	return DefineLiteralf(name, token.INT, "%#x", value)
+}
+
+func DefineBool(name string, value bool) Transform {
+	return Rename(name, strconv.FormatBool(value))
 }
 
 func CommentReplace(old, new string) Transform {
