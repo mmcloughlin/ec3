@@ -52,24 +52,24 @@ func (k *scalar) FixedWindowRecode() []int {
 		r    = ConstBitSize            // bit size
 		t    = (r + (w - 2)) / (w - 1) // length of the window representation
 		mask = (1 << w) - 1            // w-bit mask
-		val  = 1 << (w - 1)            // 2^{w-1}
+		val  = 1 << (w - 1)            // 2ʷ⁻¹
 	)
 
 	digits := make([]int, t+1)
+	K := *k
 
 	// Step 2: for i = 0 to (t-1)
 	for i := 0; i < t; i++ {
-		// Step 3: k_i = ( k mod 2^w ) - 2^{w-1}
-		v := int(k[0]&mask) - val
-		digits[i] = v
+		// Step 3: k_i = ( k mod 2ʷ ) - 2ʷ⁻¹
+		digits[i] = int(K[0]&mask) - val
 
-		// Step 4: k = (k - k_i) / 2^{w-1}
-		k.Sub(v)
-		k.Rsh(w - 1)
+		// Step 4: k = (k - k_i) / 2ʷ⁻¹
+		K.Sub(digits[i])
+		K.Rsh(w - 1)
 	}
 
 	// Step 5: k_t = k
-	digits[t] = int(k[0])
+	digits[t] = int(K[0])
 
 	return digits
 }
