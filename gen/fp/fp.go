@@ -16,6 +16,7 @@ type Config struct {
 
 	PackageName     string
 	ElementTypeName string
+	FilenamePrefix  string
 }
 
 // Montgomery reports whether this is a montgomery field. Fields implemented this way require encoding and decoding before
@@ -60,7 +61,7 @@ func Package(cfg Config) (gen.Files, error) {
 		return nil, err
 	}
 
-	fs.Add("fp.go", b)
+	fs.Add(cfg.FilenamePrefix+".go", b)
 
 	// Assembly backend.
 	a := NewAsm(cfg)
@@ -69,7 +70,7 @@ func Package(cfg Config) (gen.Files, error) {
 	a.Sub()
 	a.Mul()
 
-	if err := fs.CompileAsm(cfg.PackageName, "fp_amd64", a.Context()); err != nil {
+	if err := fs.CompileAsm(cfg.PackageName, cfg.FilenamePrefix+"_amd64", a.Context()); err != nil {
 		return nil, err
 	}
 

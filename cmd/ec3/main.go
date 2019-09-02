@@ -88,6 +88,7 @@ func p256(p *ir.Program) gen.Files {
 
 		PackageName:     "p256",
 		ElementTypeName: "Elt",
+		FilenamePrefix:  "fp",
 	}
 
 	fieldfiles, err := fp.Package(fieldcfg)
