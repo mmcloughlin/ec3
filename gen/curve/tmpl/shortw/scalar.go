@@ -44,7 +44,7 @@ func (k *scalar) Int() *big.Int {
 }
 
 // FixedWindowRecode recodes the odd scalar k into a signed fixed window
-// representation with digits in the set {+-1, +-3, ..., +-(2^(w-1)-1)}.
+// representation with digits in the set {±1, ±3, ..., ±(2^(w-1)-1)}.
 func (k *scalar) FixedWindowRecode() []int {
 	// Implementation follows [msrecclibpaper] Algorithm 6.
 	const (
