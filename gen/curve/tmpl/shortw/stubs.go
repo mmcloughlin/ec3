@@ -18,6 +18,7 @@ const (
 	ConstW = 6
 )
 
+// Affine is a stub affine point type.
 type Affine struct {
 	X, Y *big.Int
 }
@@ -30,6 +31,7 @@ func (p Affine) Coordinates() (X, Y *big.Int) {
 	return p.X, p.Y
 }
 
+// Jacobian is a stub jacobian point type.
 type Jacobian Affine
 
 func NewFromAffine(a Affine) Jacobian {
@@ -46,4 +48,39 @@ func (p *Jacobian) Add(q, r Jacobian) {
 
 func (p *Jacobian) Double(q Jacobian) {
 	p.X, p.Y = curvename.Params().Double(q.X, q.Y)
+}
+
+// scalarsize is the size of a scalar field element in bytes.
+const scalarsize = ConstBitSize / 8
+
+// scalar is a stub scalar field element type.
+type scalar [scalarsize]byte
+
+// TODO(mbm): use ec3 itself to codegen the scalar type stub
+// This will reduce duplication and help retain compatibility.
+
+func (k *scalar) SetInt(x *big.Int) {
+	if x.Sign() < 0 || x.Cmp(curvename.N) >= 0 {
+		x = new(big.Int).Mod(x, curvename.N)
+	}
+
+	for i := range k {
+		k[i] = 0
+	}
+
+	bs := x.Bytes()
+	for i, b := range bs {
+		k[len(bs)-1-i] = b
+	}
+}
+
+// Int converts to a big integer.
+func (k *scalar) Int() *big.Int {
+	// Endianness swap.
+	var be scalar
+	for i := 0; i < scalarsize; i++ {
+		be[scalarsize-1-i] = k[i]
+	}
+	// Build big.Int.
+	return new(big.Int).SetBytes(be[:])
 }
