@@ -67,15 +67,15 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 	}
 }
 
-func TestScalarSub(t *testing.T) {
+func TestScalarSubInt(t *testing.T) {
 	for trial := 0; trial < ConstNumTrials; trial++ {
 		x := RandScalar(t)
-		v := mathrand.Intn(64) - 32
+		v := mathrand.Int31n(64) - 32
 
 		// Compute subtraction via scalar type.
 		var k scalar
 		k.SetInt(x)
-		k.Sub(v)
+		k.SubInt32(v)
 		got := k.Int()
 
 		// Compute expectation.

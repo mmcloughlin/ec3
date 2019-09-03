@@ -4,6 +4,8 @@ package shortw
 
 import (
 	"crypto/elliptic"
+	"crypto/subtle"
+	"log"
 	"math/big"
 )
 
@@ -49,7 +51,46 @@ func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	j1 := NewFromAffine(a1)
 	d := new(Jacobian)
 	d.Double(j1)
-	return d.Affine().Coordinates()
+	return j1.Affine().Coordinates()
+}
+
+// tablesize is the size of the lookup table used by ScalarMult.
+const tablesize = 1 << (ConstW - 1)
+
+type table [tablesize]Jacobian
+
+// precompute a lookup table of odd multiples of P.
+func precompute(P *Jacobian) *table {
+	var t table
+	t[0].Set(P)
+
+	var _2P Jacobian
+	_2P.Double(P)
+
+	for i := 1; i < tablesize; i++ {
+		t[i].Add(&t[i-1], &_2P)
+	}
+
+	return &t
+}
+
+func (t *table) lookup(P *Jacobian, digit int32) {
+	idx := abs(digit) / 2
+	for i := range t {
+		P.CMov(&t[i], uint(subtle.ConstantTimeEq(int32(i), idx)))
+	}
+	P.CNeg(sign(digit))
+}
+
+// abs returns the absolute value of x.
+func abs(x int32) int32 {
+	mask := x >> 31
+	return (x + mask) ^ mask
+}
+
+// sign returns the sign bit of x.
+func sign(x int32) uint {
+	return uint(x>>31) & 1
 }
 
 // ScalarMult returns k*(x1,y1) where k is a number in big-endian form.
@@ -74,6 +115,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// 	oddK, isEvenK := c.toOdd(k)
 
 	even := K.ConvertToOdd()
+	log.Print(even)
 
 	// Step 7: Recode k to (kt, . . . , k0) using Algorithm 6.
 
@@ -86,29 +128,70 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// 	L := math.SignedDigit(&scalar, omega)
 
 	digits := K.FixedWindowRecode()
+	log.Print(digits)
 
 	// Step 4: Compute P[i] = (2i + 1)P for 0 <= i < 2^{w−2}.
-	const TableSize = 1 << (ConstW - 1)
-	var T [TableSize]Jacobian
-	T[0] = P
-	_2P := P
-	_2P.Double()
+	tbl := precompute(P)
+
+	// 	TabP := newAffinePoint(Px, Py).oddMultiples(omega)
+
+	// Step 8: Q = stP[(|kt| − 1)/2]
 
 	// 	var Q, R jacobianPoint
-	// 	TabP := newAffinePoint(Px, Py).oddMultiples(omega)
-	// 	for i := len(L) - 1; i ⩾ 0; i-- {
-	// 		for j := uint(0); j < omega-1; j++ {
-	// 			Q.double()
-	// 		}
-	// 		idx := absolute(L[i]) >> 1
-	// 		for j := range TabP {
-	// 			R.cmov(&TabP[j], subtle.ConstantTimeEq(int32(j), idx))
-	// 		}
-	// 		R.cneg(int(L[i]>>31) & 1)
-	// 		Q.add(&Q, &R)
-	// 	}
+
+	var Q, R Jacobian
+
+	t := len(digits) - 1
+	tbl.lookup(&Q, digits[t])
+
+	// Step 9: for i = (t − 1) to 1
+	for i := t - 1; i >= 1; i-- {
+		// Step 14: Q = 2(w−1)Q
+
+		// 		for j := uint(0); j < omega-1; j++ {
+		// 			Q.double()
+		// 		}
+
+		for j := 0; j < ConstW-1; j++ {
+			Q.Double(&Q)
+		}
+
+		// 15. Q = Q + siP[(|ki| − 1)/2]
+
+		// 		idx := absolute(L[i]) >> 1
+		// 		for j := range TabP {
+		// 			R.cmov(&TabP[j], subtle.ConstantTimeEq(int32(j), idx))
+		// 		}
+		// 		R.cneg(int(L[i]>>31) & 1)
+		// 		Q.add(&Q, &R)
+
+		tbl.lookup(&R, digits[i])
+		Q.Add(&Q, &R)
+	}
+
+	// Step 18: Q = 2(w−1)Q
+	for j := 0; j < ConstW-1; j++ {
+		Q.Double(&Q)
+	}
+
+	// Step 19: Q = Q ⊕ s0P[(|k0| − 1)/2]
+
+	// TODO(mbm): must be a complete addition formula
+
+	tbl.lookup(&R, digits[0])
+	Q.Add(&Q, &R)
+
+	// Step 20: if odd = 0 then Q = −Q
+
 	// 	Q.cneg(isEvenK)
+
+	Q.CNeg(even)
+
+	// Step 21: Convert Q to affine coordinates (x, y).
+
 	// 	return Q.toAffine().toInt()
+
+	return Q.Affine().Coordinates()
 }
 
 // 1. if k = 0 ∨ k ≥ r then return (“error: invalid scalar”) [if: validation]
@@ -120,8 +203,6 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 // (r)/(w − 1)e and sj are the signs of
 // the recoded digits.
 // Evaluation Stage:
-// 8. Q = stP[(|kt| − 1)/2]
-// 9. for i = (t − 1) to 1
 // 10. if DBLADD = true ∧ w 6= 2 then [if: algorithm variant]
 // 11. Q = 2(w−2)Q (Use Alg.10)
 // 12. Q = 2Q + siP[(|ki| − 1)/2] (Use Alg.11)
@@ -130,8 +211,4 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 // 15. Q = Q + siP[(|ki| − 1)/2] (Use Alg.12 for Eb and Alg.15 for Ed)
 // 16. end if
 // 17. end for
-// 18. Q = 2(w−1)Q (Use Alg.10 for Eb and Alg.14 for Ed)
-// 19. Q = Q ⊕ s0P[(|k0| − 1)/2] (Use Alg.19 for Eb and Alg.17 for Ed)
-// 20. if odd = 0 then Q = −Q [if: masked constant time]
-// 21. Convert Q to affine coordinates (x, y).
 // 22. return Q.

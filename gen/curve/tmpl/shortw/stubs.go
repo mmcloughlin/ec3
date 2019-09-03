@@ -20,34 +20,71 @@ const (
 
 // Affine is a stub affine point type.
 type Affine struct {
-	X, Y *big.Int
+	X, Y big.Int
 }
 
-func NewAffine(x, y *big.Int) Affine {
-	return Affine{X: x, Y: y}
+func NewAffine(x, y *big.Int) *Affine {
+	a := new(Affine)
+	a.X.Set(x)
+	a.Y.Set(y)
+	return a
 }
 
-func (p Affine) Coordinates() (X, Y *big.Int) {
-	return p.X, p.Y
+func (p *Affine) Set(q *Affine) {
+	p.X.Set(&q.X)
+	p.Y.Set(&q.Y)
+}
+
+func (p *Affine) Coordinates() (X, Y *big.Int) {
+	return new(big.Int).Set(&p.X), new(big.Int).Set(&p.Y)
 }
 
 // Jacobian is a stub jacobian point type.
-type Jacobian Affine
-
-func NewFromAffine(a Affine) Jacobian {
-	return Jacobian(a)
+type Jacobian struct {
+	a Affine
 }
 
-func (p Jacobian) Affine() Affine {
-	return Affine(p)
+func (p *Jacobian) Set(q *Jacobian) {
+	p.a.Set(&q.a)
 }
 
-func (p *Jacobian) Add(q, r Jacobian) {
-	p.X, p.Y = curvename.Params().Add(q.X, q.Y, r.X, r.Y)
+func NewFromAffine(a *Affine) *Jacobian {
+	j := &Jacobian{}
+	j.a.Set(a)
+	return j
 }
 
-func (p *Jacobian) Double(q Jacobian) {
-	p.X, p.Y = curvename.Params().Double(q.X, q.Y)
+func (p *Jacobian) Affine() *Affine {
+	return &p.a
+}
+
+func (p *Jacobian) CMov(q *Jacobian, c uint) {
+	if c != 0 {
+		p.Set(q)
+	}
+}
+
+func (p *Jacobian) CNeg(c uint) {
+	if c != 0 {
+		p.Neg()
+	}
+}
+
+func (p *Jacobian) Neg() {
+	n := new(big.Int).Neg(&p.a.Y)
+	p.a.Y.Set(n)
+}
+
+func (p *Jacobian) Add(q, r *Jacobian) {
+	x, y := curvename.Params().Add(&q.a.X, &q.a.Y, &r.a.X, &r.a.Y)
+	p.a.X.Set(x)
+	p.a.Y.Set(y)
+}
+
+func (p *Jacobian) Double(q *Jacobian) {
+	x, y := curvename.Params().Double(&q.a.X, &q.a.Y)
+	p.a.X.Set(x)
+	p.a.Y.Set(y)
 }
 
 // scalarsize is the size of a scalar field element in bytes.

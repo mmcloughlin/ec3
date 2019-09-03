@@ -23,7 +23,7 @@ func (k *scalar) uint64s() *[words]uint64 {
 
 // FixedWindowRecode recodes the odd scalar k into a signed fixed window
 // representation with digits in the set {±1, ±3, ..., ±(2^(w-1)-1)}.
-func (k *scalar) FixedWindowRecode() []int {
+func (k *scalar) FixedWindowRecode() []int32 {
 	// Implementation follows [msrecclibpaper] Algorithm 6.
 	const (
 		w    = ConstW                  // window parameter
@@ -33,21 +33,21 @@ func (k *scalar) FixedWindowRecode() []int {
 		val  = 1 << (w - 1)            // 2ʷ⁻¹
 	)
 
-	digits := make([]int, t+1)
+	digits := make([]int32, t+1)
 	K := *k
 
 	// Step 2: for i = 0 to (t-1)
 	for i := 0; i < t; i++ {
 		// Step 3: k_i = ( k mod 2ʷ ) - 2ʷ⁻¹
-		digits[i] = int(K[0]&mask) - val
+		digits[i] = int32(K[0]&mask) - val
 
 		// Step 4: k = (k - k_i) / 2ʷ⁻¹
-		K.SubInt(digits[i])
+		K.SubInt32(digits[i])
 		K.Rsh(w - 1)
 	}
 
 	// Step 5: k_t = k
-	digits[t] = int(K[0])
+	digits[t] = int32(K[0])
 
 	return digits
 }
@@ -61,8 +61,8 @@ func (k *scalar) ConvertToOdd() (even uint) {
 	return
 }
 
-// SubInt subtracts signed integer v from k.
-func (k *scalar) SubInt(v int) {
+// SubInt32 subtracts signed integer v from k.
+func (k *scalar) SubInt32(v int32) {
 	kw := k.uint64s()
 	uv := uint64(v)
 	var borrow uint64
