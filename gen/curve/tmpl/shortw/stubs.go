@@ -84,3 +84,20 @@ func (k *scalar) Int() *big.Int {
 	// Build big.Int.
 	return new(big.Int).SetBytes(be[:])
 }
+
+// SetBytes interprets b as the bytes of a big-endian unsigned integer, and sets k to that value.
+func (k *scalar) SetBytes(b []byte) {
+	k.SetInt(new(big.Int).SetBytes(b))
+}
+
+func scalarcmov(z, x *scalar, c uint) {
+	if c != 0 {
+		*z = *x
+	}
+}
+
+func scalarneg(z, x *scalar) {
+	neg := new(big.Int).Neg(x.Int())
+	neg.Mod(neg, curvename.N)
+	z.SetInt(neg)
+}

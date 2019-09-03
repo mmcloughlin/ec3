@@ -42,7 +42,7 @@ func (k *scalar) FixedWindowRecode() []int {
 		digits[i] = int(K[0]&mask) - val
 
 		// Step 4: k = (k - k_i) / 2ʷ⁻¹
-		K.Sub(digits[i])
+		K.SubInt(digits[i])
 		K.Rsh(w - 1)
 	}
 
@@ -52,8 +52,17 @@ func (k *scalar) FixedWindowRecode() []int {
 	return digits
 }
 
-// Sub subtracts signed integer v from k.
-func (k *scalar) Sub(v int) {
+// ConvertToOdd negates k if it is even. Returns whether the scalar was even.
+func (k *scalar) ConvertToOdd() (even uint) {
+	even = uint(k[0] & 1)
+	var n scalar
+	scalarneg(&n, k)
+	scalarcmov(k, &n, even)
+	return
+}
+
+// SubInt subtracts signed integer v from k.
+func (k *scalar) SubInt(v int) {
 	kw := k.uint64s()
 	uv := uint64(v)
 	var borrow uint64
