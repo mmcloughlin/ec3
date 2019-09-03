@@ -18,6 +18,7 @@ import (
 	"github.com/mmcloughlin/ec3/gen/curve"
 	"github.com/mmcloughlin/ec3/gen/ec"
 	"github.com/mmcloughlin/ec3/gen/fp"
+	"github.com/mmcloughlin/ec3/gen/name"
 	"github.com/mmcloughlin/ec3/prime"
 )
 
@@ -25,7 +26,9 @@ var (
 	flags = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
 	directory = flags.String("dir", "", "directory to write to")
-	inverse   = flags.String("inv", "", "addition chain for field inversion")
+
+	inverse       = flags.String("inv", "", "addition chain for field inversion")
+	scalarinverse = flags.String("scalarinv", "", "addition chain for scalar field inversion")
 
 	repr = flags.String("repr", "", "curve representation")
 )
@@ -33,7 +36,7 @@ var (
 func main() {
 	flags.Parse(os.Args[1:])
 
-	// Load inversion chain.
+	// Load inversion chains.
 	if *inverse == "" {
 		log.Fatal("must provide addition chain for inversion")
 	}
@@ -42,9 +45,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if *scalarinverse == "" {
+		log.Fatal("must provide addition chain for scalar inversion")
+	}
+	scalarinvp, err := acc.LoadFile(*scalarinverse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Build file set.
 	// fs := fp25519(p)
-	fs := p256(p)
+	fs := p256(p, scalarinvp)
 
 	for _, f := range fs {
 		fmt.Printf("## `%s`\n", f.Path)
@@ -80,7 +91,9 @@ func fp25519(p *ir.Program) gen.Files {
 	return fs
 }
 
-func p256(p *ir.Program) gen.Files {
+func p256(p, scalarinvp *ir.Program) gen.Files {
+	params := elliptic.P256().Params()
+
 	// Field config.
 	fieldcfg := fp.Config{
 		Field:        mont.New(prime.NISTP256),
@@ -89,9 +102,29 @@ func p256(p *ir.Program) gen.Files {
 		PackageName:     "p256",
 		ElementTypeName: "Elt",
 		FilenamePrefix:  "fp",
+		Scheme:          name.Plain,
 	}
 
 	fieldfiles, err := fp.Package(fieldcfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Scalar field config.
+	scalarcfg := fp.Config{
+		Field:        mont.New(prime.NewOther(params.N)),
+		InverseChain: scalarinvp,
+
+		PackageName:     "p256",
+		ElementTypeName: "scalar",
+		FilenamePrefix:  "scalar",
+		Scheme: name.CompositeScheme(
+			name.Prefixed("scalar"),
+			name.LowerCase,
+		),
+	}
+
+	scalarfiles, err := fp.Package(scalarcfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -233,7 +266,7 @@ func p256(p *ir.Program) gen.Files {
 	// Curve operations.
 	shortw := curve.ShortWeierstrass{
 		PackageName: "p256",
-		Params:      elliptic.P256().Params(),
+		Params:      params,
 		ShortName:   "p256",
 	}
 
@@ -243,5 +276,5 @@ func p256(p *ir.Program) gen.Files {
 	}
 
 	// Merge and output.
-	return gen.Merge(fieldfiles, pointfiles, curvefiles)
+	return gen.Merge(fieldfiles, scalarfiles, pointfiles, curvefiles)
 }

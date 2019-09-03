@@ -8,6 +8,7 @@ import (
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/gen"
+	"github.com/mmcloughlin/ec3/gen/name"
 )
 
 type Config struct {
@@ -17,6 +18,8 @@ type Config struct {
 	PackageName     string
 	ElementTypeName string
 	FilenamePrefix  string
+
+	name.Scheme
 }
 
 // Montgomery reports whether this is a montgomery field. Fields implemented this way require encoding and decoding before

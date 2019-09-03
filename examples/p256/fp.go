@@ -4,7 +4,7 @@ package p256
 
 import "math/big"
 
-// Size of a field element in bytes.
+// Size is the size of a field element in bytes.
 const Size = 32
 
 // Elt is a field element.
@@ -59,7 +59,7 @@ func (x *Elt) Int() *big.Int {
 // one is the field element 1.
 var one = new(Elt).SetInt64(1)
 
-// Decode from the Montgomery domain.
+// Decode decodes from the Montgomery domain.
 func Decode(z *Elt, x *Elt) {
 	Mul(z, x, one)
 }
@@ -67,7 +67,7 @@ func Decode(z *Elt, x *Elt) {
 // r2 is the multiplier R^2 for encoding into the Montgomery domain.
 var r2 = new(Elt).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*256))
 
-// Encode into the Montgomery domain.
+// Encode encodes into the Montgomery domain.
 func Encode(z *Elt, x *Elt) {
 	Mul(z, x, r2)
 }

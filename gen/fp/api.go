@@ -33,8 +33,8 @@ func (a *api) Generate() ([]byte, error) {
 
 	// Define element type.
 	a.NL()
-	a.Comment("Size of a field element in bytes.")
-	a.Linef("const Size = %d", a.Field.ElementSize())
+	a.Commentf("%s is the size of a field element in bytes.", a.Size())
+	a.Linef("const %s = %d", a.Size(), a.Field.ElementSize())
 
 	a.NL()
 	a.Commentf("%s is a field element.", a.ElementTypeName)
@@ -44,11 +44,11 @@ func (a *api) Generate() ([]byte, error) {
 	a.NL()
 
 	p := a.Field.Prime()
-	a.Commentf("p is the field prime modulus as a big integer.")
-	a.Linef("var p, _ = new(big.Int).SetString(\"%d\", 10)", p)
+	a.Commentf("%s is the field prime modulus as a big integer.", a.Name("p"))
+	a.Linef("var %s, _ = new(big.Int).SetString(\"%d\", 10)", a.Name("p"), p)
 
-	a.Commentf("prime is the prime field modulus as a field element.")
-	a.Printf("var prime = %s", a.Type())
+	a.Commentf("%s is the prime field modulus as a field element.", a.Name("prime"))
+	a.Printf("var %s = %s", a.Name("prime"), a.Type())
 	a.ByteArrayValue(bigint.BytesLittleEndian(p))
 
 	// Conversion to/from integer types.
@@ -70,6 +70,15 @@ func (a *api) Generate() ([]byte, error) {
 	return a.Formatted()
 }
 
+// Name of the field element size constant.
+func (a *api) Size() string { return a.Name("Size") }
+
+// Call generates a function call.
+func (a *api) Call(name string, args ...interface{}) {
+	format := a.Name(name) + "(%s" + strings.Repeat(", %s", len(args)-1) + ")"
+	a.Linef(format, args...)
+}
+
 // SetInt64 generates a function to construct a field element from an int64.
 func (a *api) SetInt64() {
 	a.Comment("SetInt64 constructs a field element from an integer.")
@@ -87,8 +96,8 @@ func (a *api) SetInt() {
 	a.EnterBlock()
 
 	a.Comment("Reduce if outside range.")
-	a.Linef("if y.Sign() < 0 || y.Cmp(p) >= 0 {")
-	a.Linef("y = new(big.Int).Mod(y, p)")
+	a.Linef("if y.Sign() < 0 || y.Cmp(%s) >= 0 {", a.Name("p"))
+	a.Linef("y = new(big.Int).Mod(y, %s)", a.Name("p"))
 	a.Linef("}")
 
 	a.Comment("Copy bytes into field element.")
@@ -97,7 +106,7 @@ func (a *api) SetInt() {
 	a.Linef("for ; i < len(b); i++ {")
 	a.Linef("x[i] = b[len(b)-1-i]")
 	a.Linef("}")
-	a.Linef("for ; i < Size; i++ {")
+	a.Linef("for ; i < %s; i++ {", a.Size())
 	a.Linef("x[i] = 0")
 	a.Linef("}")
 
@@ -113,8 +122,8 @@ func (a *api) Int() {
 
 	a.Comment("Endianness swap.")
 	a.Linef("var be %s", a.Type())
-	a.Linef("for i := 0; i < Size; i++ {")
-	a.Linef("be[Size-1-i] = x[i]")
+	a.Linef("for i := 0; i < %s; i++ {", a.Size())
+	a.Linef("be[%s-1-i] = x[i]", a.Size())
 	a.Linef("}")
 
 	a.Comment("Build big.Int.")
@@ -125,50 +134,52 @@ func (a *api) Int() {
 
 // Decode generates a decode function for Montgomery fields.
 func (a *api) Decode() {
-	a.Comment("one is the field element 1.")
-	a.Linef("var one = new(%s).SetInt64(1)", a.Type())
+	one := a.Name("one")
+	a.Commentf("%s is the field element 1.", one)
+	a.Linef("var %s = new(%s).SetInt64(1)", one, a.Type())
 
-	a.Comment("Decode from the Montgomery domain.")
-	a.Function("Decode", a.Signature("z", "x"))
-	a.Linef("Mul(z, x, one)")
+	a.Commentf("%s decodes from the Montgomery domain.", a.Name("Decode"))
+	a.Function(a.Name("Decode"), a.Signature("z", "x"))
+	a.Call("Mul", "z", "x", one)
 	a.LeaveBlock()
 }
 
 // Encode generates an encode function for Montgomery fields.
 func (a *api) Encode() {
 	// Define the R^2 constant.
-	a.Comment("r2 is the multiplier R^2 for encoding into the Montgomery domain.")
+	r2 := a.Name("r2")
+	a.Commentf("%s is the multiplier R^2 for encoding into the Montgomery domain.", r2)
 	n := a.Field.ElementBits()
-	a.Linef("var r2 = new(%s).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*%d))", a.Type(), n)
+	a.Linef("var %s = new(%s).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*%d))", r2, a.Type(), n)
 
-	a.Comment("Encode into the Montgomery domain.")
-	a.Function("Encode", a.Signature("z", "x"))
-	a.Linef("Mul(z, x, r2)")
+	a.Commentf("%s encodes into the Montgomery domain.", a.Name("Encode"))
+	a.Function(a.Name("Encode"), a.Signature("z", "x"))
+	a.Call("Mul", "z", "x", r2)
 	a.LeaveBlock()
 }
 
 // Negate generates a negation function. This is currently implemented using
 // subtraction.
 func (a *api) Negate() {
-	a.Comment("Neg computes z = -x (mod p).")
-	a.Function("Neg", a.Signature("z", "x"))
-	a.Linef("Sub(z, &prime, x)")
+	a.Commentf("%s computes z = -x (mod p).", a.Name("Neg"))
+	a.Function(a.Name("Neg"), a.Signature("z", "x"))
+	a.Call("Sub", "z", "&"+a.Name("prime"), "x")
 	a.LeaveBlock()
 }
 
 // Square generates a square function. This is currently implemented naively
 // using multiply.
 func (a *api) Square() {
-	a.Comment("Sqr computes z = x^2 (mod p).")
-	a.Function("Sqr", a.Signature("z", "x"))
-	a.Linef("Mul(z, x, x)")
+	a.Commentf("%s computes z = x^2 (mod p).", a.Name("Sqr"))
+	a.Function(a.Name("Sqr"), a.Signature("z", "x"))
+	a.Call("Mul", "z", "x", "x")
 	a.LeaveBlock()
 }
 
 func (a *api) Inverse() {
 	// Function header.
-	a.Comment("Inv computes z = 1/x (mod p).")
-	a.Function("Inv", a.Signature("z", "x"))
+	a.Commentf("%s computes z = 1/x (mod p).", a.Name("Inv"))
+	a.Function(a.Name("Inv"), a.Signature("z", "x"))
 
 	// Comment describing the addition chain.
 	p := a.InverseChain.Clone()
@@ -210,17 +221,17 @@ func (a *api) Inverse() {
 		a.Commentf("Step %d: %s = x^%#x.", inst.Output.Index, inst.Output, p.Chain[inst.Output.Index])
 		switch op := inst.Op.(type) {
 		case ir.Add:
-			a.Linef("Mul(%s, %s, %s)", inst.Output, op.X, op.Y)
+			a.Call("Mul", inst.Output, op.X, op.Y)
 		case ir.Double:
-			a.Linef("Sqr(%s, %s)", inst.Output, op.X)
+			a.Call("Sqr", inst.Output, op.X)
 		case ir.Shift:
 			first := 0
 			if inst.Output.Identifier != op.X.Identifier {
-				a.Linef("Sqr(%s, %s)", inst.Output, op.X)
+				a.Call("Sqr", inst.Output, op.X)
 				first++
 			}
 			a.Linef("for s := %d; s < %d; s++ {", first, op.S)
-			a.Linef("Sqr(%s, %s)", inst.Output, inst.Output)
+			a.Call("Sqr", inst.Output, inst.Output)
 			a.Linef("}")
 		default:
 			a.SetError(errutil.UnexpectedType(op))
