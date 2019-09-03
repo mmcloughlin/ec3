@@ -251,6 +251,13 @@ func (p *point) typ(t Type) {
 	p.Linef("return p")
 	p.LeaveBlock()
 
+	// Set from another point.
+	p.NL()
+	p.Printf("func (p *%s) Set(q *%s)", t.Name, t.Name)
+	p.EnterBlock()
+	p.Linef("*p = *q")
+	p.LeaveBlock()
+
 	// Conversion to big.Ints.
 	p.NL()
 	p.Printf("func (p *%s) Coordinates() (%s *big.Int)", t.Name, strings.Join(t.Coordinates, ", "))

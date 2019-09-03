@@ -18,6 +18,10 @@ func NewAffine(X, Y *big.Int) *Affine {
 	return p
 }
 
+func (p *Affine) Set(q *Affine) {
+	*p = *q
+}
+
 func (p *Affine) Coordinates() (X, Y *big.Int) {
 	var dX, dY Elt
 	Decode(&dX, &p.X)
@@ -42,6 +46,10 @@ func NewJacobian(X, Y, Z *big.Int) *Jacobian {
 	Encode(&p.Y, &p.Y)
 	Encode(&p.Z, &p.Z)
 	return p
+}
+
+func (p *Jacobian) Set(q *Jacobian) {
+	*p = *q
 }
 
 func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
