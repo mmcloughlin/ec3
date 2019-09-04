@@ -8,10 +8,10 @@ import (
 	"github.com/mmcloughlin/ec3/internal/tmpl"
 )
 
-//go:generate assets -pkg curve -func loadtemplate -output ztemplates.go tmpl/shortw/curve.go
+//go:generate assets -pkg curve -func loadtemplate -output ztemplates.go tmpl/shortw/curve.go tmpl/shortw/recode.go tmpl/shortw/recode_test.go
 
 var templates = tmpl.Environment{
-	Loader: tmpl.LoaderFunc(loadtemplate),
+	Loader: tmpl.NewBasePath(tmpl.LoaderFunc(loadtemplate), "tmpl/shortw"),
 }
 
 type ShortWeierstrass struct {
@@ -23,7 +23,12 @@ type ShortWeierstrass struct {
 func (c ShortWeierstrass) Generate() (gen.Files, error) {
 	fs := gen.Files{}
 
-	t, err := templates.Load("tmpl/shortw/curve.go")
+	// Build template package.
+	pkg, err := templates.Package(
+		"curve.go",
+		"recode.go",
+		"recode_test.go",
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +36,7 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 	typename := strings.ToUpper(c.ShortName)
 	varname := strings.ToLower(c.ShortName)
 
-	err = t.Apply(
+	err = pkg.Apply(
 		tmpl.GeneratedBy(gen.GeneratedBy),
 		tmpl.SetPackageName(c.PackageName),
 		tmpl.Rename("CURVENAME", typename),
@@ -47,17 +52,23 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 		tmpl.DefineString("ConstGxHex", c.Params.Gx.Text(16)),
 		tmpl.DefineString("ConstGyHex", c.Params.Gy.Text(16)),
 		tmpl.DefineIntDecimal("ConstBitSize", c.Params.BitSize),
+
+		tmpl.DefineIntDecimal("ConstW", 6),
+
+		tmpl.DefineIntDecimal("ConstNumTrials", 128),
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	src, err := t.Bytes()
-	if err != nil {
-		return nil, err
-	}
+	for filename, t := range pkg.Templates() {
+		src, err := t.Bytes()
+		if err != nil {
+			return nil, err
+		}
 
-	fs.Add("curve.go", src)
+		fs.Add(filename, src)
+	}
 
 	return fs, nil
 }

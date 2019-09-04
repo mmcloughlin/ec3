@@ -13,8 +13,16 @@ package shortw
 
 import (
 	"crypto/elliptic"
+	"crypto/subtle"
 	"math/big"
 )
+
+// References:
+//
+//	[msrecclibpaper]  Joppe W. Bos, Craig Costello, Patrick Longa and Michael Naehrig. Selecting
+//	                  Elliptic Curves for Cryptography: An Efficiency and Security Analysis.
+//	                  Cryptology ePrint Archive, Report 2014/130. 2014.
+//	                  https://eprint.iacr.org/2014/130
 
 // CURVENAME returns a Curve which implements CanonicalName.
 func CURVENAME() elliptic.Curve { return curvename }
@@ -45,13 +53,315 @@ func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	return s.Affine().Coordinates()
 }
 
-// Double returns 2*(x,y)
+// Double returns 2*(x1,y1)
 func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	j1 := NewFromAffine(a1)
 	d := new(Jacobian)
 	d.Double(j1)
 	return d.Affine().Coordinates()
+}
+
+// ScalarMult returns k*(x1,y1) where k is a number in big-endian form.
+func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
+	// Implementation follows [msrecclibpaper] Algorithm 1.
+
+	// Scalar recoding window size.
+	const w = ConstW
+
+	// Convert point from affine.
+	a := NewAffine(x1, y1)
+	p := NewFromAffine(a)
+
+	// Step 1: scalar validation.
+
+	// TODO(mbm): exit if scalar is 0.
+
+	var K scalar
+	K.SetBytes(k)
+
+	// Step 5: odd = k mod 2
+	// Step 6: if odd = 0 then k = r − k
+	even := K.ConvertToOdd()
+
+	// Step 7: Recode k to (k_t, ..., k_0) using Algorithm 6.
+	digits := K.FixedWindowRecode()
+
+	// Step 4: Compute P[i] = (2i + 1)P for 0 ⩽ i < 2^{w−2}.
+	var tbl table
+	tbl.Precompute(p)
+
+	// Step 8: Q = s_t * P[(|k_t| − 1)/2]
+	var q, r Jacobian
+
+	t := len(digits) - 1
+	tbl.Lookup(&q, digits[t])
+
+	// Step 9: for i = (t − 1) to 1
+	for i := t - 1; i >= 1; i-- {
+		// Step 14: Q = 2^{w−1}Q
+		for j := 0; j < w-1; j++ {
+			q.Double(&q)
+		}
+
+		// Step 15: Q = Q + s_i * P[(|k_i| − 1)/2]
+		tbl.Lookup(&r, digits[i])
+		q.Add(&q, &r)
+	}
+
+	// Step 18: Q = 2^{w−1}Q
+	for j := 0; j < w-1; j++ {
+		q.Double(&q)
+	}
+
+	// Step 19: Q = Q ⊕ s_0 * P[(|k_0| − 1)/2]
+
+	// TODO(mbm): must be a complete addition formula
+
+	tbl.Lookup(&r, digits[0])
+	q.Add(&q, &r)
+
+	// Step 20: if odd = 0 then Q = −Q
+	q.CNeg(even)
+
+	// Step 21: Convert Q to affine coordinates (x, y).
+	return q.Affine().Coordinates()
+}
+
+// tablesize is the size of the lookup table used by ScalarMult.
+const tablesize = 1 << (ConstW - 1)
+
+// table is a lookup table used by ScalarMult.
+type table [tablesize]Jacobian
+
+// Precompute odd multiples of p.
+func (t *table) Precompute(p *Jacobian) {
+	t[0].Set(p)
+
+	var _2p Jacobian
+	_2p.Double(p)
+
+	for i := 1; i < tablesize; i++ {
+		t[i].Add(&t[i-1], &_2p)
+	}
+}
+
+// Lookup an odd multiple from the table and store it in p. The provided digit
+// may be negative, in which case p will be negated.
+func (t *table) Lookup(p *Jacobian, digit int32) {
+	idx := abs(digit) / 2
+	for i := range t {
+		p.CMov(&t[i], uint(subtle.ConstantTimeEq(int32(i), idx)))
+	}
+	p.CNeg(sign(digit))
+}
+
+// abs returns the absolute value of x.
+func abs(x int32) int32 {
+	mask := x >> 31
+	return (x + mask) ^ mask
+}
+
+// sign returns the sign bit of x.
+func sign(x int32) uint {
+	return uint(x>>31) & 1
+}
+`), nil
+
+	case "tmpl/shortw/recode.go":
+		return []byte(`// CodeGenerationWarning
+
+package shortw
+
+import (
+	"math/bits"
+	"unsafe"
+)
+
+// References:
+//
+//	[msrecclibcode]   Microsoft Research. MSR Elliptic Curve Cryptography Library. 2014.
+//	                  https://www.microsoft.com/en-us/research/project/msr-elliptic-curve-cryptography-library/
+//	[msrecclibpaper]  Joppe W. Bos, Craig Costello, Patrick Longa and Michael Naehrig. Selecting
+//	                  Elliptic Curves for Cryptography: An Efficiency and Security Analysis.
+//	                  Cryptology ePrint Archive, Report 2014/130. 2014.
+//	                  https://eprint.iacr.org/2014/130
+
+const words = scalarsize / 8
+
+// uint64s provides a view of k as an array of uint64 words.
+func (k *scalar) uint64s() *[words]uint64 {
+	return (*[words]uint64)(unsafe.Pointer(k))
+}
+
+// FixedWindowRecode recodes the odd scalar k into a signed fixed window
+// representation with digits in the set {±1, ±3, ..., ±(2^(w-1)-1)}.
+func (k *scalar) FixedWindowRecode() []int32 {
+	// Implementation follows [msrecclibpaper] Algorithm 6.
+	const (
+		w    = ConstW                  // window parameter
+		r    = ConstBitSize            // bit size
+		t    = (r + (w - 2)) / (w - 1) // length of the window representation
+		mask = (1 << w) - 1            // w-bit mask
+		val  = 1 << (w - 1)            // 2ʷ⁻¹
+	)
+
+	digits := make([]int32, t+1)
+	K := *k
+
+	// Step 2: for i = 0 to (t-1)
+	for i := 0; i < t; i++ {
+		// Step 3: k_i = ( k mod 2ʷ ) - 2ʷ⁻¹
+		digits[i] = int32(K[0]&mask) - val
+
+		// Step 4: k = (k - k_i) / 2ʷ⁻¹
+		K.SubInt32(digits[i])
+		K.Rsh(w - 1)
+	}
+
+	// Step 5: k_t = k
+	digits[t] = int32(K[0])
+
+	return digits
+}
+
+// ConvertToOdd negates k if it is even. Returns whether the scalar was even.
+func (k *scalar) ConvertToOdd() (even uint) {
+	even = uint(k[0]&1) ^ 1
+	var n scalar
+	scalarneg(&n, k)
+	scalarcmov(k, &n, even)
+	return
+}
+
+// SubInt32 subtracts signed integer v from k.
+func (k *scalar) SubInt32(v int32) {
+	kw := k.uint64s()
+	uv := uint64(v)
+	var borrow uint64
+	kw[0], borrow = bits.Sub64(kw[0], uv, 0)
+	borrow &= (uv >> 63) ^ 1
+	for i := 1; i < words; i++ {
+		kw[i], borrow = bits.Sub64(kw[i], 0, borrow)
+	}
+}
+
+// Rsh shifts the scalar k right by s.
+func (k *scalar) Rsh(s uint) {
+	kw := k.uint64s()
+	for i := 0; i+1 < words; i++ {
+		kw[i] = (kw[i] >> s) | (kw[i+1] << (64 - s))
+	}
+	kw[words-1] >>= s
+}
+`), nil
+
+	case "tmpl/shortw/recode_test.go":
+		return []byte(`// CodeGenerationWarning
+
+package shortw
+
+import (
+	"crypto/rand"
+	"math/big"
+	mathrand "math/rand"
+	"testing"
+)
+
+func RandScalar(t *testing.T) *big.Int {
+	t.Helper()
+	N := curvename.Params().N
+	for {
+		k, err := rand.Int(rand.Reader, N)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if k.Sign() == 0 {
+			continue
+		}
+		return k
+	}
+}
+
+func RandOddScalar(t *testing.T) *big.Int {
+	t.Helper()
+	k := RandScalar(t)
+	N := curvename.Params().N
+	if k.Bit(0) == 0 {
+		k.Neg(k).Mod(k, N)
+	}
+	return k
+}
+
+func TestScalarFixedWindowRecode(t *testing.T) {
+	for trial := 0; trial < ConstNumTrials; trial++ {
+		k := RandOddScalar(t)
+
+		var K scalar
+		K.SetInt(k)
+		digits := K.FixedWindowRecode()
+
+		// Verify all digits are odd.
+		for i, digit := range digits {
+			if (digit & 1) != 1 {
+				t.Fatalf("digit %d is not odd", i)
+			}
+		}
+
+		// Confirm the sum is correct.
+		x := new(big.Int)
+		for i := len(digits) - 1; i >= 0; i-- {
+			x.Lsh(x, ConstW-1)
+			x.Add(x, big.NewInt(int64(digits[i])))
+		}
+
+		if k.Cmp(x) != 0 {
+			t.Logf("     k = %x", k)
+			t.Logf("digits = %d", digits)
+			t.Logf("   got = %x", x)
+			t.FailNow()
+		}
+	}
+}
+
+func TestScalarSubInt(t *testing.T) {
+	for trial := 0; trial < ConstNumTrials; trial++ {
+		x := RandScalar(t)
+		v := mathrand.Int31n(64) - 32
+
+		// Compute subtraction via scalar type.
+		var k scalar
+		k.SetInt(x)
+		k.SubInt32(v)
+		got := k.Int()
+
+		// Compute expectation.
+		expect := new(big.Int).Sub(x, new(big.Int).SetInt64(int64(v)))
+
+		if got.Cmp(expect) != 0 {
+			t.FailNow()
+		}
+	}
+}
+
+func TestScalarRsh(t *testing.T) {
+	for trial := 0; trial < ConstNumTrials; trial++ {
+		x := RandScalar(t)
+		s := uint(1 + mathrand.Intn(63))
+
+		// Compute shift via scalar type.
+		var k scalar
+		k.SetInt(x)
+		k.Rsh(s)
+		got := k.Int()
+
+		// Compute expectation.
+		expect := new(big.Int).Rsh(x, s)
+
+		if got.Cmp(expect) != 0 {
+			t.FailNow()
+		}
+	}
 }
 `), nil
 

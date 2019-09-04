@@ -45,6 +45,12 @@ func (x *scalar) SetInt(y *big.Int) *scalar {
 	return x
 }
 
+// SetBytes constructs a field element from bytes in big-endian order.
+func (x *scalar) SetBytes(b []byte) *scalar {
+	x.SetInt(new(big.Int).SetBytes(b))
+	return x
+}
+
 // Int converts to a big integer.
 func (x *scalar) Int() *big.Int {
 	// Endianness swap.

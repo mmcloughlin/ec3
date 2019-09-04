@@ -45,6 +45,19 @@ func TestDouble(t *testing.T) {
 	}
 }
 
+func TestScalarMult(t *testing.T) {
+	for trial := 0; trial < ConstNumTrials; trial++ {
+		k := RandScalar(t)
+		x1, y1 := RandPoint(t)
+
+		gx, gy := cur.ScalarMult(x1, y1, k.Bytes())
+		ex, ey := ref.ScalarMult(x1, y1, k.Bytes())
+
+		EqualInt(t, "x", ex, gx)
+		EqualInt(t, "y", ey, gy)
+	}
+}
+
 func EqualInt(t *testing.T, name string, expect, got *big.Int) {
 	if got.Cmp(expect) != 0 {
 		t.Logf("   got %x", got)

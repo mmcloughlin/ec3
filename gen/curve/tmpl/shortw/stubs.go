@@ -2,6 +2,7 @@ package shortw
 
 import "math/big"
 
+// Curve parameters.
 const (
 	ConstCanonicalName = "Curve-Name"
 	ConstPDecimal      = "39402006196394479212279040100143613805079739270465446667948293404245721771496870329047266088258938001861606973112319"
@@ -12,32 +13,129 @@ const (
 	ConstBitSize       = 384
 )
 
+// Implementation parameters.
+const (
+	ConstW = 6
+)
+
+// Affine is a stub affine point type.
 type Affine struct {
-	X, Y *big.Int
+	X, Y big.Int
 }
 
-func NewAffine(x, y *big.Int) Affine {
-	return Affine{X: x, Y: y}
+func NewAffine(x, y *big.Int) *Affine {
+	a := new(Affine)
+	a.X.Set(x)
+	a.Y.Set(y)
+	return a
 }
 
-func (p Affine) Coordinates() (X, Y *big.Int) {
-	return p.X, p.Y
+func (p *Affine) Set(q *Affine) {
+	p.X.Set(&q.X)
+	p.Y.Set(&q.Y)
 }
 
-type Jacobian Affine
-
-func NewFromAffine(a Affine) Jacobian {
-	return Jacobian(a)
+func (p *Affine) Coordinates() (X, Y *big.Int) {
+	return new(big.Int).Set(&p.X), new(big.Int).Set(&p.Y)
 }
 
-func (p Jacobian) Affine() Affine {
-	return Affine(p)
+// Jacobian is a stub jacobian point type.
+type Jacobian struct {
+	a Affine
 }
 
-func (p *Jacobian) Add(q, r Jacobian) {
-	p.X, p.Y = curvename.Params().Add(q.X, q.Y, r.X, r.Y)
+func (p *Jacobian) Set(q *Jacobian) {
+	p.a.Set(&q.a)
 }
 
-func (p *Jacobian) Double(q Jacobian) {
-	p.X, p.Y = curvename.Params().Double(q.X, q.Y)
+func NewFromAffine(a *Affine) *Jacobian {
+	j := &Jacobian{}
+	j.a.Set(a)
+	return j
+}
+
+func (p *Jacobian) Affine() *Affine {
+	return &p.a
+}
+
+func (p *Jacobian) CMov(q *Jacobian, c uint) {
+	if c != 0 {
+		p.Set(q)
+	}
+}
+
+func (p *Jacobian) CNeg(c uint) {
+	if c != 0 {
+		p.Neg()
+	}
+}
+
+func (p *Jacobian) Neg() {
+	y := new(big.Int).Neg(&p.a.Y)
+	y.Mod(y, curvename.P)
+	p.a.Y.Set(y)
+}
+
+func (p *Jacobian) Add(q, r *Jacobian) {
+	x, y := curvename.Params().Add(&q.a.X, &q.a.Y, &r.a.X, &r.a.Y)
+	p.a.X.Set(x)
+	p.a.Y.Set(y)
+}
+
+func (p *Jacobian) Double(q *Jacobian) {
+	x, y := curvename.Params().Double(&q.a.X, &q.a.Y)
+	p.a.X.Set(x)
+	p.a.Y.Set(y)
+}
+
+// scalarsize is the size of a scalar field element in bytes.
+const scalarsize = ConstBitSize / 8
+
+// scalar is a stub scalar field element type.
+type scalar [scalarsize]byte
+
+// TODO(mbm): use ec3 itself to codegen the scalar type stub
+// This will reduce duplication and help retain compatibility.
+
+func (k *scalar) SetInt(x *big.Int) {
+	if x.Sign() < 0 || x.Cmp(curvename.N) >= 0 {
+		x = new(big.Int).Mod(x, curvename.N)
+	}
+
+	for i := range k {
+		k[i] = 0
+	}
+
+	bs := x.Bytes()
+	for i, b := range bs {
+		k[len(bs)-1-i] = b
+	}
+}
+
+// Int converts to a big integer.
+func (k *scalar) Int() *big.Int {
+	// Endianness swap.
+	var be scalar
+	for i := 0; i < scalarsize; i++ {
+		be[scalarsize-1-i] = k[i]
+	}
+	// Build big.Int.
+	return new(big.Int).SetBytes(be[:])
+}
+
+// SetBytes interprets b as the bytes of a big-endian unsigned integer, and sets k to that value.
+func (k *scalar) SetBytes(b []byte) {
+	k.SetInt(new(big.Int).SetBytes(b))
+}
+
+func scalarcmov(z, x *scalar, c uint) {
+	if c != 0 {
+		*z = *x
+	}
+}
+
+func scalarneg(z, x *scalar) {
+	neg := new(big.Int).Neg(x.Int())
+	neg.Mod(neg, curvename.N)
+	z.SetInt(neg)
 }

@@ -54,6 +54,7 @@ func (a *api) Generate() ([]byte, error) {
 	// Conversion to/from integer types.
 	a.SetInt64()
 	a.SetInt()
+	a.SetBytes()
 	a.Int()
 
 	// Encoding and decoding for montgomery fields.
@@ -85,6 +86,16 @@ func (a *api) SetInt64() {
 	a.Printf("func (x %s) SetInt64(y int64) %s", a.PointerType(), a.PointerType())
 	a.EnterBlock()
 	a.Linef("x.SetInt(big.NewInt(y))")
+	a.Linef("return x")
+	a.LeaveBlock()
+}
+
+// SetInt64 generates a function to construct a field element from an int64.
+func (a *api) SetBytes() {
+	a.Comment("SetBytes constructs a field element from bytes in big-endian order.")
+	a.Printf("func (x %s) SetBytes(b []byte) %s", a.PointerType(), a.PointerType())
+	a.EnterBlock()
+	a.Linef("x.SetInt(new(big.Int).SetBytes(b))")
 	a.Linef("return x")
 	a.LeaveBlock()
 }
