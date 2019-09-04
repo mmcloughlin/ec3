@@ -71,18 +71,27 @@ func (p *Jacobian) CNeg(c uint) {
 }
 
 func (p *Jacobian) Neg() {
-	n := new(big.Int).Neg(&p.a.Y)
-	p.a.Y.Set(n)
+	y := new(big.Int).Neg(&p.a.Y)
+	y.Mod(y, curvename.P)
+	p.a.Y.Set(y)
+	//x := new(big.Int).Neg(&p.a.X)
+	//y := new(big.Int).Neg(&p.a.Y)
+	//p.a.X.Set(x)
+	//p.a.Y.Set(y)
 }
 
 func (p *Jacobian) Add(q, r *Jacobian) {
 	x, y := curvename.Params().Add(&q.a.X, &q.a.Y, &r.a.X, &r.a.Y)
+	// x := new(big.Int).Add(&q.a.X, &r.a.X)
+	// y := new(big.Int).Add(&q.a.Y, &r.a.Y)
 	p.a.X.Set(x)
 	p.a.Y.Set(y)
 }
 
 func (p *Jacobian) Double(q *Jacobian) {
 	x, y := curvename.Params().Double(&q.a.X, &q.a.Y)
+	// x := new(big.Int).Lsh(&q.a.X, 1)
+	// y := new(big.Int).Lsh(&q.a.Y, 1)
 	p.a.X.Set(x)
 	p.a.Y.Set(y)
 }

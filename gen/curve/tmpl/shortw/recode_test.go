@@ -52,6 +52,14 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 		K.SetInt(k)
 		digits := K.FixedWindowRecode()
 
+		// Verify all digits are odd.
+		for i, digit := range digits {
+			if (digit & 1) != 1 {
+				t.Fatalf("digit %d is not odd", i)
+			}
+		}
+
+		// Confirm the sum is correct.
 		x := new(big.Int)
 		for i := len(digits) - 1; i >= 0; i-- {
 			x.Lsh(x, ConstW-1)

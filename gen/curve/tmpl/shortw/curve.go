@@ -5,7 +5,6 @@ package shortw
 import (
 	"crypto/elliptic"
 	"crypto/subtle"
-	"log"
 	"math/big"
 )
 
@@ -115,7 +114,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// 	oddK, isEvenK := c.toOdd(k)
 
 	even := K.ConvertToOdd()
-	log.Print(even)
+	// log.Print(even)
 
 	// Step 7: Recode k to (kt, . . . , k0) using Algorithm 6.
 
@@ -128,7 +127,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// 	L := math.SignedDigit(&scalar, omega)
 
 	digits := K.FixedWindowRecode()
-	log.Print(digits)
+	//log.Print(digits)
 
 	// Step 4: Compute P[i] = (2i + 1)P for 0 <= i < 2^{w−2}.
 	tbl := precompute(P)
@@ -146,7 +145,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 
 	// Step 9: for i = (t − 1) to 1
 	for i := t - 1; i >= 1; i-- {
-		// Step 14: Q = 2(w−1)Q
+		// Step 14: Q = 2^{w−1}Q
 
 		// 		for j := uint(0); j < omega-1; j++ {
 		// 			Q.double()
@@ -169,7 +168,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 		Q.Add(&Q, &R)
 	}
 
-	// Step 18: Q = 2(w−1)Q
+	// Step 18: Q = 2^{w−1}Q
 	for j := 0; j < ConstW-1; j++ {
 		Q.Double(&Q)
 	}

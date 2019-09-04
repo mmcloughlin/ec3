@@ -54,7 +54,7 @@ func (k *scalar) FixedWindowRecode() []int32 {
 
 // ConvertToOdd negates k if it is even. Returns whether the scalar was even.
 func (k *scalar) ConvertToOdd() (even uint) {
-	even = uint(k[0] & 1)
+	even = uint(k[0]&1) ^ 1
 	var n scalar
 	scalarneg(&n, k)
 	scalarcmov(k, &n, even)
