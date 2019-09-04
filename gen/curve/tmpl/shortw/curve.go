@@ -50,7 +50,7 @@ func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	j1 := NewFromAffine(a1)
 	d := new(Jacobian)
 	d.Double(j1)
-	return j1.Affine().Coordinates()
+	return d.Affine().Coordinates()
 }
 
 // tablesize is the size of the lookup table used by ScalarMult.
