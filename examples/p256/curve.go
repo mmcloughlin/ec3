@@ -4,8 +4,16 @@ package p256
 
 import (
 	"crypto/elliptic"
+	"crypto/subtle"
 	"math/big"
 )
+
+// References:
+//
+//	[msrecclibpaper]  Joppe W. Bos, Craig Costello, Patrick Longa and Michael Naehrig. Selecting
+//	                  Elliptic Curves for Cryptography: An Efficiency and Security Analysis.
+//	                  Cryptology ePrint Archive, Report 2014/130. 2014.
+//	                  https://eprint.iacr.org/2014/130
 
 // P256 returns a Curve which implements P-256.
 func P256() elliptic.Curve { return p256 }
@@ -36,11 +44,116 @@ func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	return s.Affine().Coordinates()
 }
 
-// Double returns 2*(x,y)
+// Double returns 2*(x1,y1)
 func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	j1 := NewFromAffine(a1)
 	d := new(Jacobian)
 	d.Double(j1)
 	return d.Affine().Coordinates()
+}
+
+// ScalarMult returns k*(x1,y1) where k is a number in big-endian form.
+func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
+	// Implementation follows [msrecclibpaper] Algorithm 1.
+
+	// Scalar recoding window size.
+	const w = 6
+
+	// Convert point from affine.
+	a := NewAffine(x1, y1)
+	p := NewFromAffine(a)
+
+	// Step 1: scalar validation.
+
+	// TODO(mbm): exit if scalar is 0.
+
+	var K scalar
+	K.SetBytes(k)
+
+	// Step 5: odd = k mod 2
+	// Step 6: if odd = 0 then k = r − k
+	even := K.ConvertToOdd()
+
+	// Step 7: Recode k to (k_t, ..., k_0) using Algorithm 6.
+	digits := K.FixedWindowRecode()
+
+	// Step 4: Compute P[i] = (2i + 1)P for 0 ⩽ i < 2^{w−2}.
+	var tbl table
+	tbl.Precompute(p)
+
+	// Step 8: Q = s_t * P[(|k_t| − 1)/2]
+	var q, r Jacobian
+
+	t := len(digits) - 1
+	tbl.Lookup(&q, digits[t])
+
+	// Step 9: for i = (t − 1) to 1
+	for i := t - 1; i >= 1; i-- {
+		// Step 14: Q = 2^{w−1}Q
+		for j := 0; j < w-1; j++ {
+			q.Double(&q)
+		}
+
+		// Step 15: Q = Q + s_i * P[(|k_i| − 1)/2]
+		tbl.Lookup(&r, digits[i])
+		q.Add(&q, &r)
+	}
+
+	// Step 18: Q = 2^{w−1}Q
+	for j := 0; j < w-1; j++ {
+		q.Double(&q)
+	}
+
+	// Step 19: Q = Q ⊕ s_0 * P[(|k_0| − 1)/2]
+
+	// TODO(mbm): must be a complete addition formula
+
+	tbl.Lookup(&r, digits[0])
+	q.Add(&q, &r)
+
+	// Step 20: if odd = 0 then Q = −Q
+	q.CNeg(even)
+
+	// Step 21: Convert Q to affine coordinates (x, y).
+	return q.Affine().Coordinates()
+}
+
+// tablesize is the size of the lookup table used by ScalarMult.
+const tablesize = 1 << (6 - 1)
+
+// table is a lookup table used by ScalarMult.
+type table [tablesize]Jacobian
+
+// Precompute odd multiples of p.
+func (t *table) Precompute(p *Jacobian) {
+	t[0].Set(p)
+
+	var _2p Jacobian
+	_2p.Double(p)
+
+	for i := 1; i < tablesize; i++ {
+		t[i].Add(&t[i-1], &_2p)
+	}
+}
+
+// Lookup an odd multiple from the table and store it in p. The provided digit
+// may be negative, in which case p will be negated.
+func (t *table) Lookup(p *Jacobian, digit int32) {
+	idx := abs(digit) / 2
+	for i := range t {
+		p.CMov(&t[i], uint(subtle.ConstantTimeEq(int32(i), idx)))
+	}
+	p.CNeg(sign(digit))
+}
+
+// abs returns the absolute value of x.
+func abs(x int32) int32 {
+	mask := x >> 31
+	return (x + mask) ^ mask
+}
+
+// sign returns the sign bit of x.
+func sign(x int32) uint {
+	return uint(x>>31) & 1
 }

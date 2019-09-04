@@ -34,7 +34,6 @@ func SetPackageName(name string) Transform {
 					Name: name,
 				})
 				found = true
-				return false
 			}
 			return true
 		},

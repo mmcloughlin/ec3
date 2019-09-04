@@ -13,7 +13,7 @@ func NumTrials() int {
 	if testing.Short() {
 		return 1 << 8
 	}
-	return 1 << 20
+	return 1 << 16
 }
 
 func R() *big.Int {

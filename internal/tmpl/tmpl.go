@@ -9,6 +9,7 @@ import (
 	"go/token"
 	"io"
 	"io/ioutil"
+	"path/filepath"
 
 	"golang.org/x/xerrors"
 )
@@ -31,6 +32,13 @@ func (l LoaderFunc) Load(name string) ([]byte, error) {
 	return l(name)
 }
 
+// NewBasePath restricts the given loader to a given path.
+func NewBasePath(loader Loader, path string) Loader {
+	return LoaderFunc(func(name string) ([]byte, error) {
+		return loader.Load(filepath.Join(path, name))
+	})
+}
+
 type Environment struct {
 	Loader Loader
 }
@@ -41,6 +49,21 @@ func (e Environment) Load(name string) (*Template, error) {
 		return nil, err
 	}
 	return ParseFile(name, src)
+}
+
+func (e Environment) Package(names ...string) (*Package, error) {
+	pkg := NewPackage()
+	for _, name := range names {
+		src, err := e.Loader.Load(name)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := pkg.AddFile(name, src); err != nil {
+			return nil, err
+		}
+	}
+	return pkg, nil
 }
 
 type Transform interface {
@@ -54,9 +77,9 @@ type Template struct {
 
 func ParseFile(filename string, src []byte) (*Template, error) {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, filename, src, parser.ParseComments)
+	f, err := parse(fset, filename, src)
 	if err != nil {
-		return nil, xerrors.Errorf("failed to parse template: %w", err)
+		return nil, err
 	}
 	return &Template{
 		fset: fset,
@@ -89,4 +112,71 @@ func (t *Template) Bytes() ([]byte, error) {
 		return nil, err
 	}
 	return buf.Bytes(), nil
+}
+
+type Package struct {
+	fset  *token.FileSet
+	files map[string]*ast.File
+}
+
+func NewPackage() *Package {
+	return &Package{
+		fset:  token.NewFileSet(),
+		files: make(map[string]*ast.File),
+	}
+}
+
+func (p *Package) AddFile(name string, src []byte) error {
+	if _, ok := p.files[name]; ok {
+		return xerrors.Errorf("file named %q already exists", name)
+	}
+
+	f, err := parse(p.fset, name, src)
+	if err != nil {
+		return err
+	}
+
+	p.files[name] = f
+	return nil
+}
+
+// Template returns a template for the named file.
+func (p *Package) Template(name string) (*Template, bool) {
+	f, ok := p.files[name]
+	if !ok {
+		return nil, false
+	}
+	return &Template{
+		fset: p.fset,
+		node: f,
+	}, true
+}
+
+func (p *Package) Templates() map[string]*Template {
+	tpls := map[string]*Template{}
+	for name, f := range p.files {
+		tpls[name] = &Template{
+			fset: p.fset,
+			node: f,
+		}
+	}
+	return tpls
+}
+
+// Apply transforms to an entire package.
+func (p *Package) Apply(transforms ...Transform) error {
+	tpl := &Template{
+		fset: p.fset,
+		node: &ast.Package{Files: p.files},
+	}
+	return tpl.Apply(transforms...)
+}
+
+// parse a template.
+func parse(fset *token.FileSet, filename string, src []byte) (*ast.File, error) {
+	f, err := parser.ParseFile(fset, filename, src, parser.ParseComments)
+	if err != nil {
+		return nil, xerrors.Errorf("failed to parse template: %w", err)
+	}
+	return f, nil
 }
