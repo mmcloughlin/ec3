@@ -5,8 +5,8 @@ fmt:
 	find . -name '*.go' | xargs sed -i.fmtbackup '/^import (/,/)/ { /^$$/ d; }'
 	find . -name '*.fmtbackup' -delete
 	find . -name '*.go' | xargs gofumports -w -local $(REPO)
-	find . -name '*.go' | xargs mathfmt -w
-	find . -name '*.go' | xargs bib -bib docs/bibliography.bib -w
+	find . -name '*.go' | xargs grep -L '// Code generated' | xargs mathfmt -w
+	find . -name '*.go' | xargs grep -L '// Code generated' | xargs bib -bib docs/bibliography.bib -w
 
 .PHONY: lint
 lint:
