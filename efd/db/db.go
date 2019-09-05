@@ -199,3 +199,41 @@ func (d *directory) Next() (File, error) {
 
 // Close is a no-op.
 func (directory) Close() error { return nil }
+
+type merge struct {
+	stores []Store
+	idx    int
+}
+
+// Merge multiple database stores into one.
+func Merge(stores ...Store) Store {
+	return &merge{
+		stores: stores,
+	}
+}
+
+func (m *merge) Next() (File, error) {
+	for m.idx < len(m.stores) {
+		s := m.stores[m.idx]
+		f, err := s.Next()
+		if err == io.EOF {
+			m.idx++
+			continue
+		}
+		if err != nil {
+			return nil, err
+		}
+		return f, nil
+	}
+	return nil, io.EOF
+}
+
+func (m *merge) Close() error {
+	var errs errutil.Errors
+	for _, s := range m.stores {
+		if err := s.Close(); err != nil {
+			errs.Add(err)
+		}
+	}
+	return errs.Err()
+}
