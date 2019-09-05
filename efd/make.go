@@ -13,24 +13,20 @@ import (
 
 	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/efd/db"
+	"github.com/mmcloughlin/ec3/internal/flags"
 	"github.com/mmcloughlin/ec3/internal/gocode"
 )
 
 var (
-	archive = flag.String("archive", "efd.tar.gz", "path to efd archive")
-	output  = flag.String("output", "", "path to output file (default stdout)")
+	inputs = flags.Strings("input", []string{"efd.tar.gz"}, "path to database file")
+	output = flag.String("output", "", "path to output file (default stdout)")
 )
 
 func main() {
 	flag.Parse()
 
 	// Read database.
-	a, err := db.Open(*archive)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	d, err := db.Read(a)
+	d, err := read(*inputs)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,6 +55,20 @@ func main() {
 	if _, err := w.Write(b); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func read(filenames []string) (*db.Database, error) {
+	stores := []db.Store{}
+	for _, filename := range filenames {
+		s, err := db.Open(filename)
+		if err != nil {
+			return nil, err
+		}
+		stores = append(stores, s)
+	}
+
+	m := db.Merge(stores...)
+	return db.Read(m)
 }
 
 type generator struct {
