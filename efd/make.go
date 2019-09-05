@@ -24,8 +24,8 @@ var (
 func main() {
 	flag.Parse()
 
-	// Read archive.
-	a, err := db.Archive(*archive)
+	// Read database.
+	a, err := db.Open(*archive)
 	if err != nil {
 		log.Fatal(err)
 	}

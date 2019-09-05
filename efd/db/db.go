@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"golang.org/x/xerrors"
 
 	"github.com/mmcloughlin/ec3/internal/errutil"
 )
@@ -66,6 +69,24 @@ func Walk(s Store, v Visitor) error {
 		if err := f.Close(); err != nil {
 			return err
 		}
+	}
+}
+
+// Open is a convenience for opening a database. It will make an informed guess
+// about the storage format.
+func Open(filename string) (Store, error) {
+	s, err := os.Stat(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	switch {
+	case s.IsDir():
+		return Directory(filename)
+	case strings.HasSuffix(filename, ".tar.gz"):
+		return Archive(filename)
+	default:
+		return nil, xerrors.Errorf("unknown database type for file %q", filename)
 	}
 }
 
