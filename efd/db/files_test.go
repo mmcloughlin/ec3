@@ -1,10 +1,15 @@
 package db
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/mmcloughlin/ec3/internal/assert"
+)
 
 func TestRealArchive(t *testing.T) {
-	_, err := Read("../efd.tar.gz")
-	if err != nil {
-		t.Fatal(err)
-	}
+	a, err := Archive("../efd.tar.gz")
+	assert.NoError(t, err)
+
+	_, err = Read(a)
+	assert.NoError(t, err)
 }

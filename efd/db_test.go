@@ -13,7 +13,10 @@ import (
 // data as present in the database.
 
 func TestDB(t *testing.T) {
-	d, err := db.Read("efd.tar.gz")
+	a, err := db.Archive("efd.tar.gz")
+	assert.NoError(t, err)
+
+	d, err := db.Read(a)
 	assert.NoError(t, err)
 
 	for _, f := range efd.All {

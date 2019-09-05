@@ -96,11 +96,11 @@ func (d Database) formula(k string) *efd.Formula {
 	return d.Formulae[k]
 }
 
-func Read(archive string) (*Database, error) {
+func Read(s Store) (*Database, error) {
 	p := parser{
 		DB: New(),
 	}
-	if err := Walk(archive, p); err != nil {
+	if err := Walk(s, p); err != nil {
 		return nil, err
 	}
 	return p.DB, nil
@@ -110,21 +110,21 @@ type parser struct {
 	DB *Database
 }
 
-func (p parser) Visit(filename string, r io.Reader) error {
-	k := KeyFromFilename(filename)
+func (p parser) Visit(f File) error {
+	k := KeyFromFilename(f.Name())
 	switch {
 	case k.IsOP3():
-		return p.op3(k, r)
+		return p.op3(k, f)
 	case k.IsShape():
-		return p.shape(k, r)
+		return p.shape(k, f)
 	case k.IsRepresentation():
-		return p.representation(k, r)
+		return p.representation(k, f)
 	case k.IsFormula():
-		return p.formula(k, r)
+		return p.formula(k, f)
 	case k.Name == "README":
 		// pass
 	default:
-		return xerrors.Errorf("unknown file: %s", filename)
+		return xerrors.Errorf("unknown file: %s", f.Name())
 	}
 	return nil
 }

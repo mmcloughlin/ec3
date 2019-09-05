@@ -2,7 +2,6 @@ package parse_test
 
 import (
 	"bytes"
-	"io"
 	"io/ioutil"
 	"path/filepath"
 	"testing"
@@ -13,9 +12,12 @@ import (
 )
 
 func TestParseAllEFDFiles(t *testing.T) {
-	archive := "../../efd.tar.gz"
+	archive, err := db.Archive("../../efd.tar.gz")
+	assert.NoError(t, err)
 
-	err := db.Walk(archive, db.VisitorFunc(func(filename string, r io.Reader) error {
+	err = db.Walk(archive, db.VisitorFunc(func(f db.File) error {
+		filename := f.Name()
+
 		if filepath.Ext(filename) != ".op3" {
 			return nil
 		}
@@ -23,7 +25,7 @@ func TestParseAllEFDFiles(t *testing.T) {
 		t.Logf("parsing %s", filename)
 
 		// Read into a byte array.
-		b, err := ioutil.ReadAll(r)
+		b, err := ioutil.ReadAll(f)
 		assert.NoError(t, err)
 
 		// Some files have error messages in them, in which case we shouldn't expect
