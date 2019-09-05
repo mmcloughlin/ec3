@@ -16,7 +16,7 @@ func TestParseAllEFDFiles(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = db.Walk(archive, db.VisitorFunc(func(f db.File) error {
-		filename := f.Name()
+		filename := f.Path()
 
 		if filepath.Ext(filename) != ".op3" {
 			return nil

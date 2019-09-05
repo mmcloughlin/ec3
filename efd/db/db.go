@@ -6,27 +6,67 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/mmcloughlin/ec3/internal/errutil"
 )
 
 // File in a Store.
 type File interface {
-	Name() string
+	// Path relative to Store root.
+	Path() string
+
 	io.ReadCloser
 }
 
 type file struct {
-	name string
+	path string
 	io.ReadCloser
 }
 
-func (f file) Name() string { return f.name }
+func (f file) Path() string { return f.path }
 
 // Store is a method of accessing database files.
 type Store interface {
 	Next() (File, error)
 	io.Closer
+}
+
+// Visitor provides a Visit method that is called for every file visited by
+// Walk. The visit method receives the filename within the Store, as well as a
+// reader for the contents.
+type Visitor interface {
+	Visit(f File) error
+}
+
+// VisitorFunc adapts a plain function to the Visitor interface.
+type VisitorFunc func(f File) error
+
+// Visit calls v.
+func (v VisitorFunc) Visit(f File) error {
+	return v(f)
+}
+
+// Walk walks the Store, calling the Visitor for every file.
+func Walk(s Store, v Visitor) error {
+	defer s.Close()
+	for {
+		f, err := s.Next()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+
+		if err := v.Visit(f); err != nil {
+			return err
+		}
+
+		if err := f.Close(); err != nil {
+			return err
+		}
+	}
 }
 
 // archive provides access to a gzipped tarball.
@@ -71,7 +111,7 @@ func (a archive) Next() (File, error) {
 		}
 
 		return file{
-			name:       hdr.Name,
+			path:       hdr.Name,
 			ReadCloser: ioutil.NopCloser(a.r),
 		}, nil
 	}
@@ -88,39 +128,53 @@ func (a archive) Close() error {
 	return errs.Err()
 }
 
-// Visitor provides a Visit method that is called for every file visited by
-// Walk. The visit method receives the filename within the Store, as well as a
-// reader for the contents.
-type Visitor interface {
-	Visit(f File) error
+// directory provides access to files under a directory.
+type directory struct {
+	root  string
+	paths []string
 }
 
-// VisitorFunc adapts a plain function to the Visitor interface.
-type VisitorFunc func(f File) error
-
-// Visit calls v.
-func (v VisitorFunc) Visit(f File) error {
-	return v(f)
-}
-
-// Walk walks the Store, calling the Visitor for every file.
-func Walk(s Store, v Visitor) error {
-	defer s.Close()
-	for {
-		f, err := s.Next()
-		if err == io.EOF {
-			return nil
-		}
+// Directory opens a database stored at root.
+func Directory(root string) (Store, error) {
+	d := &directory{root: root}
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-
-		if err := v.Visit(f); err != nil {
-			return err
+		if !info.IsDir() {
+			d.paths = append(d.paths, path)
 		}
-
-		if err := f.Close(); err != nil {
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
+	return d, nil
 }
+
+// Next returns the next file in the directory.
+func (d *directory) Next() (File, error) {
+	if len(d.paths) == 0 {
+		return nil, io.EOF
+	}
+	path := d.paths[0]
+	d.paths = d.paths[1:]
+
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	rel, err := filepath.Rel(d.root, path)
+	if err != nil {
+		return nil, errutil.AssertionFailure("failed to construct relative path: %w", err)
+	}
+
+	return file{
+		path:       rel,
+		ReadCloser: f,
+	}, nil
+}
+
+// Close is a no-op.
+func (directory) Close() error { return nil }

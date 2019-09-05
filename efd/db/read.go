@@ -111,7 +111,7 @@ type parser struct {
 }
 
 func (p parser) Visit(f File) error {
-	k := KeyFromFilename(f.Name())
+	k := KeyFromFilename(f.Path())
 	switch {
 	case k.IsOP3():
 		return p.op3(k, f)
@@ -124,7 +124,7 @@ func (p parser) Visit(f File) error {
 	case k.Name == "README":
 		// pass
 	default:
-		return xerrors.Errorf("unknown file: %s", f.Name())
+		return xerrors.Errorf("unknown file: %s", f.Path())
 	}
 	return nil
 }
