@@ -16,7 +16,12 @@ func TestDB(t *testing.T) {
 	a, err := db.Archive("efd.tar.gz")
 	assert.NoError(t, err)
 
-	d, err := db.Read(a)
+	add, err := db.Directory("addenda")
+	assert.NoError(t, err)
+
+	m := db.Merge(a, add)
+
+	d, err := db.Read(m)
 	assert.NoError(t, err)
 
 	for _, f := range efd.All {
