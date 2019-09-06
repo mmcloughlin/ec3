@@ -13,10 +13,10 @@ import (
 // data as present in the database.
 
 func TestDB(t *testing.T) {
-	a, err := db.Archive("efd.tar.gz")
+	a, err := db.Archive("data/efd.tar.gz")
 	assert.NoError(t, err)
 
-	add, err := db.Directory("addenda")
+	add, err := db.Directory("data")
 	assert.NoError(t, err)
 
 	m := db.Merge(a, add)

@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	inputs = flags.Strings("input", []string{"efd.tar.gz"}, "path to database file")
+	inputs = flags.Strings("input", []string{"data/efd.tar.gz"}, "path to database file")
 	output = flag.String("output", "", "path to output file (default stdout)")
 )
 
@@ -115,6 +115,7 @@ func (g *generator) shapes() {
 
 func (g *generator) shape(s *efd.Shape) {
 	g.EnterBlock()
+	g.Linef("Collection: %#v,", s.Collection)
 	g.Linef("ID: %#v,", s.ID)
 	g.Linef("Tag: %#v,", s.Tag)
 	g.Linef("Class: %#v,", s.Class)
@@ -165,6 +166,7 @@ func (g *generator) representations() {
 
 func (g *generator) representation(r *efd.Representation) {
 	g.EnterBlock()
+	g.Linef("Collection: %#v,", r.Collection)
 	g.Linef("ID: %#v,", r.ID)
 	g.Linef("Tag: %#v,", r.Tag)
 	g.Linef("Class: %#v,", r.Class)
@@ -208,11 +210,13 @@ func (g *generator) formulae() {
 
 func (g *generator) formula(f *efd.Formula) {
 	g.EnterBlock()
+	g.Linef("Collection: %#v,", f.Collection)
 	g.Linef("ID: %#v,", f.ID)
 	g.Linef("Tag: %#v,", f.Tag)
 	g.Linef("Class: %#v,", f.Class)
 	g.Linef("Shape: %s,", g.shaperef(f.Shape))
 	g.Linef("Representation: %s,", g.representationref(f.Representation))
+	g.Linef("URL: %#v,", f.URL)
 	g.Linef("Operation: %#v,", f.Operation)
 	g.Linef("Source: %#v,", f.Source)
 	g.Linef("AppliesTo: %#v,", f.AppliesTo)

@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// Get and print list of selected formulae.
-	fs := efd.Formulae(predicates...)
+	fs := efd.Select(predicates...)
 
 	p := &printer{
 		TabWriter: print.NewTabWriter(os.Stdout, 1, 4, 4, ' ', 0),
@@ -70,7 +70,8 @@ func (p *printer) formula(f *efd.Formula) {
 	p.field("shape", f.Shape.Tag)
 	p.field("repr", f.Representation.Tag)
 	p.field("operation", f.Operation)
-	p.field("url", f.URL())
+	p.field("collection", f.Collection)
+	p.maybe("url", f.URL)
 
 	p.cost(f)
 	p.maybe("source", f.Source)

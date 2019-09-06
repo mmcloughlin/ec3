@@ -1,32 +1,32 @@
 package efd
 
-//go:generate go run make.go -input efd.tar.gz -input addenda -output zdb.go
+//go:generate go run make.go -input data/efd.tar.gz -input data -output zdb.go
 
-var All = Formulae()
+var All = Select()
 
 type Predicate func(*Formula) bool
 
-type Collection []*Formula
+type Formulae []*Formula
 
-func (c Collection) Filter(predicates ...Predicate) Collection {
+func (f Formulae) Filter(predicates ...Predicate) Formulae {
 	if len(predicates) == 0 {
-		return c
+		return f
 	}
-	result := make(Collection, 0)
-	for _, f := range c {
+	result := make(Formulae, 0)
+	for _, formula := range f {
 		keep := true
 		for _, predicate := range predicates {
-			keep = predicate(f) && keep
+			keep = predicate(formula) && keep
 		}
 		if keep {
-			result = append(result, f)
+			result = append(result, formula)
 		}
 	}
 	return result
 }
 
-func Formulae(predicates ...Predicate) Collection {
-	return Collection(formulae).Filter(predicates...)
+func Select(predicates ...Predicate) Formulae {
+	return Formulae(formulae).Filter(predicates...)
 }
 
 func WithClass(class string) Predicate {

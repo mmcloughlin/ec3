@@ -16,6 +16,7 @@ import (
 
 type Key struct {
 	Path           string
+	Collection     string
 	Class          string
 	Section        string
 	Shape          string
@@ -31,7 +32,7 @@ func KeyFromFilename(filename string) Key {
 	path := strings.TrimSuffix(filename, k.Ext)
 	parts := strings.Split(path, "/")
 	n := len(parts)
-	dst := []*string{&k.Class, &k.Section, &k.Shape, &k.Representation, &k.Operation}
+	dst := []*string{&k.Collection, &k.Class, &k.Section, &k.Shape, &k.Representation, &k.Operation}
 	for i := 0; i < n-1 && i < len(dst); i++ {
 		*dst[i] = parts[i]
 	}
@@ -55,7 +56,20 @@ func (k Key) OperationID() string { return path.Join(k.RepresentationID(), k.Ope
 
 func (k Key) FormulaID() string { return path.Join(k.OperationID(), k.Name) }
 
+// Collection specifies information about a collection of data included in the
+// database.
+type Collection struct {
+	FormulaURL string
+}
+
+// DefaultCollection specifies information about the original EFD database.
+var DefaultCollection = Collection{
+	// Example: https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html#addition-add-2007-bl
+	FormulaURL: "https://hyperelliptic.org/EFD/CLASS/auto-SHAPE-REPRESENTATION.html#OPERATION-TAG",
+}
+
 type Database struct {
+	Collections     map[string]*Collection
 	Shapes          map[string]*efd.Shape
 	Representations map[string]*efd.Representation
 	Formulae        map[string]*efd.Formula
@@ -63,10 +77,18 @@ type Database struct {
 
 func New() *Database {
 	return &Database{
+		Collections:     map[string]*Collection{},
 		Shapes:          map[string]*efd.Shape{},
 		Representations: map[string]*efd.Representation{},
 		Formulae:        map[string]*efd.Formula{},
 	}
+}
+
+func (d Database) collection(k string) *Collection {
+	if _, ok := d.Collections[k]; !ok {
+		return &DefaultCollection
+	}
+	return d.Collections[k]
 }
 
 func (d Database) shape(k string) *efd.Shape {
@@ -96,6 +118,24 @@ func (d Database) formula(k string) *efd.Formula {
 	return d.Formulae[k]
 }
 
+func (d Database) finalize() {
+	// Set formula URLs.
+	for _, f := range d.Formulae {
+		if f.URL != "" {
+			continue
+		}
+		r := strings.NewReplacer(
+			"CLASS", f.Class,
+			"SHAPE", f.Shape.Tag,
+			"REPRESENTATION", f.Representation.Tag,
+			"OPERATION", f.Operation,
+			"TAG", f.Tag,
+		)
+		tmpl := d.collection(f.Collection).FormulaURL
+		f.URL = r.Replace(tmpl)
+	}
+}
+
 func Read(s Store) (*Database, error) {
 	p := parser{
 		DB: New(),
@@ -103,6 +143,7 @@ func Read(s Store) (*Database, error) {
 	if err := Walk(s, p); err != nil {
 		return nil, err
 	}
+	p.DB.finalize()
 	return p.DB, nil
 }
 
@@ -121,16 +162,38 @@ func (p parser) Visit(f File) error {
 		return p.representation(k, f)
 	case k.IsFormula():
 		return p.formula(k, f)
-	case k.Name == "README":
-		// pass
-	default:
-		return xerrors.Errorf("unknown file: %s", f.Path())
+	case k.Name == "metadata":
+		return p.metadata(k, f)
 	}
+	return nil
+}
+
+func (p parser) metadata(k Key, r io.Reader) error {
+	props, err := ParseProperties(r)
+	if err != nil {
+		return err
+	}
+
+	c := &Collection{}
+	for prop, vs := range props {
+		switch prop {
+		case "formulaurl":
+			c.FormulaURL, err = atmostone(prop, vs)
+		default:
+			return xerrors.Errorf("unknown property %q", prop)
+		}
+		if err != nil {
+			return err
+		}
+	}
+
+	p.DB.Collections[k.Collection] = c
 	return nil
 }
 
 func (p parser) formula(k Key, r io.Reader) error {
 	f := p.DB.formula(k.FormulaID())
+	f.Collection = k.Collection
 	f.Tag = k.Name
 	f.Class = k.Class
 	f.Shape = p.DB.shape(k.ShapeID())
@@ -146,6 +209,8 @@ func (p parser) formula(k Key, r io.Reader) error {
 		switch prop {
 		case "source":
 			f.Source, err = atmostone(prop, vs)
+		case "url":
+			f.URL, err = atmostone(prop, vs)
 		case "compute":
 			f.Compute = vs
 		case "assume":
@@ -167,6 +232,7 @@ func (p parser) formula(k Key, r io.Reader) error {
 
 func (p parser) representation(k Key, r io.Reader) error {
 	repr := p.DB.representation(k.RepresentationID())
+	repr.Collection = k.Collection
 	repr.Tag = k.Representation
 	repr.Class = k.Class
 	repr.Shape = p.DB.shape(k.ShapeID())
@@ -201,6 +267,7 @@ func (p parser) representation(k Key, r io.Reader) error {
 
 func (p parser) shape(k Key, r io.Reader) error {
 	s := p.DB.shape(k.ShapeID())
+	s.Collection = k.Collection
 	s.Tag = k.Shape
 	s.Class = k.Class
 

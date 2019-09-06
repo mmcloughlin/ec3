@@ -2,13 +2,18 @@
 
 useragent='github.com/mmcloughlin/ec3'
 url='https://hyperelliptic.org/EFD'
-archive='efd.tar.gz'
+name='efd'
+archive="${name}.tar.gz"
 
 # Download in a temporary directory.
 
 cwd=$(pwd -P)
 workdir=$(mktemp -d)
 cd ${workdir}
+
+archivedir=${name}
+mkdir ${archivedir}
+cd ${archivedir}
 
 # Download.
 wget \
@@ -37,5 +42,6 @@ https://hyperelliptic.org/EFD/bib.html
 EOF
 
 # Archive.
-COPYFILE_DISABLE=1 tar czf ${archive} *
+cd ..
+COPYFILE_DISABLE=1 tar czf ${archive} ${archivedir}
 mv ${archive} ${cwd}
