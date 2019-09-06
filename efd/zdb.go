@@ -8607,7 +8607,7 @@ var formulae = []*Formula{
 		Class:          "g1p",
 		Shape:          shapes[10],
 		Representation: representations[42],
-		URL:            "https://github.com/mmcloughlin/ec3/blob/master/efd/data/addenda/g1p/data/shortw/projective-3/addition/add-2015-rcb",
+		URL:            "https://eprint.iacr.org/2015/1060",
 		Operation:      "addition",
 		Source:         "2015 Renes--Costello--Batina",
 		AppliesTo:      "",
