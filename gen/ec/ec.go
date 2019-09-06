@@ -6,6 +6,8 @@ import (
 	"go/types"
 	"strings"
 
+	"golang.org/x/xerrors"
+
 	"github.com/mmcloughlin/ec3/efd/op3"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
@@ -305,9 +307,17 @@ func (p *pointops) function(f Function) {
 		}
 	}
 
+	// Verifiy that all inputs have corresponding variables in the function.
+	variables := f.Variables()
+	for _, input := range op3.Inputs(prog) {
+		if _, ok := variables[input]; !ok {
+			p.SetError(xerrors.Errorf("no variable defined for program input %s", input))
+			return
+		}
+	}
+
 	// Setup mapping from formula variables to code, and allocate any necessary
 	// temporaries.
-	variables := f.Variables()
 	defined := f.Symbols()
 	tmps := []string{}
 
