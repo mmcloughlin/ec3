@@ -61,6 +61,7 @@ func (a *api) Generate() ([]byte, error) {
 	if a.Montgomery() {
 		a.Decode()
 		a.Encode()
+		a.SetIntEncode()
 	}
 
 	// Implement field operations.
@@ -166,6 +167,18 @@ func (a *api) Encode() {
 	a.Commentf("%s encodes into the Montgomery domain.", a.Name("Encode"))
 	a.Function(a.Name("Encode"), a.Signature("z", "x"))
 	a.Call("Mul", "z", "x", r2)
+	a.LeaveBlock()
+}
+
+// SetIntEncode generates a convenience constructor that builds a field element
+// from a big integer and also encodes it into the Montgomery domain.
+func (a *api) SetIntEncode() {
+	a.Comment("SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.")
+	a.Printf("func (x %s) SetIntEncode(y *big.Int) %s", a.PointerType(), a.PointerType())
+	a.EnterBlock()
+	a.Linef("x.SetInt(y)")
+	a.Linef("%s(x, x)", a.Name("Encode"))
+	a.Linef("return x")
 	a.LeaveBlock()
 }
 
