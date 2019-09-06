@@ -140,13 +140,13 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		affinecoords = append(affinecoords, strings.ToUpper(v))
 	}
 
-	affine := ec.Type{
+	affine := ec.Representation{
 		Name:        "Affine",
 		ElementType: fieldcfg.Type(),
 		Coordinates: affinecoords,
 	}
 
-	jacobian := ec.Type{
+	jacobian := ec.Representation{
 		Name:        "Jacobian",
 		ElementType: fieldcfg.Type(),
 		Coordinates: r.Variables,
@@ -155,11 +155,11 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	// TODO(mbm): automatically generate conversion formulae
 	fromaffine := ec.Function{
 		Name: "NewFromAffine",
-		Params: []*ec.Parameter{
-			{Name: "a", Type: affine, Action: ec.R},
+		Params: []ec.Parameter{
+			ec.Point("a", affine, 1),
 		},
-		Results: []*ec.Parameter{
-			{Name: "p", Type: jacobian, Action: ec.W},
+		Results: []ec.Parameter{
+			ec.Point("p", jacobian, 3),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -177,9 +177,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	toaffine := ec.Function{
 		Name:     "Affine",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.R},
-		Results: []*ec.Parameter{
-			{Name: "a", Type: affine, Action: ec.W},
+		Receiver: ec.Point("p", jacobian, 1),
+		Results: []ec.Parameter{
+			ec.Point("a", affine, 3),
 		},
 		Formula: scalef.Program,
 	}
@@ -187,11 +187,11 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	// TODO(mbm): automatically generate cmov formulae
 	cmov := ec.Function{
 		Name:     "CMov",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
-		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian, Action: ec.R},
+		Receiver: ec.Point("p", jacobian, 3),
+		Params: []ec.Parameter{
+			ec.Point("q", jacobian, 1),
+			ec.Condition("c"),
 		},
-		Conditions: []string{"c"},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
 				{LHS: "X3", RHS: ast.Cond{X: ast.Variable("X1"), C: ast.Variable("c")}},
@@ -203,9 +203,11 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	// TODO(mbm): automatically generate negation formulae
 	cneg := ec.Function{
-		Name:       "CNeg",
-		Receiver:   &ec.Parameter{Name: "p", Type: jacobian, Action: ec.RW},
-		Conditions: []string{"c"},
+		Name:     "CNeg",
+		Receiver: ec.Point("p", jacobian, 1, 3),
+		Params: []ec.Parameter{
+			ec.Condition("c"),
+		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
 				{LHS: "t", RHS: ast.Neg{X: ast.Variable("Y1")}},
@@ -221,10 +223,10 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	add := ec.Function{
 		Name:     "Add",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
-		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian, Action: ec.R},
-			{Name: "r", Type: jacobian, Action: ec.R},
+		Receiver: ec.Point("p", jacobian, 3),
+		Params: []ec.Parameter{
+			ec.Point("q", jacobian, 1),
+			ec.Point("r", jacobian, 2),
 		},
 		Formula: addf.Program,
 	}
@@ -236,9 +238,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	dbl := ec.Function{
 		Name:     "Double",
-		Receiver: &ec.Parameter{Name: "p", Type: jacobian, Action: ec.W},
-		Params: []*ec.Parameter{
-			{Name: "q", Type: jacobian, Action: ec.R},
+		Receiver: ec.Point("p", jacobian, 3),
+		Params: []ec.Parameter{
+			ec.Point("q", jacobian, 1),
 		},
 		Formula: dblf.Program,
 	}
