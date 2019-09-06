@@ -12,7 +12,7 @@ import (
 )
 
 func TestParseAllEFDFiles(t *testing.T) {
-	archive, err := db.Archive("../../efd.tar.gz")
+	archive, err := db.Archive("../../data/efd.tar.gz")
 	assert.NoError(t, err)
 
 	err = db.Walk(archive, db.VisitorFunc(func(f db.File) error {

@@ -7,7 +7,7 @@ import (
 )
 
 func TestRealArchive(t *testing.T) {
-	a, err := Archive("../efd.tar.gz")
+	a, err := Archive("../data/efd.tar.gz")
 	assert.NoError(t, err)
 
 	_, err = Read(a)
