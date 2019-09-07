@@ -180,3 +180,66 @@ func Pare(p *ast.Program, outputs []ast.Variable) (*ast.Program, error) {
 		Assignments: required,
 	}, nil
 }
+
+// InterferenceGraph records which variables interfere with each other.
+type InterferenceGraph struct {
+	edges map[edge]bool
+}
+
+// NewInterferenceGraph builds an empty interference graph.
+func NewInterferenceGraph() *InterferenceGraph {
+	return &InterferenceGraph{
+		edges: make(map[edge]bool),
+	}
+}
+
+// edge in at interference graph.
+type edge struct{ X, Y ast.Variable }
+
+// newedge builds an edge between x and y.
+func newedge(x, y ast.Variable) edge {
+	if x > y {
+		return edge{y, x}
+	}
+	return edge{x, y}
+}
+
+// AddInterference records that x and y interfere.
+func (g *InterferenceGraph) AddInterference(x, y ast.Variable) {
+	if x == y {
+		return
+	}
+	g.edges[newedge(x, y)] = true
+}
+
+// Interfere reports whether x and y interfere.
+func (g *InterferenceGraph) Interfere(x, y ast.Variable) bool {
+	_, ok := g.edges[newedge(x, y)]
+	return ok
+}
+
+// BuildInterferenceGraph builds the interference graph for variables in p,
+// given that the provided outputs are required.
+func BuildInterferenceGraph(p *ast.Program, outputs []ast.Variable) *InterferenceGraph {
+	g := NewInterferenceGraph()
+
+	// Initially, the required outputs are live.
+	live := NewLiveSet()
+	live.MarkLive(outputs...)
+
+	// Process the program in reverse order.
+	n := len(p.Assignments)
+	for i := n - 1; i >= 0; i-- {
+		a := p.Assignments[i]
+
+		// The output interferes with all currently live variables.
+		for l := range live {
+			g.AddInterference(a.LHS, l)
+		}
+
+		// Update liveness.
+		live.Update(a)
+	}
+
+	return g
+}
