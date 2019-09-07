@@ -121,16 +121,40 @@ func renamevariable(v ast.Variable, replacements map[ast.Variable]ast.Variable) 
 	return v
 }
 
+// LiveSet maintains a set of live variables.
+type LiveSet map[ast.Variable]bool
+
+// NewLiveSet constructs an empty set of live variables.
+func NewLiveSet() LiveSet {
+	return make(LiveSet)
+}
+
+// MarkLive records all variables in vs as live.
+func (l LiveSet) MarkLive(vs ...ast.Variable) {
+	for _, v := range vs {
+		l[v] = true
+	}
+}
+
+// Update the live set based on the assignment. In liveness analysis, program
+// assignments should be processed in reverse.
+func (l LiveSet) Update(a ast.Assignment) {
+	// Kill the variable that's written.
+	delete(l, a.LHS)
+
+	// Input variables are live.
+	inputs := ast.Variables(a.RHS.Inputs())
+	l.MarkLive(inputs...)
+}
+
 // Pare down the given program to only the operations required to produce given
 // outputs.
 func Pare(p *ast.Program, outputs []ast.Variable) (*ast.Program, error) {
 	// This is essentially liveness analysis for a single basic block.
 
 	// Initially, the required outputs are live.
-	live := map[ast.Variable]bool{}
-	for _, output := range outputs {
-		live[output] = true
-	}
+	live := NewLiveSet()
+	live.MarkLive(outputs...)
 
 	// Process the program in reverse order.
 	n := len(p.Assignments)
@@ -143,13 +167,8 @@ func Pare(p *ast.Program, outputs []ast.Variable) (*ast.Program, error) {
 			required = append(required, a)
 		}
 
-		// Kill the variable that's written.
-		delete(live, a.LHS)
-
-		// Input variables are live.
-		for _, v := range ast.Variables(a.RHS.Inputs()) {
-			live[v] = true
-		}
+		// Update liveness.
+		live.Update(a)
 	}
 
 	// Required assignments list was created in reverse order.
