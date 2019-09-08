@@ -57,4 +57,6 @@ func IndexedVariables(format string) VariableGenerator {
 }
 
 // Temporaries generates temporary variables in a standard form.
-var Temporaries = IndexedVariables("t%d")
+func Temporaries() VariableGenerator {
+	return IndexedVariables("t%d")
+}

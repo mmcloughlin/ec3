@@ -5,6 +5,15 @@ import (
 	"github.com/mmcloughlin/ec3/internal/errutil"
 )
 
+// VariableSet builds a set from a list of variables.
+func VariableSet(vs []ast.Variable) map[ast.Variable]bool {
+	set := map[ast.Variable]bool{}
+	for _, v := range vs {
+		set[v] = true
+	}
+	return set
+}
+
 // Variables returns all variables used in the program.
 func Variables(p *ast.Program) []ast.Variable {
 	seen := map[ast.Variable]bool{}
@@ -20,8 +29,8 @@ func Variables(p *ast.Program) []ast.Variable {
 	return vs
 }
 
-// Inputs returns input variables for the given program.
-func Inputs(p *ast.Program) []ast.Variable {
+// InputSet returns the set of input variables for the given program.
+func InputSet(p *ast.Program) map[ast.Variable]bool {
 	// Inputs are variables that are read before they are written.
 	inputs := map[ast.Variable]bool{}
 	written := map[ast.Variable]bool{}
@@ -33,6 +42,12 @@ func Inputs(p *ast.Program) []ast.Variable {
 		}
 		written[a.LHS] = true
 	}
+	return inputs
+}
+
+// Inputs returns input variables for the given program.
+func Inputs(p *ast.Program) []ast.Variable {
+	inputs := InputSet(p)
 
 	// Convert to slice.
 	vs := make([]ast.Variable, 0, len(inputs))
@@ -52,6 +67,16 @@ func IsSSA(p *ast.Program) bool {
 			return false
 		}
 		seen[v] = true
+	}
+	return true
+}
+
+// ReadOnly reports whether v is a read-only variable in the program p.
+func ReadOnly(p *ast.Program, v ast.Variable) bool {
+	for _, a := range p.Assignments {
+		if v == a.LHS {
+			return false
+		}
 	}
 	return true
 }
