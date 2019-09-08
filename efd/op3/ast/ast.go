@@ -26,6 +26,10 @@ func (a Assignment) String() string {
 	return fmt.Sprintf("%s = %s", a.LHS, a.RHS)
 }
 
+func (a Assignment) Operands() []Operand {
+	return append([]Operand{a.LHS}, a.RHS.Inputs()...)
+}
+
 type Expression interface {
 	Inputs() []Operand
 	fmt.Stringer

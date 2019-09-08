@@ -2,36 +2,29 @@ package op3
 
 import (
 	"reflect"
+	"sort"
 	"testing"
 
-	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
-// Corpus returns a suite of test programs.
-func Corpus() map[string]*ast.Program {
-	corpus := map[string]*ast.Program{}
-
-	// Include everything from the EFD.
-	for _, f := range efd.All {
-		p := f.Program
-		if p == nil {
-			continue
-		}
-		corpus[f.ID] = p
-	}
-
-	// Conditionals do not appear in the EFD. Include a simple program that uses them.
-	corpus["cond"] = &ast.Program{
+func TestVariables(t *testing.T) {
+	a := ast.Variable("a")
+	b := ast.Variable("b")
+	c := ast.Variable("c")
+	p := &ast.Program{
 		Assignments: []ast.Assignment{
-			{
-				LHS: ast.Variable("a"),
-				RHS: ast.Cond{X: ast.Variable("b"), C: ast.Variable("c")},
-			},
+			{LHS: a, RHS: ast.Add{X: b, Y: c}},
+			{LHS: b, RHS: ast.Add{X: a, Y: b}},
 		},
 	}
 
-	return corpus
+	expect := []ast.Variable{a, b, c}
+	got := Variables(p)
+	sort.Slice(got, func(i, j int) bool { return got[i] < got[j] })
+	if !reflect.DeepEqual(expect, got) {
+		t.FailNow()
+	}
 }
 
 func TestRenameVariables(t *testing.T) {

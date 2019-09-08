@@ -10,7 +10,7 @@ func Variables(p *ast.Program) []ast.Variable {
 	seen := map[ast.Variable]bool{}
 	vs := []ast.Variable{}
 	for _, a := range p.Assignments {
-		for _, v := range ast.Variables(a.RHS.Inputs()) {
+		for _, v := range ast.Variables(a.Operands()) {
 			if !seen[v] {
 				vs = append(vs, v)
 				seen[v] = true
