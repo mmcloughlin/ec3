@@ -88,14 +88,17 @@ func TestAliasCorrectEFDBinaryXYZ(t *testing.T) {
 			p := f.Program
 
 			// Check if the original formula works when aliased.
+			originalok := true
 			PN := NonAliasedEvaluator(t, p)
 			PL := LeftAliasedEvaluator(t, p)
 			if !CheckEqual(t, PN, PL) {
+				originalok = false
 				t.Logf("mismatch: left-aliased")
 			}
 
 			PR := RightAliasedEvaluator(t, p)
 			if !CheckEqual(t, PN, PR) {
+				originalok = false
 				t.Logf("mismatch: right-aliased")
 			}
 
@@ -117,6 +120,13 @@ func TestAliasCorrectEFDBinaryXYZ(t *testing.T) {
 			QR := RightAliasedEvaluator(t, q)
 			if !CheckEqual(t, PN, QR) {
 				t.Errorf("right-aliased fails")
+			}
+
+			// If the original was fine, we expect that no changes were made.
+			if originalok && !reflect.DeepEqual(p, q) {
+				t.Logf("original:\n%s", p)
+				t.Logf("got:\n%s", q)
+				t.Errorf("original was alias-safe; expect no changes")
 			}
 		})
 	}
