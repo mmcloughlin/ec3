@@ -20,28 +20,28 @@ func TestAliasSets(t *testing.T) {
 	}{
 		// Different types do not alias.
 		{
-			X:      Value("x", types.Typ[types.Uint16]),
-			Y:      Value("y", types.Typ[types.Int32]),
+			X:      Value("x", W, types.Typ[types.Uint16]),
+			Y:      Value("y", W, types.Typ[types.Int32]),
 			Expect: nil,
 		},
 		// Non-pointer types do not alias.
 		{
-			X:      Condition("c"),
-			Y:      Condition("d"),
+			X:      Condition("c", W),
+			Y:      Condition("d", W),
 			Expect: nil,
 		},
 		// Pointer types can alias.
 		{
-			X: Pointer("x", types.Typ[types.Uint8]),
-			Y: Pointer("y", types.Typ[types.Uint8]),
+			X: Pointer("x", W, types.Typ[types.Uint8]),
+			Y: Pointer("y", W, types.Typ[types.Uint8]),
 			Expect: [][]ast.Variable{
 				{"x", "y"},
 			},
 		},
 		// Two point types.
 		{
-			X: Point("p", jacobian, 1),
-			Y: Point("q", jacobian, 2),
+			X: Point("p", W, jacobian, 1),
+			Y: Point("q", W, jacobian, 2),
 			Expect: [][]ast.Variable{
 				{"X1", "X2"},
 				{"Y1", "Y2"},
