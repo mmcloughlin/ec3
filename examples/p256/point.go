@@ -4,6 +4,11 @@ package p256
 
 import "math/big"
 
+var (
+	bi, _ = new(big.Int).SetString("41058363725152142129326129780047268409114441015993725554835256314039467401291", 10)
+	b     = new(Elt).SetIntEncode(bi)
+)
+
 type Affine struct {
 	X Elt
 	Y Elt
@@ -28,6 +33,15 @@ func (p *Affine) Coordinates() (X, Y *big.Int) {
 	Decode(&dY, &p.Y)
 	X = dX.Int()
 	Y = dY.Int()
+	return
+}
+
+func (a *Affine) Jacobian() (p *Jacobian) {
+	p = new(Jacobian)
+	p.X = a.X
+	p.Y = a.Y
+	p.Z.SetInt64(1)
+	Encode(&p.Z, &p.Z)
 	return
 }
 
@@ -63,15 +77,6 @@ func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
 	return
 }
 
-func NewFromAffine(a *Affine) (p *Jacobian) {
-	p = new(Jacobian)
-	p.X = a.X
-	p.Y = a.Y
-	p.Z.SetInt64(1)
-	Encode(&p.Z, &p.Z)
-	return
-}
-
 func (p *Jacobian) Affine() (a *Affine) {
 	a = new(Affine)
 	var (
@@ -85,6 +90,15 @@ func (p *Jacobian) Affine() (a *Affine) {
 	Mul(&a.X, &p.X, &AA)
 	Mul(&t0, &AA, &A)
 	Mul(&a.Y, &p.Y, &t0)
+	return
+}
+
+func (p *Jacobian) Projective() (q *Projective) {
+	q = new(Projective)
+	Mul(&q.X, &p.X, &p.Z)
+	q.Y = p.Y
+	Sqr(&q.Z, &p.Z)
+	Mul(&q.Z, &q.Z, &p.Z)
 	return
 }
 
@@ -208,4 +222,107 @@ func (p *Jacobian) Double(q *Jacobian) {
 	Add(&t11, &t11, &t11)
 	Mul(&t12, &alpha, &t9)
 	Sub(&p.Y, &t12, &t11)
+}
+
+type Projective struct {
+	X Elt
+	Y Elt
+	Z Elt
+}
+
+func NewProjective(X, Y, Z *big.Int) *Projective {
+	p := new(Projective)
+	p.X.SetInt(X)
+	p.Y.SetInt(Y)
+	p.Z.SetInt(Z)
+	Encode(&p.X, &p.X)
+	Encode(&p.Y, &p.Y)
+	Encode(&p.Z, &p.Z)
+	return p
+}
+
+func (p *Projective) Set(q *Projective) {
+	*p = *q
+}
+
+func (p *Projective) Coordinates() (X, Y, Z *big.Int) {
+	var dX, dY, dZ Elt
+	Decode(&dX, &p.X)
+	Decode(&dY, &p.Y)
+	Decode(&dZ, &p.Z)
+	X = dX.Int()
+	Y = dY.Int()
+	Z = dZ.Int()
+	return
+}
+
+func (p *Projective) Affine() (a *Affine) {
+	a = new(Affine)
+	var A Elt
+	Inv(&A, &p.Z)
+	Mul(&a.X, &A, &p.X)
+	Mul(&a.Y, &A, &p.Y)
+	return
+}
+
+func (p *Projective) CNeg(c uint) {
+	var t Elt
+	Neg(&t, &p.Y)
+	CMov(&p.Y, &t, c)
+}
+
+func (p *Projective) CompleteAdd(q *Projective, r *Projective) {
+	var (
+		t0 Elt
+		t1 Elt
+		t2 Elt
+		t3 Elt
+		t4 Elt
+		t5 Elt
+	)
+
+	Mul(&t0, &q.X, &r.X)
+	Mul(&t1, &q.Y, &r.Y)
+	Mul(&t2, &q.Z, &r.Z)
+	Add(&t3, &q.X, &q.Y)
+	Add(&t4, &r.X, &r.Y)
+	Mul(&t3, &t3, &t4)
+	Add(&t4, &t0, &t1)
+	Sub(&t3, &t3, &t4)
+	Add(&t4, &q.Y, &q.Z)
+	Add(&t5, &r.Y, &r.Z)
+	Mul(&t4, &t4, &t5)
+	Add(&t5, &t1, &t2)
+	Sub(&t4, &t4, &t5)
+	Add(&t5, &q.X, &q.Z)
+	Add(&p.Y, &r.X, &r.Z)
+	Mul(&t5, &t5, &p.Y)
+	Add(&p.Y, &t0, &t2)
+	Sub(&p.Y, &t5, &p.Y)
+	Mul(&p.Z, b, &t2)
+	Sub(&t5, &p.Y, &p.Z)
+	Add(&p.Z, &t5, &t5)
+	Add(&t5, &t5, &p.Z)
+	Sub(&p.Z, &t1, &t5)
+	Add(&t5, &t1, &t5)
+	Mul(&p.Y, b, &p.Y)
+	Add(&t1, &t2, &t2)
+	Add(&t2, &t1, &t2)
+	Sub(&p.Y, &p.Y, &t2)
+	Sub(&p.Y, &p.Y, &t0)
+	Add(&t1, &p.Y, &p.Y)
+	Add(&p.Y, &t1, &p.Y)
+	Add(&t1, &t0, &t0)
+	Add(&t0, &t1, &t0)
+	Sub(&t0, &t0, &t2)
+	Mul(&t1, &t4, &p.Y)
+	Mul(&t2, &t0, &p.Y)
+	Mul(&p.Y, &t5, &p.Z)
+	Add(&p.Y, &p.Y, &t2)
+	Mul(&t5, &t3, &t5)
+	Sub(&t5, &t5, &t1)
+	Mul(&p.Z, &t4, &p.Z)
+	Mul(&t1, &t3, &t0)
+	Add(&p.Z, &p.Z, &t1)
+	p.X = t5
 }

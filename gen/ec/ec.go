@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
+	"math/big"
 	"reflect"
 	"sort"
 	"strings"
@@ -48,11 +49,38 @@ func (r Representation) Equals(other Representation) bool {
 	return reflect.DeepEqual(r, other)
 }
 
+type Constant struct {
+	VariableName string
+	ElementType  types.Type
+	Value        *big.Int
+}
+
+func (Constant) private() {}
+
+func (c Constant) Name() string { return c.VariableName }
+
+func (c Constant) Action() Action { return R }
+
+func (c Constant) Type() types.Type {
+	return types.NewPointer(c.ElementType)
+}
+
+func (c Constant) Variables() map[ast.Variable]Variable {
+	return map[ast.Variable]Variable{
+		ast.Variable(c.VariableName): pointer(c.VariableName),
+	}
+}
+
+func (c Constant) AliasSets(p Parameter) [][]ast.Variable {
+	return nil
+}
+
 type Function struct {
 	Name     string
 	Receiver Parameter
 	Params   []Parameter
 	Results  []Parameter
+	Globals  []Parameter
 	Formula  *ast.Program
 }
 
@@ -127,6 +155,7 @@ func (f Function) Parameters() []Parameter {
 	}
 	params = append(params, f.Params...)
 	params = append(params, f.Results...)
+	params = append(params, f.Globals...)
 	return params
 }
 
@@ -214,6 +243,8 @@ func (p *pointops) Generate() ([]byte, error) {
 	for _, component := range p.Components {
 		p.NL()
 		switch c := component.(type) {
+		case Constant:
+			p.constant(c)
 		case Representation:
 			p.representation(c)
 		case Function:
@@ -224,6 +255,13 @@ func (p *pointops) Generate() ([]byte, error) {
 	}
 
 	return p.Formatted()
+}
+
+func (p *pointops) constant(c Constant) {
+	p.Linef("var (")
+	p.Linef("%si, _ = new(big.Int).SetString(\"%s\", 10)", c.VariableName, c.Value)
+	p.Linef("%s = new(%s).SetIntEncode(%si)", c.VariableName, c.ElementType, c.VariableName)
+	p.Linef(")")
 }
 
 func (p *pointops) representation(r Representation) {
@@ -337,7 +375,7 @@ func (p *pointops) function(f Function) {
 		case ast.Variable:
 			p.Linef("%s = %s", variables[a.LHS].Value(), variables[e].Value())
 		case ast.Constant:
-			p.constant(variables[a.LHS], int(e))
+			p.setint64(variables[a.LHS], int64(e))
 		case ast.Pow:
 			if e.N != 2 {
 				p.SetError(errutil.AssertionFailure("power expected to be square"))
@@ -405,7 +443,7 @@ func (p *pointops) tuple(params []Parameter) {
 	p.Printf("(%s)", strings.Join(args, ", "))
 }
 
-func (p *pointops) constant(v Variable, x int) {
+func (p *pointops) setint64(v Variable, x int64) {
 	p.Linef("%s.SetInt64(%d)", v.Value(), x)
 	p.encode(v.Pointer())
 }

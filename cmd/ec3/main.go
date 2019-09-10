@@ -29,8 +29,6 @@ var (
 
 	inverse       = flags.String("inv", "", "addition chain for field inversion")
 	scalarinverse = flags.String("scalarinv", "", "addition chain for scalar field inversion")
-
-	repr = flags.String("repr", "", "curve representation")
 )
 
 func main() {
@@ -130,13 +128,13 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	}
 
 	// Point config.
-	r := efd.LookupRepresentation(*repr)
-	if r == nil {
-		log.Fatalf("unknown representation %q", *repr)
+	shape := efd.LookupShape("g1p/shortw")
+	if shape == nil {
+		log.Fatalf("unknown shape")
 	}
 
 	affinecoords := []string{}
-	for _, v := range r.Shape.Coordinates {
+	for _, v := range shape.Coordinates {
 		affinecoords = append(affinecoords, strings.ToUpper(v))
 	}
 
@@ -146,18 +144,32 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		Coordinates: affinecoords,
 	}
 
+	reprjac := efd.LookupRepresentation("g1p/shortw/jacobian-3")
+	if reprjac == nil {
+		log.Fatalf("unknown representation")
+	}
+
 	jacobian := ec.Representation{
 		Name:        "Jacobian",
 		ElementType: fieldcfg.Type(),
-		Coordinates: r.Variables,
+		Coordinates: reprjac.Variables,
+	}
+
+	reprproj := efd.LookupRepresentation("g1p/shortw/projective-3")
+	if reprjac == nil {
+		log.Fatalf("unknown representation")
+	}
+
+	projective := ec.Representation{
+		Name:        "Projective",
+		ElementType: fieldcfg.Type(),
+		Coordinates: reprproj.Variables,
 	}
 
 	// TODO(mbm): automatically generate conversion formulae
-	fromaffine := ec.Function{
-		Name: "NewFromAffine",
-		Params: []ec.Parameter{
-			ec.Point("a", ec.R, affine, 1),
-		},
+	atoj := ec.Function{
+		Name:     "Jacobian",
+		Receiver: ec.Point("a", ec.R, affine, 1),
 		Results: []ec.Parameter{
 			ec.Point("p", ec.W, jacobian, 3),
 		},
@@ -175,13 +187,43 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatalf("unknown formula")
 	}
 
-	toaffine := ec.Function{
+	jtoa := ec.Function{
 		Name:     "Affine",
 		Receiver: ec.Point("p", ec.R, jacobian, 1),
 		Results: []ec.Parameter{
 			ec.Point("a", ec.W, affine, 3),
 		},
 		Formula: scalef.Program,
+	}
+
+	// TODO(mbm): improve handling of conversion formulae
+	jtop := ec.Function{
+		Name:     "Projective",
+		Receiver: ec.Point("p", ec.R, jacobian, 1),
+		Results: []ec.Parameter{
+			ec.Point("q", ec.W, projective, 3),
+		},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "X3", RHS: ast.Mul{X: ast.Variable("X1"), Y: ast.Variable("Z1")}},
+				{LHS: "Y3", RHS: ast.Variable("Y1")},
+				{LHS: "Z3", RHS: ast.Pow{X: ast.Variable("Z1"), N: 3}},
+			},
+		},
+	}
+
+	pscalef := efd.LookupFormula("g1p/shortw/projective-3/scaling/z")
+	if pscalef == nil {
+		log.Fatalf("unknown formula")
+	}
+
+	ptoa := ec.Function{
+		Name:     "Affine",
+		Receiver: ec.Point("p", ec.R, projective, 1),
+		Results: []ec.Parameter{
+			ec.Point("a", ec.W, affine, 3),
+		},
+		Formula: pscalef.Program,
 	}
 
 	// TODO(mbm): automatically generate cmov formulae
@@ -202,7 +244,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	}
 
 	// TODO(mbm): automatically generate negation formulae
-	cneg := ec.Function{
+	jcneg := ec.Function{
 		Name:     "CNeg",
 		Receiver: ec.Point("p", ec.RW, jacobian, 1, 3),
 		Params: []ec.Parameter{
@@ -245,18 +287,67 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		Formula: dblf.Program,
 	}
 
+	b := ec.Constant{
+		VariableName: "b",
+		ElementType:  fieldcfg.Type(),
+		Value:        params.B,
+	}
+
+	pcneg := ec.Function{
+		Name:     "CNeg",
+		Receiver: ec.Point("p", ec.RW, projective, 1, 3),
+		Params: []ec.Parameter{
+			ec.Condition("c", ec.R),
+		},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "t", RHS: ast.Neg{X: ast.Variable("Y1")}},
+				{LHS: "Y3", RHS: ast.Cond{X: ast.Variable("t"), C: ast.Variable("c")}},
+			},
+		},
+	}
+
+	compaddf := efd.LookupFormula("g1p/shortw/projective-3/addition/add-2015-rcb")
+	if compaddf == nil {
+		log.Fatal("unknown formula")
+	}
+
+	compadd := ec.Function{
+		Name:     "CompleteAdd",
+		Receiver: ec.Point("p", ec.W, projective, 3),
+		Params: []ec.Parameter{
+			ec.Point("q", ec.R, projective, 1),
+			ec.Point("r", ec.R, projective, 2),
+		},
+		Globals: []ec.Parameter{b},
+		Formula: compaddf.Program,
+	}
+
 	pointcfg := ec.Config{
 		PackageName: "p256",
 		Field:       fieldcfg,
 		Components: []ec.Component{
+			// Constants.
+			b,
+
+			// Affine representation.
 			affine,
+			atoj,
+
+			// Jacobian representation.
 			jacobian,
-			fromaffine,
-			toaffine,
+			jtoa,
+			jtop,
 			cmov,
-			cneg,
+			jcneg,
 			add,
 			dbl,
+
+			// Projective representation.
+			projective,
+			ptoa,
+			pcneg,
+			compadd,
 		},
 	}
 

@@ -46,8 +46,8 @@ func init() {
 func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	a2 := NewAffine(x2, y2)
-	j1 := NewFromAffine(a1)
-	j2 := NewFromAffine(a2)
+	j1 := a1.Jacobian()
+	j2 := a2.Jacobian()
 	s := new(Jacobian)
 	s.Add(j1, j2)
 	return s.Affine().Coordinates()
@@ -56,7 +56,7 @@ func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 // Double returns 2*(x1,y1)
 func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
-	j1 := NewFromAffine(a1)
+	j1 := a1.Jacobian()
 	d := new(Jacobian)
 	d.Double(j1)
 	return d.Affine().Coordinates()
@@ -71,7 +71,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 
 	// Convert point from affine.
 	a := NewAffine(x1, y1)
-	p := NewFromAffine(a)
+	p := a.Jacobian()
 
 	// Step 1: scalar validation.
 
@@ -115,17 +115,16 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	}
 
 	// Step 19: Q = Q ⊕ s_0 * P[(|k_0| − 1)/2]
-
-	// TODO(mbm): must be a complete addition formula
-
 	tbl.Lookup(&r, digits[0])
-	q.Add(&q, &r)
+	rp := r.Projective()
+	qp := q.Projective()
+	qp.CompleteAdd(qp, rp)
 
 	// Step 20: if odd = 0 then Q = −Q
-	q.CNeg(even)
+	qp.CNeg(even)
 
 	// Step 21: Convert Q to affine coordinates (x, y).
-	return q.Affine().Coordinates()
+	return qp.Affine().Coordinates()
 }
 
 // tablesize is the size of the lookup table used by ScalarMult.

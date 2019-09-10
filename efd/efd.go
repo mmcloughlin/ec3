@@ -49,6 +49,15 @@ func WithProgram(f *Formula) bool {
 	return f.Program != nil
 }
 
+func LookupShape(id string) *Shape {
+	for _, s := range shapes {
+		if s.ID == id {
+			return s
+		}
+	}
+	return nil
+}
+
 func LookupRepresentation(id string) *Representation {
 	for _, r := range representations {
 		if r.ID == id {

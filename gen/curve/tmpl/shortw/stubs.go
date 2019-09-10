@@ -39,6 +39,12 @@ func (p *Affine) Coordinates() (X, Y *big.Int) {
 	return new(big.Int).Set(&p.X), new(big.Int).Set(&p.Y)
 }
 
+func (a *Affine) Jacobian() *Jacobian {
+	j := &Jacobian{}
+	j.a.Set(a)
+	return j
+}
+
 // Jacobian is a stub jacobian point type.
 type Jacobian struct {
 	a Affine
@@ -46,12 +52,6 @@ type Jacobian struct {
 
 func (p *Jacobian) Set(q *Jacobian) {
 	p.a.Set(&q.a)
-}
-
-func NewFromAffine(a *Affine) *Jacobian {
-	j := &Jacobian{}
-	j.a.Set(a)
-	return j
 }
 
 func (p *Jacobian) Affine() *Affine {
@@ -84,6 +84,39 @@ func (p *Jacobian) Add(q, r *Jacobian) {
 
 func (p *Jacobian) Double(q *Jacobian) {
 	x, y := curvename.Params().Double(&q.a.X, &q.a.Y)
+	p.a.X.Set(x)
+	p.a.Y.Set(y)
+}
+
+func (j *Jacobian) Projective() *Projective {
+	p := &Projective{}
+	p.a.Set(&j.a)
+	return p
+}
+
+// Projective is a stub projective point type.
+type Projective struct {
+	a Affine
+}
+
+func (p *Projective) Affine() *Affine {
+	return &p.a
+}
+
+func (p *Projective) CNeg(c uint) {
+	if c != 0 {
+		p.Neg()
+	}
+}
+
+func (p *Projective) Neg() {
+	y := new(big.Int).Neg(&p.a.Y)
+	y.Mod(y, curvename.P)
+	p.a.Y.Set(y)
+}
+
+func (p *Projective) CompleteAdd(q, r *Projective) {
+	x, y := curvename.Params().Add(&q.a.X, &q.a.Y, &r.a.X, &r.a.Y)
 	p.a.X.Set(x)
 	p.a.Y.Set(y)
 }

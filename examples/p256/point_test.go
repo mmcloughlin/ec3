@@ -37,8 +37,21 @@ func TestAffineJacobianRoundTrip(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		x, y := RandPoint(t)
 		a := NewAffine(x, y)
-		j := NewFromAffine(a)
+		j := a.Jacobian()
 		a2 := j.Affine()
+		gx, gy := a2.Coordinates()
+		EqualInt(t, "x", x, gx)
+		EqualInt(t, "y", y, gy)
+	}
+}
+
+func TestAffineJacobianProjectiveRoundTrip(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		x, y := RandPoint(t)
+		a := NewAffine(x, y)
+		j := a.Jacobian()
+		p := j.Projective()
+		a2 := p.Affine()
 		gx, gy := a2.Coordinates()
 		EqualInt(t, "x", x, gx)
 		EqualInt(t, "y", y, gy)
@@ -71,7 +84,7 @@ func TestDoublePoint(t *testing.T) {
 }
 
 func TestScalarMult(t *testing.T) {
-	for trial := 0; trial < NumTrials(); trial++ {
+	for trial := 0; trial < 128; trial++ {
 		k := RandScalar(t)
 		x1, y1 := RandPoint(t)
 
