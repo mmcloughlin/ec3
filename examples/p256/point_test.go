@@ -84,12 +84,6 @@ func TestDoublePoint(t *testing.T) {
 }
 
 func TestScalarMult(t *testing.T) {
-	t.Logf(" b = %x", *b)
-
-	b2 := new(Elt).SetInt(ref.Params().B)
-	Encode(b2, b2)
-	t.Logf("b2 = %x", *b2)
-
 	for trial := 0; trial < 128; trial++ {
 		k := RandScalar(t)
 		x1, y1 := RandPoint(t)
