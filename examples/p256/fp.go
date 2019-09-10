@@ -78,6 +78,13 @@ func Encode(z *Elt, x *Elt) {
 	Mul(z, x, r2)
 }
 
+// SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.
+func (x *Elt) SetIntEncode(y *big.Int) *Elt {
+	x.SetInt(y)
+	Encode(x, x)
+	return x
+}
+
 // Neg computes z = -x (mod p).
 func Neg(z *Elt, x *Elt) {
 	Sub(z, &prime, x)

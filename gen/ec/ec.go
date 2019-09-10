@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"go/token"
 	"go/types"
+	"reflect"
+	"sort"
 	"strings"
 
 	"golang.org/x/xerrors"
@@ -12,6 +14,7 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/gen/fp"
+	"github.com/mmcloughlin/ec3/internal/container/disjointset"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/gocode"
 )
@@ -28,6 +31,8 @@ type Representation struct {
 	Coordinates []string
 }
 
+func (Representation) private() {}
+
 func (r Representation) Type() types.Type {
 	fields := []*types.Var{}
 	for _, coord := range r.Coordinates {
@@ -39,85 +44,8 @@ func (r Representation) Type() types.Type {
 	return types.NewNamed(name, s, nil)
 }
 
-func (Representation) private() {}
-
-type Variable interface {
-	Pointer() string
-	Value() string
-}
-
-type value string
-
-func (v value) Pointer() string { return "&" + string(v) }
-func (v value) Value() string   { return string(v) }
-
-type pointer string
-
-func (p pointer) Pointer() string { return string(p) }
-func (p pointer) Value() string   { return "*" + string(p) }
-
-type Parameter interface {
-	Name() string
-	Type() types.Type
-	Variables() map[ast.Variable]Variable
-}
-
-// basic is a parameter representing a single variable.
-type basic struct {
-	name string
-	typ  types.Type
-	v    Variable
-}
-
-// Condition returns a condition variable parameter.
-func Condition(name string) Parameter {
-	return basic{
-		name: name,
-		typ:  types.Typ[types.Uint],
-		v:    value(name),
-	}
-}
-
-func (b basic) Name() string { return b.name }
-
-func (b basic) Type() types.Type { return b.typ }
-
-func (b basic) Variables() map[ast.Variable]Variable {
-	return map[ast.Variable]Variable{
-		ast.Variable(b.name): b.v,
-	}
-}
-
-type point struct {
-	name     string
-	repr     Representation
-	indicies []int
-}
-
-func Point(name string, r Representation, indicies ...int) Parameter {
-	return point{
-		name:     name,
-		repr:     r,
-		indicies: indicies,
-	}
-}
-
-func (p point) Name() string { return p.name }
-
-func (p point) Type() types.Type {
-	return types.NewPointer(p.repr.Type())
-}
-
-func (p point) Variables() map[ast.Variable]Variable {
-	vars := map[ast.Variable]Variable{}
-	for _, idx := range p.indicies {
-		for _, coord := range p.repr.Coordinates {
-			name := ast.Variable(fmt.Sprintf("%s%d", coord, idx))
-			code := fmt.Sprintf("%s.%s", p.Name(), coord)
-			vars[name] = value(code)
-		}
-	}
-	return vars
+func (r Representation) Equals(other Representation) bool {
+	return reflect.DeepEqual(r, other)
 }
 
 type Function struct {
@@ -132,18 +60,63 @@ func (Function) private() {}
 
 // Program returns the program to be implemented by this function.
 func (f Function) Program() (*ast.Program, error) {
-	// Restrict to variables used in this function.
+	// Restrict to variables output by this function.
 	outputs := []ast.Variable{}
-	for v := range f.Variables() {
-		outputs = append(outputs, v)
+	for _, out := range f.Outputs() {
+		for v := range out.Variables() {
+			outputs = append(outputs, v)
+		}
 	}
 
+	// Reduce formula given required output variables.
 	p, err := op3.Pare(f.Formula, outputs)
 	if err != nil {
 		return nil, err
 	}
 
-	return op3.Lower(p)
+	// Ensure the program is robust to potential alias sets.
+	aliases := f.AliasSets()
+	q := op3.AliasCorrect(p, aliases, outputs, op3.Temporaries())
+
+	// Finally, reduce the program to primitives.
+	return op3.Lower(q)
+}
+
+// AliasSets returns groups of variable names with a may-alias relationship,
+// meaning there is a possibility they are pointers to the same memory
+// locations.
+func (f Function) AliasSets() [][]ast.Variable {
+	// Build sets of aliases using a disjoint-set structure.
+	d := disjointset.New()
+	params := f.Parameters()
+	n := len(params)
+	for i := 0; i < n; i++ {
+		for j := i + 1; j < n; j++ {
+			sets := params[i].AliasSets(params[j])
+			for _, set := range sets {
+				for _, v := range set {
+					d.Union(string(set[0]), string(v))
+				}
+			}
+		}
+	}
+
+	// Recover sets from the disjoint-set structure.
+	sets := map[string][]ast.Variable{}
+	for name := range f.Variables() {
+		s := d.Find(string(name))
+		sets[s] = append(sets[s], name)
+	}
+
+	// Transform into alias sets.
+	aliases := [][]ast.Variable{}
+	for _, set := range sets {
+		if len(set) > 1 {
+			aliases = append(aliases, set)
+		}
+	}
+
+	return aliases
 }
 
 // Parameters returns all parameters.
@@ -155,6 +128,27 @@ func (f Function) Parameters() []Parameter {
 	params = append(params, f.Params...)
 	params = append(params, f.Results...)
 	return params
+}
+
+// ParametersWithAction returns all parameters supporting action a.
+func (f Function) ParametersWithAction(a Action) []Parameter {
+	params := []Parameter{}
+	for _, param := range f.Parameters() {
+		if param.Action().Contains(a) {
+			params = append(params, param)
+		}
+	}
+	return params
+}
+
+// Inputs returns all read parameters.
+func (f Function) Inputs() []Parameter {
+	return f.ParametersWithAction(R)
+}
+
+// Outputs returns all write parameters.
+func (f Function) Outputs() []Parameter {
+	return f.ParametersWithAction(W)
 }
 
 // Symbols returns the set of names defined by the function parameters.
@@ -333,6 +327,8 @@ func (p *pointops) function(f Function) {
 		variables[v] = value(name)
 	}
 
+	// Output sorted for reproducability.
+	sort.Strings(tmps)
 	p.declare(tmps)
 
 	// Generate program.

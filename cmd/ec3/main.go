@@ -156,10 +156,10 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	fromaffine := ec.Function{
 		Name: "NewFromAffine",
 		Params: []ec.Parameter{
-			ec.Point("a", affine, 1),
+			ec.Point("a", ec.R, affine, 1),
 		},
 		Results: []ec.Parameter{
-			ec.Point("p", jacobian, 3),
+			ec.Point("p", ec.W, jacobian, 3),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -177,9 +177,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	toaffine := ec.Function{
 		Name:     "Affine",
-		Receiver: ec.Point("p", jacobian, 1),
+		Receiver: ec.Point("p", ec.R, jacobian, 1),
 		Results: []ec.Parameter{
-			ec.Point("a", affine, 3),
+			ec.Point("a", ec.W, affine, 3),
 		},
 		Formula: scalef.Program,
 	}
@@ -187,10 +187,10 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	// TODO(mbm): automatically generate cmov formulae
 	cmov := ec.Function{
 		Name:     "CMov",
-		Receiver: ec.Point("p", jacobian, 3),
+		Receiver: ec.Point("p", ec.W, jacobian, 3),
 		Params: []ec.Parameter{
-			ec.Point("q", jacobian, 1),
-			ec.Condition("c"),
+			ec.Point("q", ec.R, jacobian, 1),
+			ec.Condition("c", ec.R),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -204,9 +204,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	// TODO(mbm): automatically generate negation formulae
 	cneg := ec.Function{
 		Name:     "CNeg",
-		Receiver: ec.Point("p", jacobian, 1, 3),
+		Receiver: ec.Point("p", ec.RW, jacobian, 1, 3),
 		Params: []ec.Parameter{
-			ec.Condition("c"),
+			ec.Condition("c", ec.R),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -223,10 +223,10 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	add := ec.Function{
 		Name:     "Add",
-		Receiver: ec.Point("p", jacobian, 3),
+		Receiver: ec.Point("p", ec.W, jacobian, 3),
 		Params: []ec.Parameter{
-			ec.Point("q", jacobian, 1),
-			ec.Point("r", jacobian, 2),
+			ec.Point("q", ec.R, jacobian, 1),
+			ec.Point("r", ec.R, jacobian, 2),
 		},
 		Formula: addf.Program,
 	}
@@ -238,9 +238,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	dbl := ec.Function{
 		Name:     "Double",
-		Receiver: ec.Point("p", jacobian, 3),
+		Receiver: ec.Point("p", ec.W, jacobian, 3),
 		Params: []ec.Parameter{
-			ec.Point("q", jacobian, 1),
+			ec.Point("q", ec.R, jacobian, 1),
 		},
 		Formula: dblf.Program,
 	}

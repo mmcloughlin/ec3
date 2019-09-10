@@ -78,6 +78,13 @@ func scalarencode(z *scalar, x *scalar) {
 	scalarmul(z, x, scalarr2)
 }
 
+// SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.
+func (x *scalar) SetIntEncode(y *big.Int) *scalar {
+	x.SetInt(y)
+	scalarencode(x, x)
+	return x
+}
+
 // scalarneg computes z = -x (mod p).
 func scalarneg(z *scalar, x *scalar) {
 	scalarsub(z, &scalarprime, x)

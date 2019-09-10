@@ -102,32 +102,32 @@ func (p *Jacobian) CNeg(c uint) {
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 	var (
-		Z2Z2 Elt
+		H    Elt
+		I    Elt
+		J    Elt
+		S1   Elt
+		S2   Elt
+		U1   Elt
+		U2   Elt
+		V    Elt
 		Z1Z1 Elt
+		Z2Z2 Elt
+		r_   Elt
 		t0   Elt
 		t1   Elt
-		U2   Elt
-		U1   Elt
-		H    Elt
-		t2   Elt
-		I    Elt
-		S2   Elt
-		S1   Elt
-		t3   Elt
-		r_   Elt
-		V    Elt
-		t4   Elt
-		J    Elt
-		t6   Elt
-		t5   Elt
-		t8   Elt
-		t7   Elt
 		t10  Elt
-		t9   Elt
 		t11  Elt
 		t12  Elt
 		t13  Elt
 		t14  Elt
+		t2   Elt
+		t3   Elt
+		t4   Elt
+		t5   Elt
+		t6   Elt
+		t7   Elt
+		t8   Elt
+		t9   Elt
 	)
 
 	Sqr(&Z1Z1, &q.Z)
@@ -163,23 +163,23 @@ func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
 
 func (p *Jacobian) Double(q *Jacobian) {
 	var (
-		gamma Elt
-		delta Elt
-		t0    Elt
-		t1    Elt
-		t2    Elt
 		alpha Elt
 		beta  Elt
-		t4    Elt
+		delta Elt
+		gamma Elt
+		t0    Elt
+		t1    Elt
+		t10   Elt
+		t11   Elt
+		t12   Elt
+		t2    Elt
 		t3    Elt
+		t4    Elt
 		t5    Elt
 		t6    Elt
 		t7    Elt
 		t8    Elt
-		t10   Elt
-		t11   Elt
 		t9    Elt
-		t12   Elt
 	)
 
 	Sqr(&delta, &q.Z)
