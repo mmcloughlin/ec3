@@ -6,7 +6,7 @@ import "math/big"
 
 var (
 	bi, _ = new(big.Int).SetString("41058363725152142129326129780047268409114441015993725554835256314039467401291", 10)
-	b     = new(Elt).SetIntEncode(bi)
+	b     = new(Elt).SetInt(bi)
 )
 
 type Affine struct {
@@ -18,8 +18,6 @@ func NewAffine(X, Y *big.Int) *Affine {
 	p := new(Affine)
 	p.X.SetInt(X)
 	p.Y.SetInt(Y)
-	Encode(&p.X, &p.X)
-	Encode(&p.Y, &p.Y)
 	return p
 }
 
@@ -28,11 +26,8 @@ func (p *Affine) Set(q *Affine) {
 }
 
 func (p *Affine) Coordinates() (X, Y *big.Int) {
-	var dX, dY Elt
-	Decode(&dX, &p.X)
-	Decode(&dY, &p.Y)
-	X = dX.Int()
-	Y = dY.Int()
+	X = p.X.Int()
+	Y = p.Y.Int()
 	return
 }
 
@@ -41,7 +36,6 @@ func (a *Affine) Jacobian() (p *Jacobian) {
 	p.X = a.X
 	p.Y = a.Y
 	p.Z.SetInt64(1)
-	Encode(&p.Z, &p.Z)
 	return
 }
 
@@ -56,9 +50,6 @@ func NewJacobian(X, Y, Z *big.Int) *Jacobian {
 	p.X.SetInt(X)
 	p.Y.SetInt(Y)
 	p.Z.SetInt(Z)
-	Encode(&p.X, &p.X)
-	Encode(&p.Y, &p.Y)
-	Encode(&p.Z, &p.Z)
 	return p
 }
 
@@ -67,13 +58,9 @@ func (p *Jacobian) Set(q *Jacobian) {
 }
 
 func (p *Jacobian) Coordinates() (X, Y, Z *big.Int) {
-	var dX, dY, dZ Elt
-	Decode(&dX, &p.X)
-	Decode(&dY, &p.Y)
-	Decode(&dZ, &p.Z)
-	X = dX.Int()
-	Y = dY.Int()
-	Z = dZ.Int()
+	X = p.X.Int()
+	Y = p.Y.Int()
+	Z = p.Z.Int()
 	return
 }
 
@@ -235,9 +222,6 @@ func NewProjective(X, Y, Z *big.Int) *Projective {
 	p.X.SetInt(X)
 	p.Y.SetInt(Y)
 	p.Z.SetInt(Z)
-	Encode(&p.X, &p.X)
-	Encode(&p.Y, &p.Y)
-	Encode(&p.Z, &p.Z)
 	return p
 }
 
@@ -246,13 +230,9 @@ func (p *Projective) Set(q *Projective) {
 }
 
 func (p *Projective) Coordinates() (X, Y, Z *big.Int) {
-	var dX, dY, dZ Elt
-	Decode(&dX, &p.X)
-	Decode(&dY, &p.Y)
-	Decode(&dZ, &p.Z)
-	X = dX.Int()
-	Y = dY.Int()
-	Z = dZ.Int()
+	X = p.X.Int()
+	Y = p.Y.Int()
+	Z = p.Z.Int()
 	return
 }
 

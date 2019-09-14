@@ -69,7 +69,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// TODO(mbm): exit if scalar is 0.
 
 	var K scalar
-	K.SetBytes(k)
+	K.SetBytesRaw(k)
 
 	// Step 5: odd = k mod 2
 	// Step 6: if odd = 0 then k = r − k

@@ -1,6 +1,7 @@
 package fp
 
 import (
+	"math/big"
 	"strings"
 
 	"github.com/mmcloughlin/ec3/addchain/acc"
@@ -48,20 +49,20 @@ func (a *api) Generate() ([]byte, error) {
 	a.Linef("var %s, _ = new(big.Int).SetString(\"%d\", 10)", a.Name("p"), p)
 
 	a.Commentf("%s is the prime field modulus as a field element.", a.Name("prime"))
-	a.Printf("var %s = %s", a.Name("prime"), a.Type())
-	a.ByteArrayValue(bigint.BytesLittleEndian(p))
+	a.DefineVar("prime", p)
 
 	// Conversion to/from integer types.
-	a.SetInt64()
-	a.SetInt()
-	a.SetBytes()
-	a.Int()
+	for _, raw := range []bool{false, true} {
+		a.SetInt64(raw)
+		a.SetInt(raw)
+		a.SetBytes(raw)
+		a.Int(raw)
+	}
 
 	// Encoding and decoding for montgomery fields.
 	if a.Montgomery() {
 		a.Decode()
 		a.Encode()
-		a.SetIntEncode()
 	}
 
 	// Implement field operations.
@@ -81,30 +82,52 @@ func (a *api) Call(name string, args ...interface{}) {
 	a.Linef(format, args...)
 }
 
+// DefineVar defines a field element variable set to the specific integer value.
+func (a *api) DefineVar(name string, x *big.Int) {
+	a.Printf("var %s = %s", a.Name(name), a.Type())
+	a.ByteArrayValue(bigint.BytesLittleEndian(x))
+}
+
+func rawname(name string, raw bool) string {
+	if raw {
+		name += "Raw"
+	}
+	return name
+}
+
+func (a *api) rawcomment(raw bool) {
+	if raw {
+		a.Comment("This raw variant sets the value directly, bypassing any encoding/decoding steps.")
+	}
+}
+
 // SetInt64 generates a function to construct a field element from an int64.
-func (a *api) SetInt64() {
-	a.Comment("SetInt64 constructs a field element from an integer.")
-	a.Printf("func (x %s) SetInt64(y int64) %s", a.PointerType(), a.PointerType())
+func (a *api) SetInt64(raw bool) {
+	a.Commentf("%s constructs a field element from an integer.", rawname("SetInt64", raw))
+	a.rawcomment(raw)
+	a.Printf("func (x %s) %s(y int64) %s", a.PointerType(), rawname("SetInt64", raw), a.PointerType())
 	a.EnterBlock()
-	a.Linef("x.SetInt(big.NewInt(y))")
+	a.Linef("x.%s(big.NewInt(y))", rawname("SetInt", raw))
 	a.Linef("return x")
 	a.LeaveBlock()
 }
 
 // SetInt64 generates a function to construct a field element from an int64.
-func (a *api) SetBytes() {
-	a.Comment("SetBytes constructs a field element from bytes in big-endian order.")
-	a.Printf("func (x %s) SetBytes(b []byte) %s", a.PointerType(), a.PointerType())
+func (a *api) SetBytes(raw bool) {
+	a.Commentf("%s constructs a field element from bytes in big-endian order.", rawname("SetBytes", raw))
+	a.rawcomment(raw)
+	a.Printf("func (x %s) %s(b []byte) %s", a.PointerType(), rawname("SetBytes", raw), a.PointerType())
 	a.EnterBlock()
-	a.Linef("x.SetInt(new(big.Int).SetBytes(b))")
+	a.Linef("x.%s(new(big.Int).SetBytes(b))", rawname("SetInt", raw))
 	a.Linef("return x")
 	a.LeaveBlock()
 }
 
 // SetInt generates a function to construct a field element from a big integer.
-func (a *api) SetInt() {
-	a.Comment("SetInt constructs a field element from a big integer.")
-	a.Printf("func (x %s) SetInt(y *big.Int) %s", a.PointerType(), a.PointerType())
+func (a *api) SetInt(raw bool) {
+	a.Commentf("%s constructs a field element from a big integer.", rawname("SetInt", raw))
+	a.rawcomment(raw)
+	a.Printf("func (x %s) %s(y *big.Int) %s", a.PointerType(), rawname("SetInt", raw), a.PointerType())
 	a.EnterBlock()
 
 	a.Comment("Reduce if outside range.")
@@ -122,24 +145,37 @@ func (a *api) SetInt() {
 	a.Linef("x[i] = 0")
 	a.Linef("}")
 
+	if !raw && a.Montgomery() {
+		a.Comment("Encode into the Montgomery domain.")
+		a.Call("Encode", "x", "x")
+	}
+
 	a.Linef("return x")
 	a.LeaveBlock()
 }
 
 // Int generates a function to convert to a big integer.
-func (a *api) Int() {
-	a.Comment("Int converts to a big integer.")
-	a.Printf("func (x %s) Int() *big.Int", a.PointerType())
+func (a *api) Int(raw bool) {
+	a.Commentf("%s converts to a big integer.", rawname("Int", raw))
+	a.rawcomment(raw)
+	a.Printf("func (x %s) %s() *big.Int", a.PointerType(), rawname("Int", raw))
 	a.EnterBlock()
 
+	if !raw && a.Montgomery() {
+		a.Linef("var z %s", a.Type())
+		a.Comment("Decode from the Montgomery domain.")
+		a.Call("Decode", "&z", "x")
+	} else {
+		a.Linef("z := *x")
+	}
+
 	a.Comment("Endianness swap.")
-	a.Linef("var be %s", a.Type())
-	a.Linef("for i := 0; i < %s; i++ {", a.Size())
-	a.Linef("be[%s-1-i] = x[i]", a.Size())
+	a.Linef("for l, r := 0, %s-1; l < r; l, r = l+1, r-1 {", a.Size())
+	a.Linef("z[l], z[r] = z[r], z[l]")
 	a.Linef("}")
 
 	a.Comment("Build big.Int.")
-	a.Linef("return new(big.Int).SetBytes(be[:])")
+	a.Linef("return new(big.Int).SetBytes(z[:])")
 
 	a.LeaveBlock()
 }
@@ -148,11 +184,11 @@ func (a *api) Int() {
 func (a *api) Decode() {
 	one := a.Name("one")
 	a.Commentf("%s is the field element 1.", one)
-	a.Linef("var %s = new(%s).SetInt64(1)", one, a.Type())
+	a.DefineVar("one", bigint.One())
 
 	a.Commentf("%s decodes from the Montgomery domain.", a.Name("Decode"))
 	a.Function(a.Name("Decode"), a.Signature("z", "x"))
-	a.Call("Mul", "z", "x", one)
+	a.Call("Mul", "z", "x", "&"+one)
 	a.LeaveBlock()
 }
 
@@ -160,25 +196,14 @@ func (a *api) Decode() {
 func (a *api) Encode() {
 	// Define the R^2 constant.
 	r2 := a.Name("r2")
-	a.Commentf("%s is the multiplier R^2 for encoding into the Montgomery domain.", r2)
-	n := a.Field.ElementBits()
-	a.Linef("var %s = new(%s).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*%d))", r2, a.Type(), n)
+	a.Commentf("%s is the multiplier R^2 for encoding into the Montgomery domain.", "r2")
+	R2 := bigint.Pow2(2 * uint(a.Field.ElementBits()))
+	R2.Mod(R2, a.Field.Prime())
+	a.DefineVar("r2", R2)
 
 	a.Commentf("%s encodes into the Montgomery domain.", a.Name("Encode"))
 	a.Function(a.Name("Encode"), a.Signature("z", "x"))
-	a.Call("Mul", "z", "x", r2)
-	a.LeaveBlock()
-}
-
-// SetIntEncode generates a convenience constructor that builds a field element
-// from a big integer and also encodes it into the Montgomery domain.
-func (a *api) SetIntEncode() {
-	a.Comment("SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.")
-	a.Printf("func (x %s) SetIntEncode(y *big.Int) %s", a.PointerType(), a.PointerType())
-	a.EnterBlock()
-	a.Linef("x.SetInt(y)")
-	a.Linef("%s(x, x)", a.Name("Encode"))
-	a.Linef("return x")
+	a.Call("Mul", "z", "x", "&"+r2)
 	a.LeaveBlock()
 }
 

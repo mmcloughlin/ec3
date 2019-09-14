@@ -260,7 +260,7 @@ func (p *pointops) Generate() ([]byte, error) {
 func (p *pointops) constant(c Constant) {
 	p.Linef("var (")
 	p.Linef("%si, _ = new(big.Int).SetString(\"%s\", 10)", c.VariableName, c.Value)
-	p.Linef("%s = new(%s).SetIntEncode(%si)", c.VariableName, c.ElementType, c.VariableName)
+	p.Linef("%s = new(%s).SetInt(%si)", c.VariableName, c.ElementType, c.VariableName)
 	p.Linef(")")
 }
 
@@ -280,9 +280,6 @@ func (p *pointops) representation(r Representation) {
 	for _, v := range r.Coordinates {
 		p.Linef("p.%s.SetInt(%s)", v, v)
 	}
-	for _, v := range r.Coordinates {
-		p.encode("&p." + v)
-	}
 	p.Linef("return p")
 	p.LeaveBlock()
 
@@ -297,16 +294,8 @@ func (p *pointops) representation(r Representation) {
 	p.NL()
 	p.Printf("func (p *%s) Coordinates() (%s *big.Int)", r.Name, strings.Join(r.Coordinates, ", "))
 	p.EnterBlock()
-	prefix := "p."
-	if p.Field.Montgomery() {
-		prefix = "d"
-		p.Linef("var d%s %s", strings.Join(r.Coordinates, ", d"), p.Field.Type())
-		for _, v := range r.Coordinates {
-			p.Linef("Decode(&d%s, &p.%s)", v, v)
-		}
-	}
 	for _, v := range r.Coordinates {
-		p.Linef("%s = %s%s.Int()", v, prefix, v)
+		p.Linef("%s = p.%s.Int()", v, v)
 	}
 	p.Linef("return")
 	p.LeaveBlock()
@@ -445,11 +434,4 @@ func (p *pointops) tuple(params []Parameter) {
 
 func (p *pointops) setint64(v Variable, x int64) {
 	p.Linef("%s.SetInt64(%d)", v.Value(), x)
-	p.encode(v.Pointer())
-}
-
-func (p *pointops) encode(v string) {
-	if p.Field.Montgomery() {
-		p.Linef("Encode(%s, %s)", v, v)
-	}
 }

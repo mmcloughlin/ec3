@@ -104,14 +104,6 @@ func ExpectDecode(x Elt) Elt {
 	return z
 }
 
-func TestSetInt64(t *testing.T) {
-	got := new(Elt).SetInt64(1)
-	expect := &Elt{1}
-	if *got != *expect {
-		t.Fatal("SetInt64(1) failed")
-	}
-}
-
 func TestCMov(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		var x, y Elt

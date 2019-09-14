@@ -130,7 +130,7 @@ type scalar [scalarsize]byte
 // TODO(mbm): use ec3 itself to codegen the scalar type stub
 // This will reduce duplication and help retain compatibility.
 
-func (k *scalar) SetInt(x *big.Int) {
+func (k *scalar) SetIntRaw(x *big.Int) {
 	if x.Sign() < 0 || x.Cmp(curvename.N) >= 0 {
 		x = new(big.Int).Mod(x, curvename.N)
 	}
@@ -145,8 +145,8 @@ func (k *scalar) SetInt(x *big.Int) {
 	}
 }
 
-// Int converts to a big integer.
-func (k *scalar) Int() *big.Int {
+// IntRaw converts to a big integer.
+func (k *scalar) IntRaw() *big.Int {
 	// Endianness swap.
 	var be scalar
 	for i := 0; i < scalarsize; i++ {
@@ -156,9 +156,9 @@ func (k *scalar) Int() *big.Int {
 	return new(big.Int).SetBytes(be[:])
 }
 
-// SetBytes interprets b as the bytes of a big-endian unsigned integer, and sets k to that value.
-func (k *scalar) SetBytes(b []byte) {
-	k.SetInt(new(big.Int).SetBytes(b))
+// SetBytesRaw interprets b as the bytes of a big-endian unsigned integer, and sets k to that value.
+func (k *scalar) SetBytesRaw(b []byte) {
+	k.SetIntRaw(new(big.Int).SetBytes(b))
 }
 
 func scalarcmov(z, x *scalar, c uint) {
@@ -168,7 +168,7 @@ func scalarcmov(z, x *scalar, c uint) {
 }
 
 func scalarneg(z, x *scalar) {
-	neg := new(big.Int).Neg(x.Int())
+	neg := new(big.Int).Neg(x.IntRaw())
 	neg.Mod(neg, curvename.N)
-	z.SetInt(neg)
+	z.SetIntRaw(neg)
 }

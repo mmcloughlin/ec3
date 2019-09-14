@@ -42,6 +42,8 @@ func (x *Elt) SetInt(y *big.Int) *Elt {
 	for ; i < Size; i++ {
 		x[i] = 0
 	}
+	// Encode into the Montgomery domain.
+	Encode(x, x)
 	return x
 }
 
@@ -53,36 +55,81 @@ func (x *Elt) SetBytes(b []byte) *Elt {
 
 // Int converts to a big integer.
 func (x *Elt) Int() *big.Int {
+	var z Elt
+	// Decode from the Montgomery domain.
+	Decode(&z, x)
 	// Endianness swap.
-	var be Elt
-	for i := 0; i < Size; i++ {
-		be[Size-1-i] = x[i]
+	for l, r := 0, Size-1; l < r; l, r = l+1, r-1 {
+		z[l], z[r] = z[r], z[l]
 	}
 	// Build big.Int.
-	return new(big.Int).SetBytes(be[:])
+	return new(big.Int).SetBytes(z[:])
+}
+
+// SetInt64Raw constructs a field element from an integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *Elt) SetInt64Raw(y int64) *Elt {
+	x.SetIntRaw(big.NewInt(y))
+	return x
+}
+
+// SetIntRaw constructs a field element from a big integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *Elt) SetIntRaw(y *big.Int) *Elt {
+	// Reduce if outside range.
+	if y.Sign() < 0 || y.Cmp(p) >= 0 {
+		y = new(big.Int).Mod(y, p)
+	}
+	// Copy bytes into field element.
+	b := y.Bytes()
+	i := 0
+	for ; i < len(b); i++ {
+		x[i] = b[len(b)-1-i]
+	}
+	for ; i < Size; i++ {
+		x[i] = 0
+	}
+	return x
+}
+
+// SetBytesRaw constructs a field element from bytes in big-endian order.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *Elt) SetBytesRaw(b []byte) *Elt {
+	x.SetIntRaw(new(big.Int).SetBytes(b))
+	return x
+}
+
+// IntRaw converts to a big integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *Elt) IntRaw() *big.Int {
+	z := *x
+	// Endianness swap.
+	for l, r := 0, Size-1; l < r; l, r = l+1, r-1 {
+		z[l], z[r] = z[r], z[l]
+	}
+	// Build big.Int.
+	return new(big.Int).SetBytes(z[:])
 }
 
 // one is the field element 1.
-var one = new(Elt).SetInt64(1)
+var one = Elt{0x1}
 
 // Decode decodes from the Montgomery domain.
 func Decode(z *Elt, x *Elt) {
-	Mul(z, x, one)
+	Mul(z, x, &one)
 }
 
 // r2 is the multiplier R^2 for encoding into the Montgomery domain.
-var r2 = new(Elt).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*256))
+var r2 = Elt{
+	0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0xff, 0xff, 0xfb, 0xff, 0xff, 0xff,
+	0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+	0xfd, 0xff, 0xff, 0xff, 0x04,
+}
 
 // Encode encodes into the Montgomery domain.
 func Encode(z *Elt, x *Elt) {
-	Mul(z, x, r2)
-}
-
-// SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.
-func (x *Elt) SetIntEncode(y *big.Int) *Elt {
-	x.SetInt(y)
-	Encode(x, x)
-	return x
+	Mul(z, x, &r2)
 }
 
 // Neg computes z = -x (mod p).

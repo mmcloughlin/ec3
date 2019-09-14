@@ -42,6 +42,8 @@ func (x *scalar) SetInt(y *big.Int) *scalar {
 	for ; i < scalarsize; i++ {
 		x[i] = 0
 	}
+	// Encode into the Montgomery domain.
+	scalarencode(x, x)
 	return x
 }
 
@@ -53,36 +55,81 @@ func (x *scalar) SetBytes(b []byte) *scalar {
 
 // Int converts to a big integer.
 func (x *scalar) Int() *big.Int {
+	var z scalar
+	// Decode from the Montgomery domain.
+	scalardecode(&z, x)
 	// Endianness swap.
-	var be scalar
-	for i := 0; i < scalarsize; i++ {
-		be[scalarsize-1-i] = x[i]
+	for l, r := 0, scalarsize-1; l < r; l, r = l+1, r-1 {
+		z[l], z[r] = z[r], z[l]
 	}
 	// Build big.Int.
-	return new(big.Int).SetBytes(be[:])
+	return new(big.Int).SetBytes(z[:])
+}
+
+// SetInt64Raw constructs a field element from an integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *scalar) SetInt64Raw(y int64) *scalar {
+	x.SetIntRaw(big.NewInt(y))
+	return x
+}
+
+// SetIntRaw constructs a field element from a big integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *scalar) SetIntRaw(y *big.Int) *scalar {
+	// Reduce if outside range.
+	if y.Sign() < 0 || y.Cmp(scalarp) >= 0 {
+		y = new(big.Int).Mod(y, scalarp)
+	}
+	// Copy bytes into field element.
+	b := y.Bytes()
+	i := 0
+	for ; i < len(b); i++ {
+		x[i] = b[len(b)-1-i]
+	}
+	for ; i < scalarsize; i++ {
+		x[i] = 0
+	}
+	return x
+}
+
+// SetBytesRaw constructs a field element from bytes in big-endian order.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *scalar) SetBytesRaw(b []byte) *scalar {
+	x.SetIntRaw(new(big.Int).SetBytes(b))
+	return x
+}
+
+// IntRaw converts to a big integer.
+// This raw variant sets the value directly, bypassing any encoding/decoding steps.
+func (x *scalar) IntRaw() *big.Int {
+	z := *x
+	// Endianness swap.
+	for l, r := 0, scalarsize-1; l < r; l, r = l+1, r-1 {
+		z[l], z[r] = z[r], z[l]
+	}
+	// Build big.Int.
+	return new(big.Int).SetBytes(z[:])
 }
 
 // scalarone is the field element 1.
-var scalarone = new(scalar).SetInt64(1)
+var scalarone = scalar{0x1}
 
 // scalardecode decodes from the Montgomery domain.
 func scalardecode(z *scalar, x *scalar) {
-	scalarmul(z, x, scalarone)
+	scalarmul(z, x, &scalarone)
 }
 
-// scalarr2 is the multiplier R^2 for encoding into the Montgomery domain.
-var scalarr2 = new(scalar).SetInt(new(big.Int).Lsh(big.NewInt(1), 2*256))
+// r2 is the multiplier R^2 for encoding into the Montgomery domain.
+var scalarr2 = scalar{
+	0xa2, 0xee, 0x79, 0xbe, 0x95, 0x4c, 0x24, 0x83,
+	0xa6, 0x6f, 0xbd, 0x49, 0x9c, 0x79, 0x99, 0x46,
+	0x59, 0xec, 0x6b, 0x2b, 0x39, 0xb2, 0x45, 0x28,
+	0x20, 0x56, 0xd9, 0xf3, 0x94, 0x2d, 0xe1, 0x66,
+}
 
 // scalarencode encodes into the Montgomery domain.
 func scalarencode(z *scalar, x *scalar) {
-	scalarmul(z, x, scalarr2)
-}
-
-// SetIntEncode constructs a field element from a big integer and encodes it into the Montgomery domain.
-func (x *scalar) SetIntEncode(y *big.Int) *scalar {
-	x.SetInt(y)
-	scalarencode(x, x)
-	return x
+	scalarmul(z, x, &scalarr2)
 }
 
 // scalarneg computes z = -x (mod p).

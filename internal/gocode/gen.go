@@ -6,6 +6,7 @@ import (
 	"go/types"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/mmcloughlin/ec3/internal/print"
 )
@@ -76,6 +77,14 @@ func (g *Generator) Function(name string, s *types.Signature) {
 }
 
 func (g *Generator) ByteArrayValue(b []byte) {
+	// Short arrays on one line.
+	if len(b) < 8 {
+		array := fmt.Sprintf("%#v", b)
+		g.Linef(strings.TrimPrefix(array, "[]byte"))
+		return
+	}
+
+	// Longer arrays encoded as a multi-line block.
 	g.EnterBlock()
 	for i, x := range b {
 		g.Printf("%#02x, ", x)

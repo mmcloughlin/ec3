@@ -78,7 +78,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// TODO(mbm): exit if scalar is 0.
 
 	var K scalar
-	K.SetBytes(k)
+	K.SetBytesRaw(k)
 
 	// Step 5: odd = k mod 2
 	// Step 6: if odd = 0 then k = r − k
@@ -297,7 +297,7 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 		k := RandOddScalar(t)
 
 		var K scalar
-		K.SetInt(k)
+		K.SetIntRaw(k)
 		digits := K.FixedWindowRecode()
 
 		// Verify all digits are odd.
@@ -330,9 +330,9 @@ func TestScalarSubInt(t *testing.T) {
 
 		// Compute subtraction via scalar type.
 		var k scalar
-		k.SetInt(x)
+		k.SetIntRaw(x)
 		k.SubInt32(v)
-		got := k.Int()
+		got := k.IntRaw()
 
 		// Compute expectation.
 		expect := new(big.Int).Sub(x, new(big.Int).SetInt64(int64(v)))
@@ -350,9 +350,9 @@ func TestScalarRsh(t *testing.T) {
 
 		// Compute shift via scalar type.
 		var k scalar
-		k.SetInt(x)
+		k.SetIntRaw(x)
 		k.Rsh(s)
-		got := k.Int()
+		got := k.IntRaw()
 
 		// Compute expectation.
 		expect := new(big.Int).Rsh(x, s)
