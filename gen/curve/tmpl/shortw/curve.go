@@ -166,6 +166,12 @@ func sign(x int32) uint {
 	return uint(x>>31) & 1
 }
 
+// ScalarBaseMult returns k*G, where G is the base point of the group
+// and k is an integer in big-endian form.
+func (c curve) ScalarBaseMult(k []byte) (x, y *big.Int) {
+	return c.ScalarMult(c.Gx, c.Gy, k)
+}
+
 // Inverse computes the inverse of k modulo the order N. Satisfies the
 // crypto/ecdsa.invertable interface.
 func (curve) Inverse(k *big.Int) *big.Int {

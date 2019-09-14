@@ -96,6 +96,18 @@ func TestScalarMult(t *testing.T) {
 	}
 }
 
+func TestScalarBaseMult(t *testing.T) {
+	for trial := 0; trial < 128; trial++ {
+		k := RandScalarNonZero(t)
+
+		gx, gy := cur.ScalarBaseMult(k.Bytes())
+		ex, ey := ref.ScalarBaseMult(k.Bytes())
+
+		EqualInt(t, "x", ex, gx)
+		EqualInt(t, "y", ey, gy)
+	}
+}
+
 func TestInverse(t *testing.T) {
 	for trial := 0; trial < NumTrials(); trial++ {
 		k := RandScalarNonZero(t)
