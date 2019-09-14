@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func RandScalar(t *testing.T) *big.Int {
+func RandScalarNonZero(t *testing.T) *big.Int {
 	t.Helper()
 	N := p256.Params().N
 	for {
@@ -26,7 +26,7 @@ func RandScalar(t *testing.T) *big.Int {
 
 func RandOddScalar(t *testing.T) *big.Int {
 	t.Helper()
-	k := RandScalar(t)
+	k := RandScalarNonZero(t)
 	N := p256.Params().N
 	if k.Bit(0) == 0 {
 		k.Neg(k).Mod(k, N)
@@ -67,7 +67,7 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 
 func TestScalarSubInt(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
-		x := RandScalar(t)
+		x := RandScalarNonZero(t)
 		v := mathrand.Int31n(64) - 32
 
 		// Compute subtraction via scalar type.
@@ -87,7 +87,7 @@ func TestScalarSubInt(t *testing.T) {
 
 func TestScalarRsh(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
-		x := RandScalar(t)
+		x := RandScalarNonZero(t)
 		s := uint(1 + mathrand.Intn(63))
 
 		// Compute shift via scalar type.

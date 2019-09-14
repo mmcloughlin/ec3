@@ -24,8 +24,17 @@ import (
 //	                  Cryptology ePrint Archive, Report 2014/130. 2014.
 //	                  https://eprint.iacr.org/2014/130
 
+// Curve extends the standard elliptic.Curve interface.
+type Curve interface {
+	elliptic.Curve
+
+	// Inverse computes the inverse of k modulo the order N. Satisfies the
+	// crypto/ecdsa.invertable interface.
+	Inverse(k *big.Int) *big.Int
+}
+
 // CURVENAME returns a Curve which implements CanonicalName.
-func CURVENAME() elliptic.Curve { return curvename }
+func CURVENAME() Curve { return curvename }
 
 type curve struct{ *elliptic.CurveParams }
 
@@ -165,6 +174,19 @@ func abs(x int32) int32 {
 func sign(x int32) uint {
 	return uint(x>>31) & 1
 }
+
+// Inverse computes the inverse of k modulo the order N. Satisfies the
+// crypto/ecdsa.invertable interface.
+func (curve) Inverse(k *big.Int) *big.Int {
+	var (
+		K   scalar
+		inv scalar
+	)
+
+	K.SetInt(k)
+	scalarinv(&inv, &K)
+	return inv.Int()
+}
 `), nil
 
 	case "tmpl/shortw/recode.go":
@@ -267,7 +289,7 @@ import (
 	"testing"
 )
 
-func RandScalar(t *testing.T) *big.Int {
+func RandScalarNonZero(t *testing.T) *big.Int {
 	t.Helper()
 	N := curvename.Params().N
 	for {
@@ -284,7 +306,7 @@ func RandScalar(t *testing.T) *big.Int {
 
 func RandOddScalar(t *testing.T) *big.Int {
 	t.Helper()
-	k := RandScalar(t)
+	k := RandScalarNonZero(t)
 	N := curvename.Params().N
 	if k.Bit(0) == 0 {
 		k.Neg(k).Mod(k, N)
@@ -325,7 +347,7 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 
 func TestScalarSubInt(t *testing.T) {
 	for trial := 0; trial < ConstNumTrials; trial++ {
-		x := RandScalar(t)
+		x := RandScalarNonZero(t)
 		v := mathrand.Int31n(64) - 32
 
 		// Compute subtraction via scalar type.
@@ -345,7 +367,7 @@ func TestScalarSubInt(t *testing.T) {
 
 func TestScalarRsh(t *testing.T) {
 	for trial := 0; trial < ConstNumTrials; trial++ {
-		x := RandScalar(t)
+		x := RandScalarNonZero(t)
 		s := uint(1 + mathrand.Intn(63))
 
 		// Compute shift via scalar type.
