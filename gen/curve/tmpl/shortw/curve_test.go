@@ -1,7 +1,6 @@
 package shortw
 
 import (
-	"crypto/rand"
 	"math/big"
 	"testing"
 )
@@ -13,10 +12,7 @@ var (
 
 func RandPoint(t *testing.T) (x, y *big.Int) {
 	t.Helper()
-	k, err := rand.Int(rand.Reader, ref.N)
-	if err != nil {
-		t.Fatal(err)
-	}
+	k := RandScalarNonZero(t)
 	return ref.ScalarBaseMult(k.Bytes())
 }
 
@@ -47,7 +43,7 @@ func TestDouble(t *testing.T) {
 
 func TestScalarMult(t *testing.T) {
 	for trial := 0; trial < ConstNumTrials; trial++ {
-		k := RandScalar(t)
+		k := RandScalarNonZero(t)
 		x1, y1 := RandPoint(t)
 
 		gx, gy := cur.ScalarMult(x1, y1, k.Bytes())
@@ -55,6 +51,19 @@ func TestScalarMult(t *testing.T) {
 
 		EqualInt(t, "x", ex, gx)
 		EqualInt(t, "y", ey, gy)
+	}
+}
+
+func TestInverse(t *testing.T) {
+	for trial := 0; trial < ConstNumTrials; trial++ {
+		k := RandScalarNonZero(t)
+
+		got := cur.Inverse(k)
+
+		expect := new(big.Int).Set(k)
+		expect.ModInverse(expect, ref.N)
+
+		EqualInt(t, "inv", expect, got)
 	}
 }
 

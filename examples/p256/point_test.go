@@ -85,7 +85,7 @@ func TestDoublePoint(t *testing.T) {
 
 func TestScalarMult(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
-		k := RandScalar(t)
+		k := RandScalarNonZero(t)
 		x1, y1 := RandPoint(t)
 
 		gx, gy := cur.ScalarMult(x1, y1, k.Bytes())
@@ -93,6 +93,19 @@ func TestScalarMult(t *testing.T) {
 
 		EqualInt(t, "x", ex, gx)
 		EqualInt(t, "y", ey, gy)
+	}
+}
+
+func TestInverse(t *testing.T) {
+	for trial := 0; trial < NumTrials(); trial++ {
+		k := RandScalarNonZero(t)
+
+		got := cur.Inverse(k)
+
+		expect := new(big.Int).Set(k)
+		expect.ModInverse(expect, ref.Params().N)
+
+		EqualInt(t, "inv", expect, got)
 	}
 }
 

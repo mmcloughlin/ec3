@@ -130,6 +130,10 @@ type scalar [scalarsize]byte
 // TODO(mbm): use ec3 itself to codegen the scalar type stub
 // This will reduce duplication and help retain compatibility.
 
+func (k *scalar) SetInt(x *big.Int) {
+	k.SetIntRaw(x)
+}
+
 func (k *scalar) SetIntRaw(x *big.Int) {
 	if x.Sign() < 0 || x.Cmp(curvename.N) >= 0 {
 		x = new(big.Int).Mod(x, curvename.N)
@@ -143,6 +147,11 @@ func (k *scalar) SetIntRaw(x *big.Int) {
 	for i, b := range bs {
 		k[len(bs)-1-i] = b
 	}
+}
+
+// Int converts to a big integer.
+func (k *scalar) Int() *big.Int {
+	return k.IntRaw()
 }
 
 // IntRaw converts to a big integer.
@@ -171,4 +180,9 @@ func scalarneg(z, x *scalar) {
 	neg := new(big.Int).Neg(x.IntRaw())
 	neg.Mod(neg, curvename.N)
 	z.SetIntRaw(neg)
+}
+
+func scalarinv(z, x *scalar) {
+	inv := new(big.Int).ModInverse(x.Int(), curvename.N)
+	z.SetInt(inv)
 }

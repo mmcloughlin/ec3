@@ -15,8 +15,17 @@ import (
 //	                  Cryptology ePrint Archive, Report 2014/130. 2014.
 //	                  https://eprint.iacr.org/2014/130
 
+// Curve extends the standard elliptic.Curve interface.
+type Curve interface {
+	elliptic.Curve
+
+	// Inverse computes the inverse of k modulo the order N. Satisfies the
+	// crypto/ecdsa.invertable interface.
+	Inverse(k *big.Int) *big.Int
+}
+
 // P256 returns a Curve which implements P-256.
-func P256() elliptic.Curve { return p256 }
+func P256() Curve { return p256 }
 
 type curve struct{ *elliptic.CurveParams }
 
@@ -155,4 +164,17 @@ func abs(x int32) int32 {
 // sign returns the sign bit of x.
 func sign(x int32) uint {
 	return uint(x>>31) & 1
+}
+
+// Inverse computes the inverse of k modulo the order N. Satisfies the
+// crypto/ecdsa.invertable interface.
+func (curve) Inverse(k *big.Int) *big.Int {
+	var (
+		K   scalar
+		inv scalar
+	)
+
+	K.SetInt(k)
+	scalarinv(&inv, &K)
+	return inv.Int()
 }
