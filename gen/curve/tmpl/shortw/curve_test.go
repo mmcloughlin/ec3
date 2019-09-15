@@ -101,3 +101,22 @@ func TestCurveInverseRand(t *testing.T) {
 		EqualInt(t, "inv", expect, got)
 	}
 }
+
+func BenchmarkScalarMult(b *testing.B) {
+	x, y := RandPoint(b)
+	K := RandScalarNonZero(b)
+	k := K.Bytes()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		cur.ScalarMult(x, y, k)
+	}
+}
+
+func BenchmarkScalarBaseMult(b *testing.B) {
+	K := RandScalarNonZero(b)
+	k := K.Bytes()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		cur.ScalarBaseMult(k)
+	}
+}

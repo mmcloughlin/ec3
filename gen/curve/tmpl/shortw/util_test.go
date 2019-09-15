@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-func RandScalarNonZero(t *testing.T) *big.Int {
-	t.Helper()
+func RandScalarNonZero(tb testing.TB) *big.Int {
+	tb.Helper()
 	N := curvename.Params().N
 	for {
 		k, err := rand.Int(rand.Reader, N)
 		if err != nil {
-			t.Fatal(err)
+			tb.Fatal(err)
 		}
 		if k.Sign() == 0 {
 			continue
@@ -23,9 +23,9 @@ func RandScalarNonZero(t *testing.T) *big.Int {
 	}
 }
 
-func RandOddScalar(t *testing.T) *big.Int {
-	t.Helper()
-	k := RandScalarNonZero(t)
+func RandOddScalar(tb testing.TB) *big.Int {
+	tb.Helper()
+	k := RandScalarNonZero(tb)
 	N := curvename.Params().N
 	if k.Bit(0) == 0 {
 		k.Neg(k).Mod(k, N)
@@ -33,9 +33,9 @@ func RandOddScalar(t *testing.T) *big.Int {
 	return k
 }
 
-func RandPoint(t *testing.T) (x, y *big.Int) {
-	t.Helper()
-	k := RandScalarNonZero(t)
+func RandPoint(tb testing.TB) (x, y *big.Int) {
+	tb.Helper()
+	k := RandScalarNonZero(tb)
 	return curvename.Params().ScalarBaseMult(k.Bytes())
 }
 
