@@ -9,6 +9,7 @@ import (
 	"github.com/mmcloughlin/avo/printer"
 
 	"github.com/mmcloughlin/ec3/asm"
+	"github.com/mmcloughlin/ec3/internal/tmpl"
 )
 
 // GeneratedBy is the name used in code generation warnings.
@@ -60,6 +61,32 @@ func (f *Files) CompileAsm(pkg, prefix string, ctx *build.Context) error {
 		return err
 	}
 	f.Add(prefix+".s", goasm)
+
+	return nil
+}
+
+func (f *Files) AddTemplates(env tmpl.Environment, filenames []string, transforms []tmpl.Transform) error {
+	// Build template package.
+	pkg, err := env.Package(filenames...)
+	if err != nil {
+		return err
+	}
+
+	// Apply transforms.
+	err = pkg.Apply(transforms...)
+	if err != nil {
+		return err
+	}
+
+	// Add to file set.
+	for filename, t := range pkg.Templates() {
+		src, err := t.Bytes()
+		if err != nil {
+			return err
+		}
+
+		f.Add(filename, src)
+	}
 
 	return nil
 }

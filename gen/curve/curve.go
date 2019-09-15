@@ -21,24 +21,18 @@ type ShortWeierstrass struct {
 }
 
 func (c ShortWeierstrass) Generate() (gen.Files, error) {
-	fs := gen.Files{}
-
-	// Build template package.
-	pkg, err := templates.Package(
+	filenames := []string{
 		"curve.go",
 		"curve_test.go",
 		"recode.go",
 		"recode_test.go",
 		"util_test.go",
-	)
-	if err != nil {
-		return nil, err
 	}
 
 	typename := strings.ToUpper(c.ShortName)
 	varname := strings.ToLower(c.ShortName)
 
-	err = pkg.Apply(
+	transforms := []tmpl.Transform{
 		tmpl.GeneratedBy(gen.GeneratedBy),
 		tmpl.SetPackageName(c.PackageName),
 		tmpl.Rename("CURVENAME", typename),
@@ -58,18 +52,12 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 		tmpl.DefineIntDecimal("ConstW", 6),
 
 		tmpl.DefineIntDecimal("ConstNumTrials", 128),
-	)
-	if err != nil {
-		return nil, err
 	}
 
-	for filename, t := range pkg.Templates() {
-		src, err := t.Bytes()
-		if err != nil {
-			return nil, err
-		}
-
-		fs.Add(filename, src)
+	fs := gen.Files{}
+	err := fs.AddTemplates(templates, filenames, transforms)
+	if err != nil {
+		return nil, err
 	}
 
 	return fs, nil
