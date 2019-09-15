@@ -3,36 +3,10 @@
 package p256
 
 import (
-	"crypto/rand"
 	"math/big"
-	mathrand "math/rand"
+	"math/rand"
 	"testing"
 )
-
-func RandScalarNonZero(t *testing.T) *big.Int {
-	t.Helper()
-	N := p256.Params().N
-	for {
-		k, err := rand.Int(rand.Reader, N)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if k.Sign() == 0 {
-			continue
-		}
-		return k
-	}
-}
-
-func RandOddScalar(t *testing.T) *big.Int {
-	t.Helper()
-	k := RandScalarNonZero(t)
-	N := p256.Params().N
-	if k.Bit(0) == 0 {
-		k.Neg(k).Mod(k, N)
-	}
-	return k
-}
 
 func TestScalarFixedWindowRecode(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
@@ -68,7 +42,7 @@ func TestScalarFixedWindowRecode(t *testing.T) {
 func TestScalarSubInt(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		x := RandScalarNonZero(t)
-		v := mathrand.Int31n(64) - 32
+		v := rand.Int31n(64) - 32
 
 		// Compute subtraction via scalar type.
 		var k scalar
@@ -88,7 +62,7 @@ func TestScalarSubInt(t *testing.T) {
 func TestScalarRsh(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		x := RandScalarNonZero(t)
-		s := uint(1 + mathrand.Intn(63))
+		s := uint(1 + rand.Intn(63))
 
 		// Compute shift via scalar type.
 		var k scalar

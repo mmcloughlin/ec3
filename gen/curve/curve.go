@@ -8,7 +8,7 @@ import (
 	"github.com/mmcloughlin/ec3/internal/tmpl"
 )
 
-//go:generate assets -pkg curve -func loadtemplate -output ztemplates.go tmpl/shortw/curve.go tmpl/shortw/recode.go tmpl/shortw/recode_test.go
+//go:generate assets -pkg curve -func loadtemplate -output ztemplates.go tmpl/shortw/*.go
 
 var templates = tmpl.Environment{
 	Loader: tmpl.NewBasePath(tmpl.LoaderFunc(loadtemplate), "tmpl/shortw"),
@@ -26,8 +26,10 @@ func (c ShortWeierstrass) Generate() (gen.Files, error) {
 	// Build template package.
 	pkg, err := templates.Package(
 		"curve.go",
+		"curve_test.go",
 		"recode.go",
 		"recode_test.go",
+		"util_test.go",
 	)
 	if err != nil {
 		return nil, err
