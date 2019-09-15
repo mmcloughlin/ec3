@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // Command line flags.
@@ -24,7 +25,12 @@ func main() {
 	process(flag.Args())
 }
 
-func process(filenames []string) {
+func process(patterns []string) {
+	filenames, err := expand(patterns)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	assets, err := LoadAssets(filenames)
 	if err != nil {
 		log.Fatal(err)
@@ -50,4 +56,17 @@ func process(filenames []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// expand filename patterns into a full list of files.
+func expand(patterns []string) ([]string, error) {
+	filenames := []string{}
+	for _, pattern := range patterns {
+		matches, err := filepath.Glob(pattern)
+		if err != nil {
+			return nil, err
+		}
+		filenames = append(filenames, matches...)
+	}
+	return filenames, nil
 }
