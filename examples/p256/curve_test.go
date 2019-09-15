@@ -12,32 +12,44 @@ var (
 	ref = p256.CurveParams
 )
 
-func TestCurveAdd(t *testing.T) {
+func TestCurveAddRand(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		x1, y1 := RandPoint(t)
 		x2, y2 := RandPoint(t)
 
-		ex, ey := ref.Add(x1, y1, x2, y2)
 		gx, gy := cur.Add(x1, y1, x2, y2)
+		ex, ey := ref.Add(x1, y1, x2, y2)
 
 		EqualInt(t, "x", ex, gx)
 		EqualInt(t, "y", ey, gy)
 	}
 }
 
-func TestCurveDouble(t *testing.T) {
+func TestCurveAddAsDouble(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		x1, y1 := RandPoint(t)
 
-		ex, ey := cur.Double(x1, y1)
-		gx, gy := ref.Double(x1, y1)
+		gx, gy := cur.Add(x1, y1, x1, y1)
+		ex, ey := ref.Double(x1, y1)
 
 		EqualInt(t, "x", ex, gx)
 		EqualInt(t, "y", ey, gy)
 	}
 }
 
-func TestCurveScalarMult(t *testing.T) {
+func TestCurveDoubleRand(t *testing.T) {
+	for trial := 0; trial < 128; trial++ {
+		x1, y1 := RandPoint(t)
+
+		gx, gy := ref.Double(x1, y1)
+		ex, ey := cur.Double(x1, y1)
+
+		EqualInt(t, "x", ex, gx)
+		EqualInt(t, "y", ey, gy)
+	}
+}
+
+func TestCurveScalarMultRand(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		k := RandScalarNonZero(t)
 		x1, y1 := RandPoint(t)
@@ -50,7 +62,7 @@ func TestCurveScalarMult(t *testing.T) {
 	}
 }
 
-func TestCurveScalarBaseMult(t *testing.T) {
+func TestCurveScalarBaseMultRand(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		k := RandScalarNonZero(t)
 
@@ -62,7 +74,7 @@ func TestCurveScalarBaseMult(t *testing.T) {
 	}
 }
 
-func TestCurveInverse(t *testing.T) {
+func TestCurveInverseRand(t *testing.T) {
 	for trial := 0; trial < 128; trial++ {
 		k := RandScalarNonZero(t)
 

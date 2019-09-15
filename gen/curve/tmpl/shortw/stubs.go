@@ -45,6 +45,12 @@ func (a *Affine) Jacobian() *Jacobian {
 	return j
 }
 
+func (a *Affine) Projective() *Projective {
+	p := &Projective{}
+	p.a.Set(a)
+	return p
+}
+
 // Jacobian is a stub jacobian point type.
 type Jacobian struct {
 	a Affine

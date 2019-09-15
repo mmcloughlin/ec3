@@ -46,10 +46,10 @@ func init() {
 func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	a2 := NewAffine(x2, y2)
-	j1 := a1.Jacobian()
-	j2 := a2.Jacobian()
-	s := new(Jacobian)
-	s.Add(j1, j2)
+	p1 := a1.Projective()
+	p2 := a2.Projective()
+	s := new(Projective)
+	s.CompleteAdd(p1, p2)
 	return s.Affine().Coordinates()
 }
 

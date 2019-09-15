@@ -182,6 +182,21 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		},
 	}
 
+	atop := ec.Function{
+		Name:     "Projective",
+		Receiver: ec.Point("a", ec.R, affine, 1),
+		Results: []ec.Parameter{
+			ec.Point("p", ec.W, projective, 3),
+		},
+		Formula: &ast.Program{
+			Assignments: []ast.Assignment{
+				{LHS: "X3", RHS: ast.Variable("X1")},
+				{LHS: "Y3", RHS: ast.Variable("Y1")},
+				{LHS: "Z3", RHS: ast.Constant(1)},
+			},
+		},
+	}
+
 	scalef := efd.LookupFormula("g1p/shortw/jacobian-3/scaling/z")
 	if scalef == nil {
 		log.Fatalf("unknown formula")
@@ -333,6 +348,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 			// Affine representation.
 			affine,
 			atoj,
+			atop,
 
 			// Jacobian representation.
 			jacobian,

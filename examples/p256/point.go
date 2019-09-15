@@ -39,6 +39,14 @@ func (a *Affine) Jacobian() (p *Jacobian) {
 	return
 }
 
+func (a *Affine) Projective() (p *Projective) {
+	p = new(Projective)
+	p.X = a.X
+	p.Y = a.Y
+	p.Z.SetInt64(1)
+	return
+}
+
 type Jacobian struct {
 	X Elt
 	Y Elt
