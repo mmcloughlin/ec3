@@ -16,7 +16,7 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/gen/curve"
-	"github.com/mmcloughlin/ec3/gen/ec"
+	"github.com/mmcloughlin/ec3/gen/fmla"
 	"github.com/mmcloughlin/ec3/gen/fp"
 	"github.com/mmcloughlin/ec3/gen/name"
 	"github.com/mmcloughlin/ec3/prime"
@@ -138,7 +138,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		affinecoords = append(affinecoords, strings.ToUpper(v))
 	}
 
-	affine := ec.Representation{
+	affine := fmla.Representation{
 		Name:        "Affine",
 		ElementType: fieldcfg.Type(),
 		Coordinates: affinecoords,
@@ -149,7 +149,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatalf("unknown representation")
 	}
 
-	jacobian := ec.Representation{
+	jacobian := fmla.Representation{
 		Name:        "Jacobian",
 		ElementType: fieldcfg.Type(),
 		Coordinates: reprjac.Variables,
@@ -160,18 +160,18 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatalf("unknown representation")
 	}
 
-	projective := ec.Representation{
+	projective := fmla.Representation{
 		Name:        "Projective",
 		ElementType: fieldcfg.Type(),
 		Coordinates: reprproj.Variables,
 	}
 
 	// TODO(mbm): automatically generate conversion formulae
-	atoj := ec.Function{
+	atoj := fmla.Function{
 		Name:     "Jacobian",
-		Receiver: ec.Point("a", ec.R, affine, 1),
-		Results: []ec.Parameter{
-			ec.Point("p", ec.W, jacobian, 3),
+		Receiver: fmla.Point("a", fmla.R, affine, 1),
+		Results: []fmla.Parameter{
+			fmla.Point("p", fmla.W, jacobian, 3),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -182,11 +182,11 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		},
 	}
 
-	atop := ec.Function{
+	atop := fmla.Function{
 		Name:     "Projective",
-		Receiver: ec.Point("a", ec.R, affine, 1),
-		Results: []ec.Parameter{
-			ec.Point("p", ec.W, projective, 3),
+		Receiver: fmla.Point("a", fmla.R, affine, 1),
+		Results: []fmla.Parameter{
+			fmla.Point("p", fmla.W, projective, 3),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -202,21 +202,21 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatalf("unknown formula")
 	}
 
-	jtoa := ec.Function{
+	jtoa := fmla.Function{
 		Name:     "Affine",
-		Receiver: ec.Point("p", ec.R, jacobian, 1),
-		Results: []ec.Parameter{
-			ec.Point("a", ec.W, affine, 3),
+		Receiver: fmla.Point("p", fmla.R, jacobian, 1),
+		Results: []fmla.Parameter{
+			fmla.Point("a", fmla.W, affine, 3),
 		},
 		Formula: scalef.Program,
 	}
 
 	// TODO(mbm): improve handling of conversion formulae
-	jtop := ec.Function{
+	jtop := fmla.Function{
 		Name:     "Projective",
-		Receiver: ec.Point("p", ec.R, jacobian, 1),
-		Results: []ec.Parameter{
-			ec.Point("q", ec.W, projective, 3),
+		Receiver: fmla.Point("p", fmla.R, jacobian, 1),
+		Results: []fmla.Parameter{
+			fmla.Point("q", fmla.W, projective, 3),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -232,22 +232,22 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatalf("unknown formula")
 	}
 
-	ptoa := ec.Function{
+	ptoa := fmla.Function{
 		Name:     "Affine",
-		Receiver: ec.Point("p", ec.R, projective, 1),
-		Results: []ec.Parameter{
-			ec.Point("a", ec.W, affine, 3),
+		Receiver: fmla.Point("p", fmla.R, projective, 1),
+		Results: []fmla.Parameter{
+			fmla.Point("a", fmla.W, affine, 3),
 		},
 		Formula: pscalef.Program,
 	}
 
 	// TODO(mbm): automatically generate cmov formulae
-	cmov := ec.Function{
+	cmov := fmla.Function{
 		Name:     "CMov",
-		Receiver: ec.Point("p", ec.W, jacobian, 3),
-		Params: []ec.Parameter{
-			ec.Point("q", ec.R, jacobian, 1),
-			ec.Condition("c", ec.R),
+		Receiver: fmla.Point("p", fmla.W, jacobian, 3),
+		Params: []fmla.Parameter{
+			fmla.Point("q", fmla.R, jacobian, 1),
+			fmla.Condition("c", fmla.R),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -259,11 +259,11 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	}
 
 	// TODO(mbm): automatically generate negation formulae
-	jcneg := ec.Function{
+	jcneg := fmla.Function{
 		Name:     "CNeg",
-		Receiver: ec.Point("p", ec.RW, jacobian, 1, 3),
-		Params: []ec.Parameter{
-			ec.Condition("c", ec.R),
+		Receiver: fmla.Point("p", fmla.RW, jacobian, 1, 3),
+		Params: []fmla.Parameter{
+			fmla.Condition("c", fmla.R),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -278,12 +278,12 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatal("unknown formula")
 	}
 
-	add := ec.Function{
+	add := fmla.Function{
 		Name:     "Add",
-		Receiver: ec.Point("p", ec.W, jacobian, 3),
-		Params: []ec.Parameter{
-			ec.Point("q", ec.R, jacobian, 1),
-			ec.Point("r", ec.R, jacobian, 2),
+		Receiver: fmla.Point("p", fmla.W, jacobian, 3),
+		Params: []fmla.Parameter{
+			fmla.Point("q", fmla.R, jacobian, 1),
+			fmla.Point("r", fmla.R, jacobian, 2),
 		},
 		Formula: addf.Program,
 	}
@@ -293,26 +293,26 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatal("unknown formula")
 	}
 
-	dbl := ec.Function{
+	dbl := fmla.Function{
 		Name:     "Double",
-		Receiver: ec.Point("p", ec.W, jacobian, 3),
-		Params: []ec.Parameter{
-			ec.Point("q", ec.R, jacobian, 1),
+		Receiver: fmla.Point("p", fmla.W, jacobian, 3),
+		Params: []fmla.Parameter{
+			fmla.Point("q", fmla.R, jacobian, 1),
 		},
 		Formula: dblf.Program,
 	}
 
-	b := ec.Constant{
+	b := fmla.Constant{
 		VariableName: "b",
 		ElementType:  fieldcfg.Type(),
 		Value:        params.B,
 	}
 
-	pcneg := ec.Function{
+	pcneg := fmla.Function{
 		Name:     "CNeg",
-		Receiver: ec.Point("p", ec.RW, projective, 1, 3),
-		Params: []ec.Parameter{
-			ec.Condition("c", ec.R),
+		Receiver: fmla.Point("p", fmla.RW, projective, 1, 3),
+		Params: []fmla.Parameter{
+			fmla.Condition("c", fmla.R),
 		},
 		Formula: &ast.Program{
 			Assignments: []ast.Assignment{
@@ -327,21 +327,21 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatal("unknown formula")
 	}
 
-	compadd := ec.Function{
+	compadd := fmla.Function{
 		Name:     "CompleteAdd",
-		Receiver: ec.Point("p", ec.W, projective, 3),
-		Params: []ec.Parameter{
-			ec.Point("q", ec.R, projective, 1),
-			ec.Point("r", ec.R, projective, 2),
+		Receiver: fmla.Point("p", fmla.W, projective, 3),
+		Params: []fmla.Parameter{
+			fmla.Point("q", fmla.R, projective, 1),
+			fmla.Point("r", fmla.R, projective, 2),
 		},
-		Globals: []ec.Parameter{b},
+		Globals: []fmla.Parameter{b},
 		Formula: compaddf.Program,
 	}
 
-	pointcfg := ec.Config{
+	pointcfg := fmla.Config{
 		PackageName: "p256",
 		Field:       fieldcfg,
-		Components: []ec.Component{
+		Components: []fmla.Component{
 			// Constants.
 			b,
 
@@ -367,7 +367,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		},
 	}
 
-	pointfiles, err := ec.Package(pointcfg)
+	pointfiles, err := fmla.Package(pointcfg)
 	if err != nil {
 		log.Fatal(err)
 	}

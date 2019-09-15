@@ -1,4 +1,5 @@
-package ec
+// Package fmla generates functions from formulae.
+package fmla
 
 import (
 	"fmt"

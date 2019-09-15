@@ -1,4 +1,4 @@
-package ec
+package fmla
 
 import (
 	"go/types"
