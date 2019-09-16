@@ -33,6 +33,7 @@ func (a Asm) Context() *build.Context {
 
 func (a Asm) Function(name string, params ...string) {
 	a.ctx.Function(a.cfg.Name(name))
+	a.ctx.Pragma("noescape")
 	a.ctx.Attributes(attr.NOSPLIT)
 
 	sig := a.cfg.Signature(params...)
@@ -43,6 +44,7 @@ func (a Asm) CMov() {
 	// Declare the function. We can't use the standard helper here since this
 	// doesn't only take field element arguments.
 	a.ctx.Function(a.cfg.Name("CMov"))
+	a.ctx.Pragma("noescape")
 	a.ctx.Attributes(attr.NOSPLIT)
 	params := types.NewTuple(
 		a.cfg.Param("y"),

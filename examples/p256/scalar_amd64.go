@@ -2,10 +2,14 @@
 
 package p256
 
+//go:noescape
 func scalarcmov(y *scalar, x *scalar, c uint)
 
+//go:noescape
 func scalaradd(z *scalar, x *scalar, y *scalar)
 
+//go:noescape
 func scalarsub(z *scalar, x *scalar, y *scalar)
 
+//go:noescape
 func scalarmul(z *scalar, x *scalar, y *scalar)

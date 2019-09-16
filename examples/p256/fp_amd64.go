@@ -2,10 +2,14 @@
 
 package p256
 
+//go:noescape
 func CMov(y *Elt, x *Elt, c uint)
 
+//go:noescape
 func Add(z *Elt, x *Elt, y *Elt)
 
+//go:noescape
 func Sub(z *Elt, x *Elt, y *Elt)
 
+//go:noescape
 func Mul(z *Elt, x *Elt, y *Elt)
