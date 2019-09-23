@@ -27,3 +27,15 @@ func Zero64(ctx *build.Context) reg.Register {
 	ctx.XORQ(zero, zero)
 	return zero
 }
+
+// IsRegisterName reports whether name is a register name.
+func IsRegisterName(name string) bool {
+	for _, family := range reg.Families {
+		for _, r := range family.Registers() {
+			if r.Asm() == name {
+				return true
+			}
+		}
+	}
+	return false
+}
