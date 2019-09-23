@@ -8,7 +8,7 @@ func TestIsRegisterName(t *testing.T) {
 		Expect bool
 	}{
 		{"SP", true},
-		{"EBX", true},
+		{"BX", true},
 		{"R13", true},
 		{"X3", true},
 		{"Y13", true},
