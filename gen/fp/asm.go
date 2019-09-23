@@ -125,8 +125,7 @@ func (a Asm) Mul() {
 
 	// Perform multiplication.
 	// TODO(mbm): is it possible to store the intermediate result in registers?
-	stack := a.ctx.AllocLocal(8 * 2 * k)
-	m := mp.NewIntFromMem(stack, 2*k)
+	m := mp.AllocLocal(a.ctx, 2*k)
 	mp.Mul(a.ctx, m, x, y)
 
 	// Reduce.

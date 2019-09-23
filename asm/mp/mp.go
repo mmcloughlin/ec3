@@ -1,10 +1,15 @@
 package mp
 
 import (
+	"math/big"
+
 	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
 	"github.com/mmcloughlin/avo/reg"
+	"golang.org/x/xerrors"
+
+	"github.com/mmcloughlin/ec3/internal/bigint"
 )
 
 // Int represents a multi-precision integer.
@@ -31,6 +36,15 @@ func NewInt(k int) Int {
 	return make(Int, k)
 }
 
+// NewIntZero builds an integer with all k limbs set to the immediate value 0.
+func NewIntZero(k int) Int {
+	x := NewInt(k)
+	for i := 0; i < k; i++ {
+		x[i] = operand.U32(0)
+	}
+	return x
+}
+
 // NewIntLimb64 builds multi-precision integer with k 64-bit limbs.
 func NewIntLimb64(ctx *build.Context, k int) Int {
 	x := NewInt(k)
@@ -38,6 +52,24 @@ func NewIntLimb64(ctx *build.Context, k int) Int {
 		x[i] = ctx.GP64()
 	}
 	return x
+}
+
+// Imm returns an integer representing the big integer constant c with k 64-bit limbs.
+func Imm(c *big.Int, k int) (Int, error) {
+	limbs := bigint.Uint64s(c)
+	if len(limbs) > k {
+		return nil, xerrors.Errorf("constant %d cannot be represented in %d 64-bit limbs", c, k)
+	}
+	x := NewIntZero(k)
+	for i, limb := range limbs {
+		x[i] = operand.Imm(limb)
+	}
+	return x, nil
+}
+
+// ImmUint returns an integer representing the unsigned integer constant c with k 64-bit limbs.
+func ImmUint(c uint, k int) (Int, error) {
+	return Imm(new(big.Int).SetUint64(uint64(c)), k)
 }
 
 // NewIntFromMem builds a multi-precision integer referencing the k 64-bit limbs
@@ -48,6 +80,13 @@ func NewIntFromMem(m operand.Mem, k int) Int {
 		x[i] = m.Offset(8 * i)
 	}
 	return x
+}
+
+// AllocLocal allocates an integer with k 64-bit limbs on the stack of the
+// currently active function.
+func AllocLocal(ctx *build.Context, k int) Int {
+	addr := ctx.AllocLocal(8 * k)
+	return NewIntFromMem(addr, k)
 }
 
 // Param builds a multi-precision integer from a function parameter. The
