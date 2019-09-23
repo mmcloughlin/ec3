@@ -172,7 +172,7 @@ func (b *builder) ModulusPrime() operand.Op {
 	return b.mprime
 }
 
-func (b builder) ReduceDouble(z, x mp.Int) {
+func (b *builder) ReduceDouble(z, x mp.Int) {
 	// Reduction is performed with multi-word Montgomery reduction. See [hac:impl]
 	// Algorithm 14.32.
 
