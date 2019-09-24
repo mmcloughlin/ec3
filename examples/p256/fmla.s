@@ -2,6 +2,77 @@
 
 #include "textflag.h"
 
+// func lookup(p *Jacobian, tbl []Jacobian, idx int)
+TEXT ·lookup(SB), $0-40
+	MOVQ p+0(FP), AX
+	MOVQ tbl_base+8(FP), CX
+	MOVQ tbl_len+16(FP), DX
+	MOVQ idx+32(FP), BX
+
+	// Initialize a 1 register.
+	PXOR    X0, X0
+	PCMPEQL X1, X1
+	PSUBL   X1, X0
+
+	// Initialize index register.
+	MOVQ   BX, X1
+	PSHUFD $0x00, X1, X1
+
+	// Initialize result.
+	PXOR X2, X2
+	PXOR X3, X3
+	PXOR X4, X4
+	PXOR X5, X5
+	PXOR X6, X6
+	PXOR X7, X7
+
+	// Loop header.
+	PXOR X14, X14
+
+loop:
+	// Check ctr == idx.
+	MOVOU   X1, X15
+	PCMPEQL X14, X15
+
+	// Load from memory.
+	MOVOU (CX), X8
+	MOVOU 16(CX), X9
+	MOVOU 32(CX), X10
+	MOVOU 48(CX), X11
+	MOVOU 64(CX), X12
+	MOVOU 80(CX), X13
+	ADDQ  $0x60, CX
+
+	// Apply comparison mask.
+	PAND X15, X8
+	PAND X15, X9
+	PAND X15, X10
+	PAND X15, X11
+	PAND X15, X12
+	PAND X15, X13
+
+	// XOR into result.
+	PXOR X8, X2
+	PXOR X9, X3
+	PXOR X10, X4
+	PXOR X11, X5
+	PXOR X12, X6
+	PXOR X13, X7
+
+	// Loop update.
+	PADDL X0, X14
+	DECQ  DX
+	JNE   loop
+
+	// Write result.
+	MOVOU X2, (AX)
+	MOVOU X3, 16(AX)
+	MOVOU X4, 32(AX)
+	MOVOU X5, 48(AX)
+	MOVOU X6, 64(AX)
+	MOVOU X7, 80(AX)
+	RET
+
 // func add(X1_ *Elt, X2_ *Elt, X3_ *Elt, Y1_ *Elt, Y2_ *Elt, Y3_ *Elt, Z1_ *Elt, Z2_ *Elt, Z3_ *Elt)
 TEXT ·add(SB), $1184-72
 	MOVQ Y2_+32(FP), BX

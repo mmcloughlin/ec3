@@ -4,7 +4,6 @@ package p256
 
 import (
 	"crypto/elliptic"
-	"crypto/subtle"
 	"math/big"
 )
 
@@ -149,9 +148,7 @@ func (t *table) Precompute(p *Jacobian) {
 // may be negative, in which case p will be negated.
 func (t *table) Lookup(p *Jacobian, digit int32) {
 	idx := abs(digit) / 2
-	for i := range t {
-		p.CMov(&t[i], uint(subtle.ConstantTimeEq(int32(i), idx)))
-	}
+	lookup(p, t[:], int(idx))
 	p.CNeg(sign(digit))
 }
 

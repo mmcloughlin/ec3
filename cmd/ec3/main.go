@@ -241,6 +241,12 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		Formula: pscalef.Program,
 	}
 
+	// Lookup formula.
+	lookup := fmla.Lookup{
+		Name: "lookup",
+		Repr: jacobian,
+	}
+
 	// TODO(mbm): automatically generate cmov formulae
 	cmov := fmla.Function{
 		Name:     "CMov",
@@ -354,6 +360,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 			jacobian,
 			jtoa,
 			jtop,
+			lookup,
 			cmov,
 			jcneg,
 			add,

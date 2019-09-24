@@ -127,6 +127,11 @@ func (p *Projective) CompleteAdd(q, r *Projective) {
 	p.a.Y.Set(y)
 }
 
+// lookup position idx in tbl.
+func lookup(p *Jacobian, tbl []Jacobian, idx int) {
+	p.Set(&tbl[idx])
+}
+
 // scalarsize is the size of a scalar field element in bytes.
 const scalarsize = ConstBitSize / 8
 

@@ -3,6 +3,9 @@
 package p256
 
 //go:noescape
+func lookup(p *Jacobian, tbl []Jacobian, idx int)
+
+//go:noescape
 func add(X1_ *Elt, X2_ *Elt, X3_ *Elt, Y1_ *Elt, Y2_ *Elt, Y3_ *Elt, Z1_ *Elt, Z2_ *Elt, Z3_ *Elt)
 
 //go:noescape

@@ -228,6 +228,14 @@ func NewAsmFunctionDefault(f Function) AsmFunction {
 	}
 }
 
+// Lookup is a table lookup function for a given point representation.
+type Lookup struct {
+	Name string
+	Repr Representation
+}
+
+func (Lookup) private() {}
+
 type Config struct {
 	PackageName string
 	Field       fp.Config
@@ -280,6 +288,8 @@ func (p *pointops) Generate() ([]byte, error) {
 			p.constant(c)
 		case Representation:
 			p.representation(c)
+		case Lookup:
+			p.lookup(c)
 		case Function:
 			p.function(c)
 		case AsmFunction:
@@ -349,6 +359,11 @@ func (p *pointops) representation(r Representation) {
 	}
 	p.Linef("return")
 	p.LeaveBlock()
+}
+
+func (p *pointops) lookup(l Lookup) {
+	asm := p.asmbuilder()
+	asm.Lookup(l.Name, l.Repr)
 }
 
 func (p *pointops) function(f Function) {

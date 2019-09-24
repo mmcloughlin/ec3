@@ -13,7 +13,6 @@ package shortw
 
 import (
 	"crypto/elliptic"
-	"crypto/subtle"
 	"math/big"
 )
 
@@ -158,9 +157,7 @@ func (t *table) Precompute(p *Jacobian) {
 // may be negative, in which case p will be negated.
 func (t *table) Lookup(p *Jacobian, digit int32) {
 	idx := abs(digit) / 2
-	for i := range t {
-		p.CMov(&t[i], uint(subtle.ConstantTimeEq(int32(i), idx)))
-	}
+	lookup(p, t[:], int(idx))
 	p.CNeg(sign(digit))
 }
 
@@ -619,6 +616,11 @@ func (p *Projective) CompleteAdd(q, r *Projective) {
 	x, y := curvename.Params().Add(&q.a.X, &q.a.Y, &r.a.X, &r.a.Y)
 	p.a.X.Set(x)
 	p.a.Y.Set(y)
+}
+
+// lookup position idx in tbl.
+func lookup(p *Jacobian, tbl []Jacobian, idx int) {
+	p.Set(&tbl[idx])
 }
 
 // scalarsize is the size of a scalar field element in bytes.
