@@ -31,28 +31,12 @@ func NewAsm(cfg fp.Config) *Asm {
 	}
 }
 
-func (a Asm) Context() *build.Context {
+func (a *Asm) Context() *build.Context {
 	return a.ctx
 }
 
-func (a Asm) Function(name string, p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variable) error {
+func (a *Asm) Function(name string, p *ast.Program, outputs []ast.Variable) error {
 	field := a.cfg.Field
-
-	// TODO(mbm): refactor copypasta from (Function).Program method
-	// Reduce formula given required output variables.
-	p, err := op3.Pare(p, outputs)
-	if err != nil {
-		return err
-	}
-
-	// Ensure the program is robust to potential alias sets.
-	p = op3.AliasCorrect(p, aliases, outputs, op3.Temporaries())
-
-	// Finally, reduce the program to primitives.
-	p, err = op3.Lower(p)
-	if err != nil {
-		return err
-	}
 
 	// Declare the function.
 	a.ctx.Function(name)
@@ -93,6 +77,13 @@ func (a Asm) Function(name string, p *ast.Program, aliases [][]ast.Variable, out
 		a.ctx.Commentf("Step %d: %s", step+1, asgn.RHS)
 		// TODO(mbm): refactor common code in case blocks
 		switch e := asgn.RHS.(type) {
+		case ast.Variable:
+			ops, err := a.operands(stack, asgn.LHS, e)
+			if err != nil {
+				return err
+			}
+			mp.Copy(a.ctx, t, ops[1])
+			mp.Copy(a.ctx, ops[0], t)
 		case ast.Pow:
 			if e.N != 2 {
 				return xerrors.New("non-square powers are not supported")
@@ -131,7 +122,7 @@ func (a Asm) Function(name string, p *ast.Program, aliases [][]ast.Variable, out
 			y := mp.CopyIntoRegisters(a.ctx, ops[2])
 			a.field.Add(x, y)
 			mp.Copy(a.ctx, ops[0], x)
-		case ast.Inv, ast.Neg, ast.Cond, ast.Variable, ast.Constant:
+		case ast.Inv, ast.Neg, ast.Cond, ast.Constant:
 			return xerrors.Errorf("operation %T is not supported in assembly", e)
 		default:
 			return errutil.UnexpectedType(e)
@@ -151,7 +142,7 @@ func (a Asm) Function(name string, p *ast.Program, aliases [][]ast.Variable, out
 	return nil
 }
 
-func (a Asm) operands(vars map[ast.Variable]mp.Int, ops ...ast.Operand) ([]mp.Int, error) {
+func (a *Asm) operands(vars map[ast.Variable]mp.Int, ops ...ast.Operand) ([]mp.Int, error) {
 	xs := make([]mp.Int, 0, len(ops))
 	for _, op := range ops {
 		x, err := a.operand(vars, op)
@@ -163,7 +154,7 @@ func (a Asm) operands(vars map[ast.Variable]mp.Int, ops ...ast.Operand) ([]mp.In
 	return xs, nil
 }
 
-func (a Asm) operand(vars map[ast.Variable]mp.Int, o ast.Operand) (mp.Int, error) {
+func (a *Asm) operand(vars map[ast.Variable]mp.Int, o ast.Operand) (mp.Int, error) {
 	switch op := o.(type) {
 	case ast.Variable:
 		x, ok := vars[op]

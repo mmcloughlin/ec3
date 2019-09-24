@@ -278,7 +278,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatal("unknown formula")
 	}
 
-	add := fmla.Function{
+	add := fmla.NewAsmFunctionDefault(fmla.Function{
 		Name:     "Add",
 		Receiver: fmla.Point("p", fmla.W, jacobian, 3),
 		Params: []fmla.Parameter{
@@ -286,21 +286,21 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 			fmla.Point("r", fmla.R, jacobian, 2),
 		},
 		Formula: addf.Program,
-	}
+	})
 
 	dblf := efd.LookupFormula("g1p/shortw/jacobian-3/doubling/dbl-2001-b")
 	if dblf == nil {
 		log.Fatal("unknown formula")
 	}
 
-	dbl := fmla.Function{
+	dbl := fmla.NewAsmFunctionDefault(fmla.Function{
 		Name:     "Double",
 		Receiver: fmla.Point("p", fmla.W, jacobian, 3),
 		Params: []fmla.Parameter{
 			fmla.Point("q", fmla.R, jacobian, 1),
 		},
 		Formula: dblf.Program,
-	}
+	})
 
 	b := fmla.Constant{
 		VariableName: "b",
@@ -327,7 +327,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		log.Fatal("unknown formula")
 	}
 
-	compadd := fmla.Function{
+	compadd := fmla.NewAsmFunctionDefault(fmla.Function{
 		Name:     "CompleteAdd",
 		Receiver: fmla.Point("p", fmla.W, projective, 3),
 		Params: []fmla.Parameter{
@@ -336,7 +336,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 		},
 		Globals: []fmla.Parameter{b},
 		Formula: compaddf.Program,
-	}
+	})
 
 	pointcfg := fmla.Config{
 		PackageName: "p256",

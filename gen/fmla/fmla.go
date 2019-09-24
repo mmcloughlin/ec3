@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mmcloughlin/avo/build"
 	"golang.org/x/xerrors"
 
 	"github.com/mmcloughlin/ec3/efd/op3"
@@ -87,15 +88,17 @@ type Function struct {
 
 func (Function) private() {}
 
+// IsVoid reports whether f is void. That is, it returns true if the function
+// has no return values.
+func (f *Function) IsVoid() bool { return !f.HasResults() }
+
+// HasResults reports whether f has return values.
+func (f *Function) HasResults() bool { return len(f.Results) > 0 }
+
 // Program returns the program to be implemented by this function.
 func (f Function) Program() (*ast.Program, error) {
 	// Restrict to variables output by this function.
-	outputs := []ast.Variable{}
-	for _, out := range f.Outputs() {
-		for v := range out.Variables() {
-			outputs = append(outputs, v)
-		}
-	}
+	outputs := ParametersVariableNames(f.Outputs()...)
 
 	// Reduce formula given required output variables.
 	p, err := op3.Pare(f.Formula, outputs)
@@ -105,10 +108,23 @@ func (f Function) Program() (*ast.Program, error) {
 
 	// Ensure the program is robust to potential alias sets.
 	aliases := f.AliasSets()
-	q := op3.AliasCorrect(p, aliases, outputs, op3.Temporaries())
+	p = op3.AliasCorrect(p, aliases, outputs, op3.Temporaries())
 
 	// Finally, reduce the program to primitives.
-	return op3.Lower(q)
+	p, err = op3.Lower(p)
+	if err != nil {
+		return nil, err
+	}
+
+	// Verify that all inputs have corresponding variables in the function.
+	variables := f.Variables()
+	for _, input := range op3.Inputs(p) {
+		if _, ok := variables[input]; !ok {
+			return nil, xerrors.Errorf("no variable defined for program input %s", input)
+		}
+	}
+
+	return p, nil
 }
 
 // AliasSets returns groups of variable names with a may-alias relationship,
@@ -193,13 +209,23 @@ func (f Function) Symbols() map[string]bool {
 // Variables builds a map from program variable names to the Go code that
 // references their corresponding function parameters.
 func (f Function) Variables() map[ast.Variable]Variable {
-	variables := map[ast.Variable]Variable{}
-	for _, p := range f.Parameters() {
-		for name, v := range p.Variables() {
-			variables[name] = v
-		}
+	return ParametersVariables(f.Parameters()...)
+}
+
+// AsmFunction is a Function implemented in assembly under the hood.
+type AsmFunction struct {
+	Function
+
+	// AsmName is the name of the assembly function implementing the formula.
+	// Typically this will be unexported.
+	AsmName string
+}
+
+func NewAsmFunctionDefault(f Function) AsmFunction {
+	return AsmFunction{
+		Function: f,
+		AsmName:  strings.ToLower(f.Name),
 	}
-	return variables
 }
 
 type Config struct {
@@ -211,13 +237,26 @@ type Config struct {
 func Package(cfg Config) (gen.Files, error) {
 	fs := gen.Files{}
 
-	// Point operations.
-	b, err := PointOperations(cfg)
+	p := &pointops{
+		Config:    cfg,
+		Generator: gocode.NewGenerator(),
+	}
+
+	// Generate Go code.
+	b, err := p.Generate()
 	if err != nil {
 		return nil, err
 	}
 
 	fs.Add("point.go", b)
+
+	// Generate assembly.
+	if asm := p.Asm(); asm != nil {
+		err := fs.CompileAsm(cfg.PackageName, "fmla", asm)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return fs, nil
 }
@@ -225,14 +264,7 @@ func Package(cfg Config) (gen.Files, error) {
 type pointops struct {
 	Config
 	gocode.Generator
-}
-
-func PointOperations(cfg Config) ([]byte, error) {
-	p := &pointops{
-		Config:    cfg,
-		Generator: gocode.NewGenerator(),
-	}
-	return p.Generate()
+	asm *Asm
 }
 
 func (p *pointops) Generate() ([]byte, error) {
@@ -250,12 +282,29 @@ func (p *pointops) Generate() ([]byte, error) {
 			p.representation(c)
 		case Function:
 			p.function(c)
+		case AsmFunction:
+			p.asmfunction(c)
 		default:
 			return nil, errutil.UnexpectedType(c)
 		}
 	}
 
 	return p.Formatted()
+}
+
+// Asm returns generated assembly, if any.
+func (p *pointops) Asm() *build.Context {
+	if p.asm == nil {
+		return nil
+	}
+	return p.asm.Context()
+}
+
+func (p *pointops) asmbuilder() *Asm {
+	if p.asm == nil {
+		p.asm = NewAsm(p.Field)
+	}
+	return p.asm
 }
 
 func (p *pointops) constant(c Constant) {
@@ -311,35 +360,11 @@ func (p *pointops) function(f Function) {
 	}
 
 	// Function header.
-	p.Printf("func ")
-	if f.Receiver != nil {
-		p.tuple([]Parameter{f.Receiver})
-	}
-	p.Printf("%s", f.Name)
-	p.tuple(f.Params)
-	if len(f.Results) > 0 {
-		p.tuple(f.Results)
-	}
-	p.EnterBlock()
-
-	// Setup return variables.
-	for _, r := range f.Results {
-		if ptr, ok := r.Type().(*types.Pointer); ok {
-			p.Linef("%s = new(%s)", r.Name(), ptr.Elem())
-		}
-	}
-
-	// Verifiy that all inputs have corresponding variables in the function.
-	variables := f.Variables()
-	for _, input := range op3.Inputs(prog) {
-		if _, ok := variables[input]; !ok {
-			p.SetError(xerrors.Errorf("no variable defined for program input %s", input))
-			return
-		}
-	}
+	p.header(f)
 
 	// Setup mapping from formula variables to code, and allocate any necessary
 	// temporaries.
+	variables := f.Variables()
 	defined := f.Symbols()
 	tmps := []string{}
 
@@ -390,7 +415,72 @@ func (p *pointops) function(f Function) {
 		}
 	}
 
-	if len(f.Results) > 0 {
+	p.footer(f)
+}
+
+func (p *pointops) asmfunction(f AsmFunction) {
+	// Determine program.
+	prog, err := f.Program()
+	if err != nil {
+		p.SetError(err)
+		return
+	}
+
+	// Enter function.
+	p.header(f.Function)
+
+	// Generate assembly version of function.
+	asm := p.asmbuilder()
+	outputs := ParametersVariableNames(f.Outputs()...)
+	if err := asm.Function(f.AsmName, prog, outputs); err != nil {
+		p.SetError(err)
+		return
+	}
+
+	// Call the assembly function. (Arguments in string order.)
+	variables := f.Variables()
+	names := []string{}
+	for name := range variables {
+		names = append(names, string(name))
+	}
+	sort.Strings(names)
+
+	args := []string{}
+	for _, name := range names {
+		v := ast.Variable(name)
+		arg := variables[v].Pointer()
+		args = append(args, arg)
+	}
+
+	p.Linef("%s(%s)", f.AsmName, strings.Join(args, ", "))
+
+	// Leave function.
+	p.footer(f.Function)
+}
+
+func (p *pointops) header(f Function) {
+	// Function signature.
+	p.Printf("func ")
+	if f.Receiver != nil {
+		p.tuple([]Parameter{f.Receiver})
+	}
+	p.Printf("%s", f.Name)
+	p.tuple(f.Params)
+	if f.HasResults() {
+		p.tuple(f.Results)
+	}
+	p.EnterBlock()
+
+	// Setup return variables.
+	for _, r := range f.Results {
+		if ptr, ok := r.Type().(*types.Pointer); ok {
+			p.Linef("%s = new(%s)", r.Name(), ptr.Elem())
+		}
+	}
+}
+
+func (p *pointops) footer(f Function) {
+	if f.HasResults() {
 		p.Linef("return")
 	}
 	p.LeaveBlock()

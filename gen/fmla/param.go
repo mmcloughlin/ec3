@@ -47,6 +47,28 @@ type Parameter interface {
 	AliasSets(Parameter) [][]ast.Variable
 }
 
+// ParametersVariables gathers variables for the given list of parameters.
+func ParametersVariables(params ...Parameter) map[ast.Variable]Variable {
+	variables := map[ast.Variable]Variable{}
+	for _, param := range params {
+		for name, v := range param.Variables() {
+			variables[name] = v
+		}
+	}
+	return variables
+}
+
+// ParametersVariableNames gathers all variable names for the given list of parameters.
+func ParametersVariableNames(params ...Parameter) []ast.Variable {
+	names := []ast.Variable{}
+	for _, param := range params {
+		for name := range param.Variables() {
+			names = append(names, name)
+		}
+	}
+	return names
+}
+
 // basic is a parameter representing a single variable.
 type basic struct {
 	name string

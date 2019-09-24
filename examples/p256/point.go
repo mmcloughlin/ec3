@@ -110,113 +110,11 @@ func (p *Jacobian) CNeg(c uint) {
 }
 
 func (p *Jacobian) Add(q *Jacobian, r *Jacobian) {
-	var (
-		H    Elt
-		I    Elt
-		J    Elt
-		S1   Elt
-		S2   Elt
-		U1   Elt
-		U2   Elt
-		V    Elt
-		Z1Z1 Elt
-		Z2Z2 Elt
-		r_   Elt
-		t0   Elt
-		t1   Elt
-		t10  Elt
-		t11  Elt
-		t12  Elt
-		t13  Elt
-		t14  Elt
-		t2   Elt
-		t3   Elt
-		t4   Elt
-		t5   Elt
-		t6   Elt
-		t7   Elt
-		t8   Elt
-		t9   Elt
-	)
-
-	Sqr(&Z1Z1, &q.Z)
-	Sqr(&Z2Z2, &r.Z)
-	Mul(&U1, &q.X, &Z2Z2)
-	Mul(&U2, &r.X, &Z1Z1)
-	Mul(&t0, &r.Z, &Z2Z2)
-	Mul(&S1, &q.Y, &t0)
-	Mul(&t1, &q.Z, &Z1Z1)
-	Mul(&S2, &r.Y, &t1)
-	Sub(&H, &U2, &U1)
-	Add(&t2, &H, &H)
-	Sqr(&I, &t2)
-	Mul(&J, &H, &I)
-	Sub(&t3, &S2, &S1)
-	Add(&r_, &t3, &t3)
-	Mul(&V, &U1, &I)
-	Sqr(&t4, &r_)
-	Add(&t5, &V, &V)
-	Sub(&t6, &t4, &J)
-	Sub(&p.X, &t6, &t5)
-	Sub(&t7, &V, &p.X)
-	Mul(&t8, &S1, &J)
-	Add(&t9, &t8, &t8)
-	Mul(&t10, &r_, &t7)
-	Sub(&p.Y, &t10, &t9)
-	Add(&t11, &q.Z, &r.Z)
-	Sqr(&t12, &t11)
-	Sub(&t13, &t12, &Z1Z1)
-	Sub(&t14, &t13, &Z2Z2)
-	Mul(&p.Z, &t14, &H)
+	add(&q.X, &r.X, &p.X, &q.Y, &r.Y, &p.Y, &q.Z, &r.Z, &p.Z)
 }
 
 func (p *Jacobian) Double(q *Jacobian) {
-	var (
-		alpha Elt
-		beta  Elt
-		delta Elt
-		gamma Elt
-		t0    Elt
-		t1    Elt
-		t10   Elt
-		t11   Elt
-		t12   Elt
-		t2    Elt
-		t3    Elt
-		t4    Elt
-		t5    Elt
-		t6    Elt
-		t7    Elt
-		t8    Elt
-		t9    Elt
-	)
-
-	Sqr(&delta, &q.Z)
-	Sqr(&gamma, &q.Y)
-	Mul(&beta, &q.X, &gamma)
-	Sub(&t0, &q.X, &delta)
-	Add(&t1, &q.X, &delta)
-	Mul(&t2, &t0, &t1)
-	Add(&alpha, &t2, &t2)
-	Add(&alpha, &alpha, &t2)
-	Sqr(&t3, &alpha)
-	Add(&t4, &beta, &beta)
-	Add(&t4, &t4, &t4)
-	Add(&t4, &t4, &t4)
-	Sub(&p.X, &t3, &t4)
-	Add(&t5, &q.Y, &q.Z)
-	Sqr(&t6, &t5)
-	Sub(&t7, &t6, &gamma)
-	Sub(&p.Z, &t7, &delta)
-	Add(&t8, &beta, &beta)
-	Add(&t8, &t8, &t8)
-	Sub(&t9, &t8, &p.X)
-	Sqr(&t10, &gamma)
-	Add(&t11, &t10, &t10)
-	Add(&t11, &t11, &t11)
-	Add(&t11, &t11, &t11)
-	Mul(&t12, &alpha, &t9)
-	Sub(&p.Y, &t12, &t11)
+	double(&q.X, &p.X, &q.Y, &p.Y, &q.Z, &p.Z)
 }
 
 type Projective struct {
@@ -260,57 +158,5 @@ func (p *Projective) CNeg(c uint) {
 }
 
 func (p *Projective) CompleteAdd(q *Projective, r *Projective) {
-	var (
-		t0 Elt
-		t1 Elt
-		t2 Elt
-		t3 Elt
-		t4 Elt
-		t5 Elt
-	)
-
-	Mul(&t0, &q.X, &r.X)
-	Mul(&t1, &q.Y, &r.Y)
-	Mul(&t2, &q.Z, &r.Z)
-	Add(&t3, &q.X, &q.Y)
-	Add(&t4, &r.X, &r.Y)
-	Mul(&t3, &t3, &t4)
-	Add(&t4, &t0, &t1)
-	Sub(&t3, &t3, &t4)
-	Add(&t4, &q.Y, &q.Z)
-	Add(&t5, &r.Y, &r.Z)
-	Mul(&t4, &t4, &t5)
-	Add(&t5, &t1, &t2)
-	Sub(&t4, &t4, &t5)
-	Add(&t5, &q.X, &q.Z)
-	Add(&p.Y, &r.X, &r.Z)
-	Mul(&t5, &t5, &p.Y)
-	Add(&p.Y, &t0, &t2)
-	Sub(&p.Y, &t5, &p.Y)
-	Mul(&p.Z, b, &t2)
-	Sub(&t5, &p.Y, &p.Z)
-	Add(&p.Z, &t5, &t5)
-	Add(&t5, &t5, &p.Z)
-	Sub(&p.Z, &t1, &t5)
-	Add(&t5, &t1, &t5)
-	Mul(&p.Y, b, &p.Y)
-	Add(&t1, &t2, &t2)
-	Add(&t2, &t1, &t2)
-	Sub(&p.Y, &p.Y, &t2)
-	Sub(&p.Y, &p.Y, &t0)
-	Add(&t1, &p.Y, &p.Y)
-	Add(&p.Y, &t1, &p.Y)
-	Add(&t1, &t0, &t0)
-	Add(&t0, &t1, &t0)
-	Sub(&t0, &t0, &t2)
-	Mul(&t1, &t4, &p.Y)
-	Mul(&t2, &t0, &p.Y)
-	Mul(&p.Y, &t5, &p.Z)
-	Add(&p.Y, &p.Y, &t2)
-	Mul(&t5, &t3, &t5)
-	Sub(&t5, &t5, &t1)
-	Mul(&p.Z, &t4, &p.Z)
-	Mul(&t1, &t3, &t0)
-	Add(&p.Z, &p.Z, &t1)
-	p.X = t5
+	completeadd(&q.X, &r.X, &p.X, &q.Y, &r.Y, &p.Y, &q.Z, &r.Z, &p.Z, b)
 }
