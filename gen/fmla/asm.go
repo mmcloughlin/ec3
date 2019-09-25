@@ -163,7 +163,7 @@ func (a *Asm) Function(name string, p *ast.Program, outputs []ast.Variable) erro
 
 	// Copy inputs to stack.
 	t := mp.NewIntLimb64(a.ctx, field.Limbs())
-	for _, input := range op3.Inputs(p) {
+	for _, input := range op3.SortedVariables(op3.Inputs(p)) {
 		x := mp.Param(a.ctx, paramname(input), field.Limbs())
 		mp.Copy(a.ctx, t, x)
 		mp.Copy(a.ctx, stack[input], t)
@@ -230,7 +230,7 @@ func (a *Asm) Function(name string, p *ast.Program, outputs []ast.Variable) erro
 	}
 
 	// Store outputs.
-	for _, output := range outputs {
+	for _, output := range op3.SortedVariables(outputs) {
 		x := mp.Param(a.ctx, paramname(output), field.Limbs())
 		mp.Copy(a.ctx, t, stack[output])
 		mp.Copy(a.ctx, x, t)

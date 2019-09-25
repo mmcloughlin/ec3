@@ -1,6 +1,8 @@
 package op3
 
 import (
+	"sort"
+
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 )
@@ -56,6 +58,15 @@ func Inputs(p *ast.Program) []ast.Variable {
 	}
 
 	return vs
+}
+
+// SortedVariables returns the variables vs sorted in string order.
+func SortedVariables(vs []ast.Variable) []ast.Variable {
+	sorted := append([]ast.Variable{}, vs...)
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i] < sorted[j]
+	})
+	return sorted
 }
 
 // IsSSA reports whether every variable is written once.
