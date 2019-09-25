@@ -189,3 +189,8 @@ func Mul(ctx *build.Context, z, x, y Int) {
 		ctx.MOVQ(acc[j], z[j])
 	}
 }
+
+// Sqr does a full square z = x^2.
+func Sqr(ctx *build.Context, z, x Int) {
+	Mul(ctx, z, x, x)
+}

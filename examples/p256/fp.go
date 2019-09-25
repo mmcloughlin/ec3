@@ -137,11 +137,6 @@ func Neg(z *Elt, x *Elt) {
 	Sub(z, &prime, x)
 }
 
-// Sqr computes z = x^2 (mod p).
-func Sqr(z *Elt, x *Elt) {
-	Mul(z, x, x)
-}
-
 // Inv computes z = 1/x (mod p).
 func Inv(z *Elt, x *Elt) {
 	// Inversion computation is derived from the addition chain:

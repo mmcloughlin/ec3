@@ -13,3 +13,6 @@ func scalarsub(z *scalar, x *scalar, y *scalar)
 
 //go:noescape
 func scalarmul(z *scalar, x *scalar, y *scalar)
+
+//go:noescape
+func scalarsqr(z *scalar, x *scalar)

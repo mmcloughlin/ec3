@@ -13,3 +13,6 @@ func Sub(z *Elt, x *Elt, y *Elt)
 
 //go:noescape
 func Mul(z *Elt, x *Elt, y *Elt)
+
+//go:noescape
+func Sqr(z *Elt, x *Elt)

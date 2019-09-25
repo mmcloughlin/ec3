@@ -72,6 +72,7 @@ func Package(cfg Config) (gen.Files, error) {
 	a.Add()
 	a.Sub()
 	a.Mul()
+	a.Sqr()
 
 	if err := fs.CompileAsm(cfg.PackageName, cfg.FilenamePrefix+"_amd64", a.Context()); err != nil {
 		return nil, err

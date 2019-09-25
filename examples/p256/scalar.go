@@ -137,11 +137,6 @@ func scalarneg(z *scalar, x *scalar) {
 	scalarsub(z, &scalarprime, x)
 }
 
-// scalarsqr computes z = x^2 (mod p).
-func scalarsqr(z *scalar, x *scalar) {
-	scalarmul(z, x, x)
-}
-
 // scalarinv computes z = 1/x (mod p).
 func scalarinv(z *scalar, x *scalar) {
 	// Inversion computation is derived from the addition chain:

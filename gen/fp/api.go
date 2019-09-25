@@ -67,7 +67,6 @@ func (a *api) Generate() ([]byte, error) {
 
 	// Implement field operations.
 	a.Negate()
-	a.Square()
 	a.Inverse()
 
 	return a.Formatted()
@@ -213,15 +212,6 @@ func (a *api) Negate() {
 	a.Commentf("%s computes z = -x (mod p).", a.Name("Neg"))
 	a.Function(a.Name("Neg"), a.Signature("z", "x"))
 	a.Call("Sub", "z", "&"+a.Name("prime"), "x")
-	a.LeaveBlock()
-}
-
-// Square generates a square function. This is currently implemented naively
-// using multiply.
-func (a *api) Square() {
-	a.Commentf("%s computes z = x^2 (mod p).", a.Name("Sqr"))
-	a.Function(a.Name("Sqr"), a.Signature("z", "x"))
-	a.Call("Mul", "z", "x", "x")
 	a.LeaveBlock()
 }
 

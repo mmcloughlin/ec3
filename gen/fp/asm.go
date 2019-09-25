@@ -134,3 +134,23 @@ func (a Asm) Mul() {
 
 	a.ctx.RET()
 }
+
+func (a Asm) Sqr() {
+	a.Function("Sqr", "z", "x")
+	k := a.field.Limbs()
+
+	// Load parameters.
+	z := mp.Param(a.ctx, "z", k)
+	x := mp.Param(a.ctx, "x", k)
+
+	// Perform square.
+	// TODO(mbm): is it possible to store the intermediate result in registers?
+	m := mp.AllocLocal(a.ctx, 2*k)
+	mp.Sqr(a.ctx, m, x)
+
+	// Reduce.
+	a.ctx.Comment("Reduction.")
+	a.field.ReduceDouble(z, m)
+
+	a.ctx.RET()
+}

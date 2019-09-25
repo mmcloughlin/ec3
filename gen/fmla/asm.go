@@ -193,7 +193,7 @@ func (a *Asm) Function(name string, p *ast.Program, outputs []ast.Variable) erro
 				return err
 			}
 			x := mp.CopyIntoRegisters(a.ctx, ops[1])
-			mp.Mul(a.ctx, m, x, x)
+			mp.Sqr(a.ctx, m, x)
 			a.field.ReduceDouble(ops[0], m)
 		case ast.Mul:
 			ops, err := a.operands(stack, asgn.LHS, e.X, e.Y)
