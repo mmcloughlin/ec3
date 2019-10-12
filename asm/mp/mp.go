@@ -3,6 +3,8 @@ package mp
 import (
 	"math/big"
 
+	"github.com/mmcloughlin/ec3/internal/ints"
+
 	"github.com/mmcloughlin/avo/attr"
 	"github.com/mmcloughlin/avo/build"
 	"github.com/mmcloughlin/avo/operand"
@@ -190,7 +192,134 @@ func Mul(ctx *build.Context, z, x, y Int) {
 	}
 }
 
+type Accumulator struct {
+	x   Int
+	max *big.Int
+	ctx *build.Context
+}
+
+func NewAccumulator(ctx *build.Context) *Accumulator {
+	return &Accumulator{
+		ctx: ctx,
+		max: new(big.Int),
+	}
+}
+
+// Int returns the value in the accumulator.
+func (a *Accumulator) Int() Int { return a.x }
+
+// AddAtMax adds a into the accumulator starting at limb i, assuming that the
+// registers have maximum value max.
+func (a *Accumulator) AddAtMax(y Int, max *big.Int, i int) {
+	zero := operand.U32(0)
+
+	// Update maximum value.
+	Y := new(big.Int).Lsh(max, 64*uint(i))
+	a.max.Add(a.max, Y)
+
+	// Add y.
+	carry := false
+	for len(y) > 0 {
+		x := a.get(i)
+		switch {
+		case !carry && x == nil:
+			l := a.ctx.GP64()
+			a.ctx.MOVQ(y[0], l)
+			a.set(i, l)
+		case carry && x == nil:
+			l := a.ctx.GP64()
+			a.ctx.MOVQ(zero, l)
+			a.ctx.ADCQ(y[0], l)
+			a.set(i, l)
+			carry = true
+		case !carry && x != nil:
+			a.ctx.ADDQ(y[0], x)
+			carry = true
+		case carry && x != nil:
+			a.ctx.ADCQ(y[0], x)
+			carry = true
+		}
+		i++
+		y = y[1:]
+	}
+
+	// Consider a possible carry off the top.
+	if !carry || i >= a.limbs() {
+		return
+	}
+
+	if x := a.get(i); x == nil {
+		l := a.ctx.GP64()
+		a.ctx.MOVQ(zero, l)
+		a.set(i, l)
+	}
+	a.ctx.ADCQ(zero, a.get(i))
+}
+
+// AddAt adds a into the accumulator starting at limb i.
+func (a *Accumulator) AddAt(y Int, i int) {
+	bits := uint(64 * len(y))
+	a.AddAtMax(y, bigint.Ones(bits), i)
+}
+
+// limbs returns the required number of limbs to represent the max possible value.
+func (a *Accumulator) limbs() int {
+	return ints.NextMultiple(a.max.BitLen(), 64) / 64
+}
+
+func (a *Accumulator) get(i int) operand.Op {
+	if i < len(a.x) {
+		return a.x[i]
+	}
+	return nil
+}
+
+func (a *Accumulator) set(i int, v operand.Op) {
+	for len(a.x) <= i {
+		a.x = append(a.x, nil)
+	}
+	a.x[i] = v
+}
+
 // Sqr does a full square z = x^2.
 func Sqr(ctx *build.Context, z, x Int) {
-	Mul(ctx, z, x, x)
+	k := len(x)
+	acc := NewAccumulator(ctx)
+
+	// Max value of product.
+	max64 := bigint.Ones(64)
+	maxprod := new(big.Int).Mul(max64, max64)
+
+	// Compute all products x_i * x_j for i < j. Due to symmetry these are are the
+	// terms of the product that will appear twice.
+	for n := 0; n < 2*k; n++ {
+		for i := ints.Max(0, n-k+1); 2*i < n && i < k; i++ {
+			j := n - i
+			ctx.Commentf("x[%d] * x[%d]", i, j)
+
+			// Multiply.
+			ctx.MOVQ(x[i], reg.RAX)
+			ctx.MULQ(x[j])
+			hi, lo := reg.RDX, reg.RAX
+			acc.AddAtMax(Int{lo, hi}, maxprod, n)
+		}
+	}
+
+	// Double the result so far.
+	ctx.Comment("*2")
+	v := acc.Int()
+	acc.AddAt(v[1:], 1)
+
+	// Add in squared terms.
+	for i := 0; i < k; i++ {
+		ctx.Commentf("x[%d] * x[%d]", i, i)
+		ctx.MOVQ(x[i], reg.RAX)
+		ctx.MULQ(x[i])
+		hi, lo := reg.RDX, reg.RAX
+		acc.AddAtMax(Int{lo, hi}, maxprod, 2*i)
+	}
+
+	// TODO(mbm): is copy necessary?
+	ctx.Comment("Copy to result.")
+	Copy(ctx, z, acc.Int())
 }

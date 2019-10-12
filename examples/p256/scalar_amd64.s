@@ -323,114 +323,101 @@ GLOBL mprime<>(SB), RODATA|NOPTR, $8
 
 // func scalarsqr(z *scalar, x *scalar)
 TEXT ·scalarsqr(SB), NOSPLIT, $64-16
-	MOVQ z+0(FP), AX
-	MOVQ x+8(FP), CX
+	MOVQ z+0(FP), CX
+	MOVQ x+8(FP), BX
 
-	// y[0]
-	MOVQ (CX), DX
-	XORQ BX, BX
+	// x[0] * x[1]
+	MOVQ (BX), AX
+	MULQ 8(BX)
+	MOVQ AX, BP
+	MOVQ DX, SI
 
-	// x[0] * y[0] -> z[0]
-	MULXQ (CX), BP, SI
+	// x[0] * x[2]
+	MOVQ (BX), AX
+	MULQ 16(BX)
+	ADDQ AX, SI
+	MOVQ $0x00000000, DI
+	ADCQ DX, DI
 
-	// x[1] * y[0] -> z[1]
-	MULXQ 8(CX), DI, R8
-	ADCXQ DI, SI
+	// x[0] * x[3]
+	MOVQ (BX), AX
+	MULQ 24(BX)
+	ADDQ AX, DI
+	MOVQ $0x00000000, R8
+	ADCQ DX, R8
 
-	// x[2] * y[0] -> z[2]
-	MULXQ 16(CX), DI, R9
-	ADCXQ DI, R8
+	// x[1] * x[2]
+	MOVQ 8(BX), AX
+	MULQ 16(BX)
+	ADDQ AX, DI
+	ADCQ DX, R8
+	MOVQ $0x00000000, R9
+	ADCQ $0x00000000, R9
 
-	// x[3] * y[0] -> z[3]
-	MULXQ 24(CX), DX, DI
-	ADCXQ DX, R9
-	ADCXQ BX, DI
-	MOVQ  BP, (SP)
+	// x[1] * x[3]
+	MOVQ 8(BX), AX
+	MULQ 24(BX)
+	ADDQ AX, R8
+	ADCQ DX, R9
 
-	// y[1]
-	MOVQ 8(CX), DX
-	XORQ BX, BX
+	// x[2] * x[3]
+	MOVQ 16(BX), AX
+	MULQ 24(BX)
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[0] * y[1] -> z[1]
-	MULXQ (CX), BP, R10
-	ADCXQ BP, SI
-	ADOXQ R10, R8
+	// *2
+	ADDQ BP, BP
+	ADCQ SI, SI
+	ADCQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[1] * y[1] -> z[2]
-	MULXQ 8(CX), BP, R10
-	ADCXQ BP, R8
-	ADOXQ R10, R9
+	// x[0] * x[0]
+	MOVQ (BX), AX
+	MULQ (BX)
+	MOVQ AX, R12
+	ADDQ DX, BP
+	ADCQ $0x00000000, SI
 
-	// x[2] * y[1] -> z[3]
-	MULXQ 16(CX), BP, R10
-	ADCXQ BP, R9
-	ADOXQ R10, DI
+	// x[1] * x[1]
+	MOVQ 8(BX), AX
+	MULQ 8(BX)
+	ADDQ AX, SI
+	ADCQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[3] * y[1] -> z[4]
-	MULXQ 24(CX), DX, BP
-	ADCXQ DX, DI
-	ADCXQ BX, BP
-	ADOXQ BX, BP
-	MOVQ  SI, 8(SP)
+	// x[2] * x[2]
+	MOVQ 16(BX), AX
+	MULQ 16(BX)
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// y[2]
-	MOVQ 16(CX), DX
-	XORQ BX, BX
+	// x[3] * x[3]
+	MOVQ 24(BX), AX
+	MULQ 24(BX)
+	ADDQ AX, R10
+	ADCQ DX, R11
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ (CX), SI, R10
-	ADCXQ SI, R8
-	ADOXQ R10, R9
-
-	// x[1] * y[2] -> z[3]
-	MULXQ 8(CX), SI, R10
-	ADCXQ SI, R9
-	ADOXQ R10, DI
-
-	// x[2] * y[2] -> z[4]
-	MULXQ 16(CX), SI, R10
-	ADCXQ SI, DI
-	ADOXQ R10, BP
-
-	// x[3] * y[2] -> z[5]
-	MULXQ 24(CX), DX, SI
-	ADCXQ DX, BP
-	ADCXQ BX, SI
-	ADOXQ BX, SI
-	MOVQ  R8, 16(SP)
-
-	// y[3]
-	MOVQ 24(CX), DX
-	XORQ BX, BX
-
-	// x[0] * y[3] -> z[3]
-	MULXQ (CX), R8, R10
-	ADCXQ R8, R9
-	ADOXQ R10, DI
-
-	// x[1] * y[3] -> z[4]
-	MULXQ 8(CX), R8, R10
-	ADCXQ R8, DI
-	ADOXQ R10, BP
-
-	// x[2] * y[3] -> z[5]
-	MULXQ 16(CX), R8, R10
-	ADCXQ R8, BP
-	ADOXQ R10, SI
-
-	// x[3] * y[3] -> z[6]
-	MULXQ 24(CX), CX, DX
-	ADCXQ CX, SI
-	ADCXQ BX, DX
-	ADOXQ BX, DX
-	MOVQ  R9, 24(SP)
-	MOVQ  DI, 32(SP)
-	MOVQ  BP, 40(SP)
-	MOVQ  SI, 48(SP)
-	MOVQ  DX, 56(SP)
+	// Copy to result.
+	MOVQ R12, (SP)
+	MOVQ BP, 8(SP)
+	MOVQ SI, 16(SP)
+	MOVQ DI, 24(SP)
+	MOVQ R8, 32(SP)
+	MOVQ R9, 40(SP)
+	MOVQ R10, 48(SP)
+	MOVQ R11, 56(SP)
 
 	// Reduction.
-	XORQ    CX, CX
+	XORQ    AX, AX
 	MOVQ    (SP), BX
 	MOVQ    8(SP), BP
 	MOVQ    16(SP), SI
@@ -451,9 +438,9 @@ TEXT ·scalarsqr(SB), NOSPLIT, $64-16
 	MULXQ   p<>+24(SB), DX, BX
 	ADCXQ   DX, DI
 	ADOXQ   BX, R8
-	ADCXQ   CX, R8
-	ADCXQ   CX, R9
-	ADOXQ   CX, R9
+	ADCXQ   AX, R8
+	ADCXQ   AX, R9
+	ADOXQ   AX, R9
 	MOVQ    mprime<>+0(SB), DX
 	MULXQ   BP, DX, BX
 	MOVQ    40(SP), BX
@@ -471,8 +458,8 @@ TEXT ·scalarsqr(SB), NOSPLIT, $64-16
 	ADCXQ   DX, R8
 	ADOXQ   BP, BX
 	ADCXQ   R9, BX
-	ADCXQ   CX, R10
-	ADOXQ   CX, R10
+	ADCXQ   AX, R10
+	ADOXQ   AX, R10
 	MOVQ    mprime<>+0(SB), DX
 	MULXQ   SI, DX, BP
 	MOVQ    48(SP), BP
@@ -490,8 +477,8 @@ TEXT ·scalarsqr(SB), NOSPLIT, $64-16
 	ADCXQ   DX, BX
 	ADOXQ   SI, BP
 	ADCXQ   R10, BP
-	ADCXQ   CX, R9
-	ADOXQ   CX, R9
+	ADCXQ   AX, R9
+	ADOXQ   AX, R9
 	MOVQ    mprime<>+0(SB), DX
 	MULXQ   DI, DX, SI
 	MOVQ    56(SP), SI
@@ -509,23 +496,23 @@ TEXT ·scalarsqr(SB), NOSPLIT, $64-16
 	ADCXQ   DX, BP
 	ADOXQ   DI, SI
 	ADCXQ   R9, SI
-	ADCXQ   CX, R10
-	ADOXQ   CX, R10
-	MOVQ    R8, CX
+	ADCXQ   AX, R10
+	ADOXQ   AX, R10
+	MOVQ    R8, AX
 	MOVQ    BX, DX
 	MOVQ    BP, DI
 	MOVQ    SI, R9
-	SUBQ    p<>+0(SB), CX
+	SUBQ    p<>+0(SB), AX
 	SBBQ    p<>+8(SB), DX
 	SBBQ    p<>+16(SB), DI
 	SBBQ    p<>+24(SB), R9
 	SBBQ    $0x00000000, R10
-	CMOVQCC CX, R8
+	CMOVQCC AX, R8
 	CMOVQCC DX, BX
 	CMOVQCC DI, BP
 	CMOVQCC R9, SI
-	MOVQ    R8, (AX)
-	MOVQ    BX, 8(AX)
-	MOVQ    BP, 16(AX)
-	MOVQ    SI, 24(AX)
+	MOVQ    R8, (CX)
+	MOVQ    BX, 8(CX)
+	MOVQ    BP, 16(CX)
+	MOVQ    SI, 24(CX)
 	RET

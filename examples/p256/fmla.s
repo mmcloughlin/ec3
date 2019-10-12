@@ -131,113 +131,100 @@ TEXT ·add(SB), $1184-72
 	MOVQ BX, 120(SP)
 
 	// Step 1: Z1^2
-	MOVQ 32(SP), AX
-	MOVQ 40(SP), CX
-	MOVQ 48(SP), BX
-	MOVQ 56(SP), BP
+	MOVQ 32(SP), CX
+	MOVQ 40(SP), BX
+	MOVQ 48(SP), BP
+	MOVQ 56(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 1120(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 1128(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 1136(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 1144(SP)
-	MOVQ    R9, 1152(SP)
-	MOVQ    DI, 1160(SP)
-	MOVQ    R8, 1168(SP)
-	MOVQ    CX, 1176(SP)
+	// Copy to result.
+	MOVQ    CX, 1120(SP)
+	MOVQ    DI, 1128(SP)
+	MOVQ    R8, 1136(SP)
+	MOVQ    R9, 1144(SP)
+	MOVQ    R10, 1152(SP)
+	MOVQ    R11, 1160(SP)
+	MOVQ    R12, 1168(SP)
+	MOVQ    R13, 1176(SP)
 	XORQ    AX, AX
 	MOVQ    1120(SP), CX
 	MOVQ    1128(SP), BX
@@ -334,113 +321,100 @@ TEXT ·add(SB), $1184-72
 	MOVQ    BP, 24(SP)
 
 	// Step 2: Z2^2
-	MOVQ 96(SP), AX
-	MOVQ 104(SP), CX
-	MOVQ 112(SP), BX
-	MOVQ 120(SP), BP
+	MOVQ 96(SP), CX
+	MOVQ 104(SP), BX
+	MOVQ 112(SP), BP
+	MOVQ 120(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 1120(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 1128(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 1136(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 1144(SP)
-	MOVQ    R9, 1152(SP)
-	MOVQ    DI, 1160(SP)
-	MOVQ    R8, 1168(SP)
-	MOVQ    CX, 1176(SP)
+	// Copy to result.
+	MOVQ    CX, 1120(SP)
+	MOVQ    DI, 1128(SP)
+	MOVQ    R8, 1136(SP)
+	MOVQ    R9, 1144(SP)
+	MOVQ    R10, 1152(SP)
+	MOVQ    R11, 1160(SP)
+	MOVQ    R12, 1168(SP)
+	MOVQ    R13, 1176(SP)
 	XORQ    AX, AX
 	MOVQ    1120(SP), CX
 	MOVQ    1128(SP), BX
@@ -1839,113 +1813,100 @@ TEXT ·add(SB), $1184-72
 	MOVQ    BX, 504(SP)
 
 	// Step 11: t2^2
-	MOVQ 480(SP), AX
-	MOVQ 488(SP), CX
-	MOVQ 496(SP), BX
-	MOVQ 504(SP), BP
+	MOVQ 480(SP), CX
+	MOVQ 488(SP), BX
+	MOVQ 496(SP), BP
+	MOVQ 504(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 1120(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 1128(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 1136(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 1144(SP)
-	MOVQ    R9, 1152(SP)
-	MOVQ    DI, 1160(SP)
-	MOVQ    R8, 1168(SP)
-	MOVQ    CX, 1176(SP)
+	// Copy to result.
+	MOVQ    CX, 1120(SP)
+	MOVQ    DI, 1128(SP)
+	MOVQ    R8, 1136(SP)
+	MOVQ    R9, 1144(SP)
+	MOVQ    R10, 1152(SP)
+	MOVQ    R11, 1160(SP)
+	MOVQ    R12, 1168(SP)
+	MOVQ    R13, 1176(SP)
 	XORQ    AX, AX
 	MOVQ    1120(SP), CX
 	MOVQ    1128(SP), BX
@@ -2520,113 +2481,100 @@ TEXT ·add(SB), $1184-72
 	MOVQ    BP, 664(SP)
 
 	// Step 16: r^2
-	MOVQ 608(SP), AX
-	MOVQ 616(SP), CX
-	MOVQ 624(SP), BX
-	MOVQ 632(SP), BP
+	MOVQ 608(SP), CX
+	MOVQ 616(SP), BX
+	MOVQ 624(SP), BP
+	MOVQ 632(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 1120(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 1128(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 1136(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 1144(SP)
-	MOVQ    R9, 1152(SP)
-	MOVQ    DI, 1160(SP)
-	MOVQ    R8, 1168(SP)
-	MOVQ    CX, 1176(SP)
+	// Copy to result.
+	MOVQ    CX, 1120(SP)
+	MOVQ    DI, 1128(SP)
+	MOVQ    R8, 1136(SP)
+	MOVQ    R9, 1144(SP)
+	MOVQ    R10, 1152(SP)
+	MOVQ    R11, 1160(SP)
+	MOVQ    R12, 1168(SP)
+	MOVQ    R13, 1176(SP)
 	XORQ    AX, AX
 	MOVQ    1120(SP), CX
 	MOVQ    1128(SP), BX
@@ -3366,113 +3314,100 @@ TEXT ·add(SB), $1184-72
 	MOVQ    BX, 984(SP)
 
 	// Step 26: t11^2
-	MOVQ 960(SP), AX
-	MOVQ 968(SP), CX
-	MOVQ 976(SP), BX
-	MOVQ 984(SP), BP
+	MOVQ 960(SP), CX
+	MOVQ 968(SP), BX
+	MOVQ 976(SP), BP
+	MOVQ 984(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 1120(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 1128(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 1136(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 1144(SP)
-	MOVQ    R9, 1152(SP)
-	MOVQ    DI, 1160(SP)
-	MOVQ    R8, 1168(SP)
-	MOVQ    CX, 1176(SP)
+	// Copy to result.
+	MOVQ    CX, 1120(SP)
+	MOVQ    DI, 1128(SP)
+	MOVQ    R8, 1136(SP)
+	MOVQ    R9, 1144(SP)
+	MOVQ    R10, 1152(SP)
+	MOVQ    R11, 1160(SP)
+	MOVQ    R12, 1168(SP)
+	MOVQ    R13, 1176(SP)
 	XORQ    AX, AX
 	MOVQ    1120(SP), CX
 	MOVQ    1128(SP), BX
@@ -3905,113 +3840,100 @@ TEXT ·double(SB), $800-48
 	MOVQ BX, 56(SP)
 
 	// Step 1: Z1^2
-	MOVQ 32(SP), AX
-	MOVQ 40(SP), CX
-	MOVQ 48(SP), BX
-	MOVQ 56(SP), BP
+	MOVQ 32(SP), CX
+	MOVQ 40(SP), BX
+	MOVQ 48(SP), BP
+	MOVQ 56(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 736(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 744(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 752(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 760(SP)
-	MOVQ    R9, 768(SP)
-	MOVQ    DI, 776(SP)
-	MOVQ    R8, 784(SP)
-	MOVQ    CX, 792(SP)
+	// Copy to result.
+	MOVQ    CX, 736(SP)
+	MOVQ    DI, 744(SP)
+	MOVQ    R8, 752(SP)
+	MOVQ    R9, 760(SP)
+	MOVQ    R10, 768(SP)
+	MOVQ    R11, 776(SP)
+	MOVQ    R12, 784(SP)
+	MOVQ    R13, 792(SP)
 	XORQ    AX, AX
 	MOVQ    736(SP), CX
 	MOVQ    744(SP), BX
@@ -4108,113 +4030,100 @@ TEXT ·double(SB), $800-48
 	MOVQ    BP, 24(SP)
 
 	// Step 2: Y1^2
-	MOVQ 96(SP), AX
-	MOVQ 104(SP), CX
-	MOVQ 112(SP), BX
-	MOVQ 120(SP), BP
+	MOVQ 96(SP), CX
+	MOVQ 104(SP), BX
+	MOVQ 112(SP), BP
+	MOVQ 120(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 736(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 744(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 752(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 760(SP)
-	MOVQ    R9, 768(SP)
-	MOVQ    DI, 776(SP)
-	MOVQ    R8, 784(SP)
-	MOVQ    CX, 792(SP)
+	// Copy to result.
+	MOVQ    CX, 736(SP)
+	MOVQ    DI, 744(SP)
+	MOVQ    R8, 752(SP)
+	MOVQ    R9, 760(SP)
+	MOVQ    R10, 768(SP)
+	MOVQ    R11, 776(SP)
+	MOVQ    R12, 784(SP)
+	MOVQ    R13, 792(SP)
 	XORQ    AX, AX
 	MOVQ    736(SP), CX
 	MOVQ    744(SP), BX
@@ -4855,113 +4764,100 @@ TEXT ·double(SB), $800-48
 	MOVQ    BX, 312(SP)
 
 	// Step 9: alpha^2
-	MOVQ 288(SP), AX
-	MOVQ 296(SP), CX
-	MOVQ 304(SP), BX
-	MOVQ 312(SP), BP
+	MOVQ 288(SP), CX
+	MOVQ 296(SP), BX
+	MOVQ 304(SP), BP
+	MOVQ 312(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 736(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 744(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 752(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 760(SP)
-	MOVQ    R9, 768(SP)
-	MOVQ    DI, 776(SP)
-	MOVQ    R8, 784(SP)
-	MOVQ    CX, 792(SP)
+	// Copy to result.
+	MOVQ    CX, 736(SP)
+	MOVQ    DI, 744(SP)
+	MOVQ    R8, 752(SP)
+	MOVQ    R9, 760(SP)
+	MOVQ    R10, 768(SP)
+	MOVQ    R11, 776(SP)
+	MOVQ    R12, 784(SP)
+	MOVQ    R13, 792(SP)
 	XORQ    AX, AX
 	MOVQ    736(SP), CX
 	MOVQ    744(SP), BX
@@ -5223,113 +5119,100 @@ TEXT ·double(SB), $800-48
 	MOVQ    BX, 440(SP)
 
 	// Step 15: t5^2
-	MOVQ 416(SP), AX
-	MOVQ 424(SP), CX
-	MOVQ 432(SP), BX
-	MOVQ 440(SP), BP
+	MOVQ 416(SP), CX
+	MOVQ 424(SP), BX
+	MOVQ 432(SP), BP
+	MOVQ 440(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 736(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 744(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 752(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 760(SP)
-	MOVQ    R9, 768(SP)
-	MOVQ    DI, 776(SP)
-	MOVQ    R8, 784(SP)
-	MOVQ    CX, 792(SP)
+	// Copy to result.
+	MOVQ    CX, 736(SP)
+	MOVQ    DI, 744(SP)
+	MOVQ    R8, 752(SP)
+	MOVQ    R9, 760(SP)
+	MOVQ    R10, 768(SP)
+	MOVQ    R11, 776(SP)
+	MOVQ    R12, 784(SP)
+	MOVQ    R13, 792(SP)
 	XORQ    AX, AX
 	MOVQ    736(SP), CX
 	MOVQ    744(SP), BX
@@ -5591,113 +5474,100 @@ TEXT ·double(SB), $800-48
 	MOVQ    BX, 600(SP)
 
 	// Step 21: gamma^2
-	MOVQ 64(SP), AX
-	MOVQ 72(SP), CX
-	MOVQ 80(SP), BX
-	MOVQ 88(SP), BP
+	MOVQ 64(SP), CX
+	MOVQ 72(SP), BX
+	MOVQ 80(SP), BP
+	MOVQ 88(SP), SI
 
-	// y[0]
-	MOVQ AX, DX
-	XORQ SI, SI
+	// x[0] * x[1]
+	MOVQ CX, AX
+	MULQ BX
+	MOVQ AX, DI
+	MOVQ DX, R8
 
-	// x[0] * y[0] -> z[0]
-	MULXQ AX, DI, R8
+	// x[0] * x[2]
+	MOVQ CX, AX
+	MULQ BP
+	ADDQ AX, R8
+	MOVQ $0x00000000, R9
+	ADCQ DX, R9
 
-	// x[1] * y[0] -> z[1]
-	MULXQ CX, R9, R10
-	ADCXQ R9, R8
+	// x[0] * x[3]
+	MOVQ CX, AX
+	MULQ SI
+	ADDQ AX, R9
+	MOVQ $0x00000000, R10
+	ADCQ DX, R10
 
-	// x[2] * y[0] -> z[2]
-	MULXQ BX, R9, R11
-	ADCXQ R9, R10
+	// x[1] * x[2]
+	MOVQ BX, AX
+	MULQ BP
+	ADDQ AX, R9
+	ADCQ DX, R10
+	MOVQ $0x00000000, R11
+	ADCQ $0x00000000, R11
 
-	// x[3] * y[0] -> z[3]
-	MULXQ BP, DX, R9
-	ADCXQ DX, R11
-	ADCXQ SI, R9
-	MOVQ  DI, 736(SP)
+	// x[1] * x[3]
+	MOVQ BX, AX
+	MULQ SI
+	ADDQ AX, R10
+	ADCQ DX, R11
 
-	// y[1]
-	MOVQ CX, DX
-	XORQ SI, SI
+	// x[2] * x[3]
+	MOVQ BP, AX
+	MULQ SI
+	ADDQ AX, R11
+	MOVQ $0x00000000, R12
+	ADCQ DX, R12
 
-	// x[0] * y[1] -> z[1]
-	MULXQ AX, DI, R12
-	ADCXQ DI, R8
-	ADOXQ R12, R10
+	// *2
+	ADDQ DI, DI
+	ADCQ R8, R8
+	ADCQ R9, R9
+	ADCQ R10, R10
+	ADCQ R11, R11
+	ADCQ R12, R12
+	MOVQ $0x00000000, R13
+	ADCQ $0x00000000, R13
 
-	// x[1] * y[1] -> z[2]
-	MULXQ CX, DI, R12
-	ADCXQ DI, R10
-	ADOXQ R12, R11
+	// x[0] * x[0]
+	MOVQ CX, AX
+	MULQ CX
+	MOVQ AX, CX
+	ADDQ DX, DI
+	ADCQ $0x00000000, R8
 
-	// x[2] * y[1] -> z[3]
-	MULXQ BX, DI, R12
-	ADCXQ DI, R11
-	ADOXQ R12, R9
+	// x[1] * x[1]
+	MOVQ BX, AX
+	MULQ BX
+	ADDQ AX, R8
+	ADCQ DX, R9
+	ADCQ $0x00000000, R10
 
-	// x[3] * y[1] -> z[4]
-	MULXQ BP, DX, DI
-	ADCXQ DX, R9
-	ADCXQ SI, DI
-	ADOXQ SI, DI
-	MOVQ  R8, 744(SP)
+	// x[2] * x[2]
+	MOVQ BP, AX
+	MULQ BP
+	ADDQ AX, R10
+	ADCQ DX, R11
+	ADCQ $0x00000000, R12
 
-	// y[2]
-	MOVQ BX, DX
-	XORQ SI, SI
+	// x[3] * x[3]
+	MOVQ SI, AX
+	MULQ SI
+	ADDQ AX, R12
+	ADCQ DX, R13
+	MOVQ $0x00000000, AX
+	ADCQ $0x00000000, AX
 
-	// x[0] * y[2] -> z[2]
-	MULXQ AX, R8, R12
-	ADCXQ R8, R10
-	ADOXQ R12, R11
-
-	// x[1] * y[2] -> z[3]
-	MULXQ CX, R8, R12
-	ADCXQ R8, R11
-	ADOXQ R12, R9
-
-	// x[2] * y[2] -> z[4]
-	MULXQ BX, R8, R12
-	ADCXQ R8, R9
-	ADOXQ R12, DI
-
-	// x[3] * y[2] -> z[5]
-	MULXQ BP, DX, R8
-	ADCXQ DX, DI
-	ADCXQ SI, R8
-	ADOXQ SI, R8
-	MOVQ  R10, 752(SP)
-
-	// y[3]
-	MOVQ BP, DX
-	XORQ SI, SI
-
-	// x[0] * y[3] -> z[3]
-	MULXQ AX, AX, R10
-	ADCXQ AX, R11
-	ADOXQ R10, R9
-
-	// x[1] * y[3] -> z[4]
-	MULXQ CX, AX, CX
-	ADCXQ AX, R9
-	ADOXQ CX, DI
-
-	// x[2] * y[3] -> z[5]
-	MULXQ BX, AX, CX
-	ADCXQ AX, DI
-	ADOXQ CX, R8
-
-	// x[3] * y[3] -> z[6]
-	MULXQ   BP, AX, CX
-	ADCXQ   AX, R8
-	ADCXQ   SI, CX
-	ADOXQ   SI, CX
-	MOVQ    R11, 760(SP)
-	MOVQ    R9, 768(SP)
-	MOVQ    DI, 776(SP)
-	MOVQ    R8, 784(SP)
-	MOVQ    CX, 792(SP)
+	// Copy to result.
+	MOVQ    CX, 736(SP)
+	MOVQ    DI, 744(SP)
+	MOVQ    R8, 752(SP)
+	MOVQ    R9, 760(SP)
+	MOVQ    R10, 768(SP)
+	MOVQ    R11, 776(SP)
+	MOVQ    R12, 784(SP)
+	MOVQ    R13, 792(SP)
 	XORQ    AX, AX
 	MOVQ    736(SP), CX
 	MOVQ    744(SP), BX
