@@ -19,7 +19,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
       with:
-        path: ${{ runner.workspace }}/src/github.com/${{ github.repository }}
+        path: src/github.com/${{ github.repository }}
     - name: Bootstrap
       run: make bootstrap
     - name: Build
