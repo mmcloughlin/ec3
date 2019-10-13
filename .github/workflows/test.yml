@@ -1,6 +1,6 @@
 on: [push, pull_request]
 
-name: Go
+name: ci
 jobs:
   test:
     strategy:
@@ -9,19 +9,14 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     env:
+      GOPATH: /home/runner/work/ec3
       GO111MODULE: off
     steps:
-    - name: Dump runner context
-      env:
-        RUNNER_CONTEXT: ${{ toJson(runner) }}
-      run: echo "$RUNNER_CONTEXT"
     - name: Install Go
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go-version }}
-    - name: Configure Go Environment
-      run: go env -w GOPATH=${{ runner.workspace }}
-    - name: Dump Go Environment
+    - name: Go Environment
       run: go env
     - name: Checkout code
       uses: actions/checkout@v1
