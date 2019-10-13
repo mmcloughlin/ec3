@@ -9,13 +9,14 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     env:
-      GOPATH: /home/runner/work/ec3
       GO111MODULE: off
     steps:
     - name: Install Go
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go-version }}
+    - name: Configure GOPATH
+      run: echo ::set-env name=GOPATH::${{ runner.workspace }}
     - name: Go Environment
       run: go env
     - name: Checkout code
