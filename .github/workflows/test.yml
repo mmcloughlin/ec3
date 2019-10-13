@@ -17,8 +17,10 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go-version }}
-    - name: Configure GOPATH
-      run: echo ::set-env name=GOPATH::${{ runner.workspace }}
+    - name: Configure Go Environment
+      run: |
+        echo ::set-env name=GOPATH::${{ runner.workspace }}
+        echo ::add-path::$GOPATH/bin
     - name: Go Environment
       run: go env
     - name: Checkout code
