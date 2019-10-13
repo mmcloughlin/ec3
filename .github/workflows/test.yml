@@ -9,6 +9,7 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     env:
+      GOPATH: ${{ runner.workspace }}
       GO111MODULE: off
     steps:
     - name: Dump runner context
