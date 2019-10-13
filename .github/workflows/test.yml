@@ -25,62 +25,21 @@ jobs:
         path: src/github.com/${{ github.repository }}
     - name: Bootstrap
       run: make bootstrap
+
     - name: Build
       run: go build ./...
     - name: Test
       run: go test -coverprofile=coverage.out -covermode=count ./...
 
-# version: 2
-# 
-# aliases:
-#   env: &env
-#     docker:
-#       - image: circleci/golang:1.12
-#     working_directory: /go/src/github.com/mmcloughlin/ec3
-#   checkdirty: &checkdirty
-#     name: Git Status
-#     command: |
-#       git diff
-#       test -z "$(git status --porcelain)"
-# 
-# 
-# jobs:
-#   test:
-#     <<: *env
-#     steps:
-#       - checkout
-#       - run:
-#           name: Bootstrap
-#           command: make bootstrap
-#       - run:
-#           name: Build
-#           command: go build ./...
-#       - run:
-#           name: Test
-#           command: go test -coverprofile=coverage.out -covermode=count ./...
-#       - run:
-#           name: Upload Coverage
-#           command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
-#           when: on_success
-#   generate:
-#     <<: *env
-#     steps:
-#       - checkout
-#       - run:
-#           name: Bootstrap
-#           command: make bootstrap
-#       - run:
-#           name: Generate
-#           command: make generate
-#       - run: *checkdirty
-#       - run:
-#           name: Format
-#           command: make fmt
-#       - run: *checkdirty
-# 
-# workflows:
-#   version: 2
-#   ci:
-#     jobs:
-#       - test
-#       - generate
+    - name: Generate
+      run: make generate
+    - name: Git Status
+      run: |
+        git diff
+        test -z "$(git status --porcelain)"
+    - name: Format
+      run: make fmt
+    - name: Git Status
+      run: |
+        git diff
+        test -z "$(git status --porcelain)"
