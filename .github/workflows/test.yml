@@ -9,9 +9,12 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     env:
-      GOPATH: ${{ runner.workspace }}
       GO111MODULE: off
     steps:
+    - name: Dump runner context
+      env:
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+      run: echo "$RUNNER_CONTEXT"
     - name: Install Go
       uses: actions/setup-go@v1
       with:
