@@ -11,6 +11,8 @@ jobs:
     env:
       GO111MODULE: off
     steps:
+    - name: CPU Information
+      run: cat /proc/cpuinfo
     - name: Install Go
       uses: actions/setup-go@v1
       with:
