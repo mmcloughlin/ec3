@@ -9,7 +9,6 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     env:
-      GOPATH: ${{ runner.workspace }}
       GO111MODULE: off
     steps:
     - name: Dump runner context
@@ -20,6 +19,8 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go-version }}
+    - name: Configure Go Environment
+      run: export GOPATH=${{ runner.workspace }}
     - name: Checkout code
       uses: actions/checkout@v1
       with:
