@@ -20,7 +20,9 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
     - name: Configure Go Environment
-      run: export GOPATH=${{ runner.workspace }}
+      run: go env -w GOPATH=${{ runner.workspace }}
+    - name: Dump Go Environment
+      run: go env
     - name: Checkout code
       uses: actions/checkout@v1
       with:
