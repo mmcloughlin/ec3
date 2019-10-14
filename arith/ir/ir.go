@@ -58,10 +58,10 @@ func (SUB) instruction() {}
 
 // MUL is a multiply instruction providing lower and upper parts of the result.
 type MUL struct {
-	X     Operand
-	Y     Operand
-	Upper Register
-	Lower Register
+	X    Operand
+	Y    Operand
+	High Register
+	Low  Register
 }
 
 func (MUL) instruction() {}
