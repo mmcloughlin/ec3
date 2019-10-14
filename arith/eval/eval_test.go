@@ -91,3 +91,57 @@ func TestSUB(t *testing.T) {
 		})
 	}
 }
+
+func TestSHL(t *testing.T) {
+	cases := []struct {
+		X, Shift uint64
+		Result   uint64
+	}{
+		{X: 5, Shift: 3, Result: 5 << 3},
+		{X: 5, Shift: 0, Result: 5},
+		{X: 5, Shift: 100, Result: 0},
+	}
+	for _, c := range cases {
+		p := &ir.Program{
+			Instructions: []ir.Instruction{
+				ir.MOV{Source: ir.Constant(c.X), Destination: ir.Register("X")},
+				ir.SHL{
+					X:      ir.Register("X"),
+					Shift:  ir.Constant(c.Shift),
+					Result: ir.Register("S"),
+				},
+			},
+		}
+		Execute(t, p, []Expectation{
+			{ir.Register("X"), c.X},
+			{ir.Register("S"), c.Result},
+		})
+	}
+}
+
+func TestSHR(t *testing.T) {
+	cases := []struct {
+		X, Shift uint64
+		Result   uint64
+	}{
+		{X: 500, Shift: 3, Result: 500 >> 3},
+		{X: 500, Shift: 0, Result: 500},
+		{X: 500, Shift: 100, Result: 0},
+	}
+	for _, c := range cases {
+		p := &ir.Program{
+			Instructions: []ir.Instruction{
+				ir.MOV{Source: ir.Constant(c.X), Destination: ir.Register("X")},
+				ir.SHR{
+					X:      ir.Register("X"),
+					Shift:  ir.Constant(c.Shift),
+					Result: ir.Register("S"),
+				},
+			},
+		}
+		Execute(t, p, []Expectation{
+			{ir.Register("X"), c.X},
+			{ir.Register("S"), c.Result},
+		})
+	}
+}
