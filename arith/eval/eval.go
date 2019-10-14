@@ -56,8 +56,12 @@ func (e *Evaluator) instruction(inst ir.Instruction) error {
 		e.setregister(i.Diff, diff)
 		e.setflag(i.BorrowOut, bout)
 	// case ir.MUL:
-	// case ir.SHL:
-	// case ir.SHR:
+	case ir.SHL:
+		x := e.operand(i.X)
+		e.setregister(i.Result, x<<i.Shift)
+	case ir.SHR:
+		x := e.operand(i.X)
+		e.setregister(i.Result, x>>i.Shift)
 	default:
 		return errutil.UnexpectedType(i)
 	}
