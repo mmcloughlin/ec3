@@ -50,7 +50,7 @@ type SUB struct {
 	X         Operand
 	Y         Operand
 	BorrowIn  Operand
-	Result    Register
+	Diff      Register
 	BorrowOut Register
 }
 

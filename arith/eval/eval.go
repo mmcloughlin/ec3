@@ -48,7 +48,13 @@ func (e *Evaluator) instruction(inst ir.Instruction) error {
 		sum, cout := bits.Add64(x, y, cin)
 		e.setregister(i.Sum, sum)
 		e.setflag(i.CarryOut, cout)
-	// case ir.SUB:
+	case ir.SUB:
+		x := e.operand(i.X)
+		y := e.operand(i.Y)
+		bin := e.flag(i.BorrowIn)
+		diff, bout := bits.Sub64(x, y, bin)
+		e.setregister(i.Diff, diff)
+		e.setflag(i.BorrowOut, bout)
 	// case ir.MUL:
 	// case ir.SHL:
 	// case ir.SHR:

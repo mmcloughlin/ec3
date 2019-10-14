@@ -59,3 +59,35 @@ func TestADD(t *testing.T) {
 		})
 	}
 }
+
+func TestSUB(t *testing.T) {
+	cases := []struct {
+		X, Y, BorrowIn  uint64
+		Diff, BorrowOut uint64
+	}{
+		{X: 5, Y: 2, BorrowIn: 0, Diff: 3, BorrowOut: 0},
+		{X: 5, Y: 2, BorrowIn: 1, Diff: 2, BorrowOut: 0},
+		{X: 2, Y: 5, BorrowIn: 0, Diff: (1 << 64) - 3, BorrowOut: 1},
+		{X: 2, Y: 5, BorrowIn: 1, Diff: (1 << 64) - 4, BorrowOut: 1},
+	}
+	for _, c := range cases {
+		p := &ir.Program{
+			Instructions: []ir.Instruction{
+				ir.MOV{Source: ir.Constant(c.X), Destination: ir.Register("X")},
+				ir.MOV{Source: ir.Constant(c.BorrowIn), Destination: ir.Register("CF")},
+				ir.SUB{
+					X:         ir.Register("X"),
+					Y:         ir.Constant(c.Y),
+					BorrowIn:  ir.Register("CF"),
+					Diff:      ir.Register("D"),
+					BorrowOut: ir.Register("CF"),
+				},
+			},
+		}
+		Execute(t, p, []Expectation{
+			{ir.Register("X"), c.X},
+			{ir.Register("D"), c.Diff},
+			{ir.Register("CF"), c.BorrowOut},
+		})
+	}
+}
