@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/arith/ir"
+	"github.com/mmcloughlin/ec3/internal/assert"
 )
 
 type Expectation struct {
@@ -172,4 +173,36 @@ func TestSHR(t *testing.T) {
 			{ir.Register("S"), c.Result},
 		})
 	}
+}
+
+func TestUndefinedRegister(t *testing.T) {
+	p := &ir.Program{
+		Instructions: []ir.Instruction{
+			ir.SHR{
+				X:      ir.Register("X"),
+				Shift:  ir.Constant(3),
+				Result: ir.Register("S"),
+			},
+		},
+	}
+	e := NewEvaluator()
+	err := e.Execute(p)
+	assert.ErrorContains(t, err, "undefined")
+}
+
+func TestInvalidFlag(t *testing.T) {
+	p := &ir.Program{
+		Instructions: []ir.Instruction{
+			ir.ADD{
+				X:        ir.Constant(2),
+				Y:        ir.Constant(2),
+				CarryIn:  ir.Constant(42), // not a 1-bit value
+				Sum:      ir.Register("S"),
+				CarryOut: ir.Register("CF"),
+			},
+		},
+	}
+	e := NewEvaluator()
+	err := e.Execute(p)
+	assert.ErrorContains(t, err, "1-bit value")
 }
