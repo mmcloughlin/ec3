@@ -92,6 +92,34 @@ func TestSUB(t *testing.T) {
 	}
 }
 
+func TestMUL(t *testing.T) {
+	cases := []struct {
+		X, Y      uint64
+		High, Low uint64
+	}{
+		{X: 5, Y: 2, High: 0, Low: 10},
+		{X: 0xfeedbeefcafe, Y: 0x123456789, High: 0x1220d, Low: 0x5d391f6e1975d3ee},
+	}
+	for _, c := range cases {
+		p := &ir.Program{
+			Instructions: []ir.Instruction{
+				ir.MOV{Source: ir.Constant(c.X), Destination: ir.Register("X")},
+				ir.MUL{
+					X:    ir.Register("X"),
+					Y:    ir.Constant(c.Y),
+					High: ir.Register("H"),
+					Low:  ir.Register("L"),
+				},
+			},
+		}
+		Execute(t, p, []Expectation{
+			{ir.Register("X"), c.X},
+			{ir.Register("H"), c.High},
+			{ir.Register("L"), c.Low},
+		})
+	}
+}
+
 func TestSHL(t *testing.T) {
 	cases := []struct {
 		X, Shift uint64

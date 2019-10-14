@@ -55,7 +55,12 @@ func (e *Evaluator) instruction(inst ir.Instruction) error {
 		diff, bout := bits.Sub64(x, y, bin)
 		e.setregister(i.Diff, diff)
 		e.setflag(i.BorrowOut, bout)
-	// case ir.MUL:
+	case ir.MUL:
+		x := e.operand(i.X)
+		y := e.operand(i.Y)
+		hi, lo := bits.Mul64(x, y)
+		e.setregister(i.High, hi)
+		e.setregister(i.Low, lo)
 	case ir.SHL:
 		x := e.operand(i.X)
 		e.setregister(i.Result, x<<i.Shift)
