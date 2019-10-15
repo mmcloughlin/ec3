@@ -64,5 +64,5 @@ workflows:
   ci:
     jobs:
       - container
-      - test
-      - generate
+      #- test
+      #- generate
