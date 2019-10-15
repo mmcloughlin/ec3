@@ -13,6 +13,14 @@ aliases:
 
 
 jobs:
+  container:
+    env:
+      docker:
+        - image: docker:19.03.3
+    steps:
+      - checkout
+      - run: Docker Build
+        command: docker build .
   test:
     <<: *env
     steps:
@@ -53,5 +61,6 @@ workflows:
   version: 2
   ci:
     jobs:
+      - container
       - test
       - generate
