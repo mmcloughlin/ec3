@@ -19,8 +19,9 @@ jobs:
         - image: docker:19.03.3
     steps:
       - checkout
-      - run: Docker Build
-        command: docker build .
+      - run:
+          name: Docker Build
+          command: docker build .
   test:
     <<: *env
     steps:
