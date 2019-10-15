@@ -14,9 +14,8 @@ aliases:
 
 jobs:
   container:
-    env:
-      docker:
-        - image: docker:19.03.3
+    docker:
+      - image: docker:19.03.3
     steps:
       - checkout
       - run:
