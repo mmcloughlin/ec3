@@ -19,7 +19,7 @@ jobs:
       - checkout
       - run:
           name: Install Packages
-          command: apt-get install --yes libz3-dev
+          command: sudo apt-get install --yes libz3-dev
       - run:
           name: Bootstrap
           command: make bootstrap
