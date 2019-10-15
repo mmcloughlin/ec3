@@ -18,6 +18,8 @@ jobs:
       - image: docker:19.03.3
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Docker Build
           command: docker build .
