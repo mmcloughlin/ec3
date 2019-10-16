@@ -2,6 +2,7 @@ package z3
 
 /*
 #cgo LDFLAGS: -lz3
+#include <stdint.h>
 #include <z3.h>
 */
 import "C"
@@ -19,7 +20,7 @@ func (c *Context) BVSort(bits uint) *BVSort {
 }
 
 func (s *BVSort) Uint64(x uint64) *BV {
-	return s.wrap(C.Z3_mk_unsigned_int64(s.ctx.ctx, C.ulonglong(x), s.sort))
+	return s.wrap(C.Z3_mk_unsigned_int64(s.ctx.ctx, C.uint64_t(x), s.sort))
 }
 
 func (s *BVSort) Const(name string) *BV {
