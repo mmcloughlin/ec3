@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 
 aliases:
   env: &env
@@ -24,7 +24,8 @@ jobs:
       - run:
           name: Configure Environment
           command: |
-            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV}
+            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV} \
+            source ${BASH_ENV}
       - run:
           name: Docker Login
           command: |
