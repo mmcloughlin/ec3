@@ -49,6 +49,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Sanity checks.
+	if errs := Lint(ws); len(errs) > 0 {
+		for _, err := range errs {
+			log.Print(err)
+		}
+		log.Fatal("failing due to lint errors")
+	}
+
 	// Setup output writer.
 	w := os.Stdout
 	if *output != "" {
@@ -91,6 +99,48 @@ type Wrapper struct {
 	Doc []string
 	Go  Function
 	C   Function
+}
+
+// Lint runs some sanity checks on a set of wrappers.
+func Lint(ws []*Wrapper) errutil.Errors {
+	var errs errutil.Errors
+
+	// Check for multiple wrappers of the same function.
+	funcs := map[string]bool{}
+	for _, w := range ws {
+		name := w.C.Name
+		if funcs[name] {
+			errs.Add(xerrors.Errorf("function %q is wrapped multiple times", name))
+		}
+		funcs[name] = true
+	}
+
+	// Check documentation.
+	for _, w := range ws {
+		if len(w.Doc) == 0 {
+			errs.Add(xerrors.Errorf("function %q is undocumented", w.Go.Name))
+			continue
+		}
+		if !strings.HasPrefix(w.Doc[0], w.Go.Name+" ") {
+			errs.Add(xerrors.Errorf("function %q documentation should start with %q", w.Go.Name, w.Go.Name))
+		}
+	}
+
+	// Expect correspondance with the Z3 function names.
+	abbrev := strings.NewReplacer(
+		"Reduce", "red",
+		"Logic", "l",
+		"Arith", "a",
+	)
+	for _, w := range ws {
+		goname := strings.ToLower(abbrev.Replace(w.Go.Name))
+		cname := strings.ToLower(strings.ReplaceAll(w.C.Name, "_", ""))
+		if !strings.HasSuffix(cname, goname) {
+			errs.Add(xerrors.Errorf("function name %q expected to match suffix of %q", w.Go.Name, w.C.Name))
+		}
+	}
+
+	return errs
 }
 
 // parser parses directives from source code.

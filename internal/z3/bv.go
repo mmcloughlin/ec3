@@ -44,11 +44,11 @@ type BV struct {
 //wrap:doc Not returns bitwise negation of the vector.
 //wrap:unary Not Z3_mk_bvnot
 
-//wrap:doc All returns the conjunction of bits in the vector, as a vector of length 1.
-//wrap:unary All Z3_mk_bvredand
+//wrap:doc ReduceAnd returns the conjunction of bits in the vector, as a vector of length 1.
+//wrap:unary ReduceAnd Z3_mk_bvredand
 
-//wrap:doc Any returns the disjunction of bits in the vector, as a vector of length 1.
-//wrap:unary Any Z3_mk_bvredor
+//wrap:doc ReduceOr returns the disjunction of bits in the vector, as a vector of length 1.
+//wrap:unary ReduceOr Z3_mk_bvredor
 
 //wrap:doc And returns the bitwise and of the input vectors.
 //wrap:binary And Z3_mk_bvand
@@ -93,7 +93,7 @@ type BV struct {
 //wrap:binary Srem Z3_mk_bvsrem
 
 //wrap:doc Smod returns twos complement signed remainder (sign follows divisor).
-//wrap:binary Smod Z3_mk_bvsrem
+//wrap:binary Smod Z3_mk_bvsmod
 
 //wrap:doc ULT is unsigned less than.
 //wrap:binary ULT:Bool Z3_mk_bvult
@@ -126,40 +126,40 @@ type BV struct {
 //wrap:go Extract x high:uint low:uint
 //wrap:c Z3_mk_extract high:unsigned low:unsigned x
 
-//wrap:doc SignExtend the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
-//wrap:go SignExtend x i:uint
+//wrap:doc SignExt the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+//wrap:go SignExt x i:uint
 //wrap:c Z3_mk_sign_ext i:unsigned x
 
-//wrap:doc ZeroExtend extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
-//wrap:go ZeroExtend x i:uint
+//wrap:doc ZeroExt extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+//wrap:go ZeroExt x i:uint
 //wrap:c Z3_mk_zero_ext i:unsigned x
 
 //wrap:doc Repeat the given bit-vector up length i.
 //wrap:go Repeat x i:uint
 //wrap:c Z3_mk_repeat i:unsigned x
 
-//wrap:doc Lsh returns x << y.
-//wrap:binary Lsh Z3_mk_bvshl
+//wrap:doc Shl returns x << y.
+//wrap:binary Shl Z3_mk_bvshl
 
-//wrap:doc Rsh returns x >> y.
-//wrap:binary Rsh Z3_mk_bvlshr
+//wrap:doc LogicShr returns x >> y.
+//wrap:binary LogicShr Z3_mk_bvlshr
 
-//wrap:doc Srsh returns the arithmetic right shift of x by y.
-//wrap:binary Srsh Z3_mk_bvashr
+//wrap:doc ArithShr returns the arithmetic right shift of x by y.
+//wrap:binary ArithShr Z3_mk_bvashr
 
-//wrap:doc RotateLeftConst rotates the bits of x to the left i times.
-//wrap:go RotateLeftConst x i:uint
+//wrap:doc RotateLeft rotates the bits of x to the left i times.
+//wrap:go RotateLeft x i:uint
 //wrap:c Z3_mk_rotate_left i:unsigned x
 
-//wrap:doc RotateRightConst rotates the bits of x to the right i times.
-//wrap:go RotateRightConst x i:uint
+//wrap:doc RotateRight rotates the bits of x to the right i times.
+//wrap:go RotateRight x i:uint
 //wrap:c Z3_mk_rotate_right i:unsigned x
 
-//wrap:doc RotateLeft rotates the bits of x to the left y times.
-//wrap:binary RotateLeft Z3_mk_ext_rotate_left
+//wrap:doc ExtRotateLeft rotates the bits of x to the left y times.
+//wrap:binary ExtRotateLeft Z3_mk_ext_rotate_left
 
-//wrap:doc RotateRight rotates the bits of x to the right y times.
-//wrap:binary RotateRight Z3_mk_ext_rotate_right
+//wrap:doc ExtRotateRight rotates the bits of x to the right y times.
+//wrap:binary ExtRotateRight Z3_mk_ext_rotate_right
 
 //
 // Z3_ast Z3_API 	Z3_mk_int2bv (Z3_context c, unsigned n, Z3_ast t1)

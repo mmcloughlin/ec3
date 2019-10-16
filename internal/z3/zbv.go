@@ -17,18 +17,18 @@ func (x *BV) Not() *BV {
 	}
 }
 
-// All returns the conjunction of bits in the vector, as a vector of length 1.
+// ReduceAnd returns the conjunction of bits in the vector, as a vector of length 1.
 // Wraps Z3_mk_bvredand.
-func (x *BV) All() *BV {
+func (x *BV) ReduceAnd() *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvredand(x.ctx, x.ast),
 	}
 }
 
-// Any returns the disjunction of bits in the vector, as a vector of length 1.
+// ReduceOr returns the disjunction of bits in the vector, as a vector of length 1.
 // Wraps Z3_mk_bvredor.
-func (x *BV) Any() *BV {
+func (x *BV) ReduceOr() *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvredor(x.ctx, x.ast),
@@ -162,11 +162,11 @@ func (x *BV) Srem(y *BV) *BV {
 }
 
 // Smod returns twos complement signed remainder (sign follows divisor).
-// Wraps Z3_mk_bvsrem.
+// Wraps Z3_mk_bvsmod.
 func (x *BV) Smod(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
-		ast: C.Z3_mk_bvsrem(x.ctx, x.ast, y.ast),
+		ast: C.Z3_mk_bvsmod(x.ctx, x.ast, y.ast),
 	}
 }
 
@@ -260,18 +260,18 @@ func (x *BV) Extract(high uint, low uint) *BV {
 	}
 }
 
-// SignExtend the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+// SignExt the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
 // Wraps Z3_mk_sign_ext.
-func (x *BV) SignExtend(i uint) *BV {
+func (x *BV) SignExt(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_sign_ext(x.ctx, C.unsigned(i), x.ast),
 	}
 }
 
-// ZeroExtend extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+// ZeroExt extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
 // Wraps Z3_mk_zero_ext.
-func (x *BV) ZeroExtend(i uint) *BV {
+func (x *BV) ZeroExt(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_zero_ext(x.ctx, C.unsigned(i), x.ast),
@@ -287,63 +287,63 @@ func (x *BV) Repeat(i uint) *BV {
 	}
 }
 
-// Lsh returns x << y.
+// Shl returns x << y.
 // Wraps Z3_mk_bvshl.
-func (x *BV) Lsh(y *BV) *BV {
+func (x *BV) Shl(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvshl(x.ctx, x.ast, y.ast),
 	}
 }
 
-// Rsh returns x >> y.
+// LogicShr returns x >> y.
 // Wraps Z3_mk_bvlshr.
-func (x *BV) Rsh(y *BV) *BV {
+func (x *BV) LogicShr(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvlshr(x.ctx, x.ast, y.ast),
 	}
 }
 
-// Srsh returns the arithmetic right shift of x by y.
+// ArithShr returns the arithmetic right shift of x by y.
 // Wraps Z3_mk_bvashr.
-func (x *BV) Srsh(y *BV) *BV {
+func (x *BV) ArithShr(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvashr(x.ctx, x.ast, y.ast),
 	}
 }
 
-// RotateLeftConst rotates the bits of x to the left i times.
+// RotateLeft rotates the bits of x to the left i times.
 // Wraps Z3_mk_rotate_left.
-func (x *BV) RotateLeftConst(i uint) *BV {
+func (x *BV) RotateLeft(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_rotate_left(x.ctx, C.unsigned(i), x.ast),
 	}
 }
 
-// RotateRightConst rotates the bits of x to the right i times.
+// RotateRight rotates the bits of x to the right i times.
 // Wraps Z3_mk_rotate_right.
-func (x *BV) RotateRightConst(i uint) *BV {
+func (x *BV) RotateRight(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_rotate_right(x.ctx, C.unsigned(i), x.ast),
 	}
 }
 
-// RotateLeft rotates the bits of x to the left y times.
+// ExtRotateLeft rotates the bits of x to the left y times.
 // Wraps Z3_mk_ext_rotate_left.
-func (x *BV) RotateLeft(y *BV) *BV {
+func (x *BV) ExtRotateLeft(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_ext_rotate_left(x.ctx, x.ast, y.ast),
 	}
 }
 
-// RotateRight rotates the bits of x to the right y times.
+// ExtRotateRight rotates the bits of x to the right y times.
 // Wraps Z3_mk_ext_rotate_right.
-func (x *BV) RotateRight(y *BV) *BV {
+func (x *BV) ExtRotateRight(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_ext_rotate_right(x.ctx, x.ast, y.ast),
