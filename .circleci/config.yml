@@ -98,6 +98,6 @@ workflows:
       - test:
           requires:
             - container
-      #- generate:
-      #    requires:
-      #      - container
+      - generate:
+          requires:
+            - container
