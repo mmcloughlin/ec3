@@ -39,6 +39,8 @@ RUN wget --quiet \
     ;
 
 # Setup environment.
+ENV LD_LIBRARY_PATH /usr/local/lib
+
 ENV GOPATH /go
 ENV PATH ${GOPATH}/bin:/usr/local/go/bin:${PATH}
 
