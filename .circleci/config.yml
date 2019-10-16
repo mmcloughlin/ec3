@@ -24,11 +24,14 @@ jobs:
       - run:
           name: Configure Environment
           command: |
-            echo "export CACHE_TAG=docker:$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV}
+            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV}
       - run:
           name: Docker Login
           command: |
             echo ${DOCKERHUB_PASSWORD} | docker login --username ${DOCKERHUB_USERNAME} --password-stdin
+      - run:
+          name: Check Environment
+          command: echo ${CACHE_TAG}
       - run:
           name: Docker Pull
           command: docker pull ${BUILD_IMAGE}:${CACHE_TAG} || true
