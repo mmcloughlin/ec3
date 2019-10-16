@@ -39,30 +39,15 @@ type BV struct {
 	ast C.Z3_ast
 }
 
-func (l *BV) Not() *BV {
-	return &BV{
-		ctx: l.ctx,
-		ast: C.Z3_mk_bvnot(l.ctx, l.ast),
-	}
-}
+//go:generate go run wrap.go -type BV -input $GOFILE -output zbv.go
 
-func (l *BV) Add(r *BV) *BV {
-	return &BV{
-		ctx: l.ctx,
-		ast: C.Z3_mk_bvadd(l.ctx, l.ast, r.ast),
-	}
-}
+//wrap:doc Bitwise negation.
+//wrap:unary Not Z3_mk_bvnot
 
-func (l *BV) Sub(r *BV) *BV {
-	return &BV{
-		ctx: l.ctx,
-		ast: C.Z3_mk_bvsub(l.ctx, l.ast, r.ast),
-	}
-}
+//wrap:doc Add returns standard twos complement addition.
+//wrap:binary Add Z3_mk_bvadd
 
-func (l *BV) SLE(r *BV) *Bool {
-	return &Bool{
-		ctx: l.ctx,
-		ast: C.Z3_mk_bvsle(l.ctx, l.ast, r.ast),
-	}
-}
+//wrap:doc Sub returns standard twos complement subtraction.
+//wrap:binary Sub Z3_mk_bvsub
+
+//wrap:binary SLE:Bool Z3_mk_bvsle
