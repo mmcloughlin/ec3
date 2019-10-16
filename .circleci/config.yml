@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Docker Push
           command: |
-            docker push ${BUILD_IMAGE}:${CACHE_TAG} \
+            docker push ${BUILD_IMAGE}:${CACHE_TAG}
             docker push ${BUILD_IMAGE}:${COMMIT_TAG}
   test:
     <<: *runner
