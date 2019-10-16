@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 aliases:
   env: &env
@@ -11,18 +11,33 @@ aliases:
       git diff
       test -z "$(git status --porcelain)"
 
-
 jobs:
   container:
     docker:
       - image: docker:19.03.3
+    environment:
+      BUILD_IMAGE: mmcloughlin/ec3-build
+      DOCKERFILE: Dockerfile
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
+      - run:
+          name: Configure Environment
+          command: |
+            echo "export CACHE_TAG=docker:$(sha1 ${DOCKERFILE})" >> ${BASH_ENV}
+      - run:
+          name: Docker Login
+          command: docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASSWORD}
+      - run:
+          name: Docker Pull
+          command: docker pull ${BUILD_IMAGE}:${CACHE_TAG} || true
       - run:
           name: Docker Build
-          command: docker build .
+          command: |
+            docker build \
+              --cache-from ${BUILD_IMAGE}:${CACHE_TAG} \
+              --tag ${BUILD_IMAGE}:${CACHE_TAG} \
+              .
   test:
     <<: *env
     steps:
