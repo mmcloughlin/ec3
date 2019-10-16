@@ -46,7 +46,7 @@ func (s *Solver) Assert(c *Bool) {
 
 func (s *Solver) Check() (bool, error) {
 	res := C.Z3_solver_check(s.ctx, s.solver)
-	if res == C.Z3_L_UNDEF {	
+	if res == C.Z3_L_UNDEF {
 		reason := C.Z3_solver_get_reason_unknown(s.ctx, s.solver)
 		return false, errors.New(C.GoString(reason))
 	}
