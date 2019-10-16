@@ -4,16 +4,87 @@ package z3
 
 /*
 #cgo LDFLAGS: -lz3
-#include <stdint.h>
 #include <z3.h>
 */
 import "C"
 
-// Bitwise negation.
+// Not returns bitwise negation of the vector.
 func (x *BV) Not() *BV {
 	return &BV{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvnot(x.ctx, x.ast),
+	}
+}
+
+// All returns the conjunction of bits in the vector, as a vector of length 1.
+func (x *BV) All() *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvredand(x.ctx, x.ast),
+	}
+}
+
+// Any returns the disjunction of bits in the vector, as a vector of length 1.
+func (x *BV) Any() *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvredor(x.ctx, x.ast),
+	}
+}
+
+// And returns the bitwise and of the input vectors.
+func (x *BV) And(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvand(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Or returns the bitwise or of the input vectors.
+func (x *BV) Or(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvor(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Xor returns the bitwise exclusive-or of the input vectors.
+func (x *BV) Xor(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvxor(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Nand returns the bitwise nand of the input vectors.
+func (x *BV) Nand(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvnand(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Nor returns the bitwise nor of the input vectors.
+func (x *BV) Nor(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvnor(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Xnor returns the bitwise xnor of the input vectors.
+func (x *BV) Xnor(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvxnor(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Neg returns twos complement unary minus.
+func (x *BV) Neg() *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvneg(x.ctx, x.ast),
 	}
 }
 
@@ -33,9 +104,210 @@ func (x *BV) Sub(y *BV) *BV {
 	}
 }
 
+// Mul returns standard twos complement multiplication.
+func (x *BV) Mul(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvmul(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Udiv returns unsigned division.
+func (x *BV) Udiv(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvudiv(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Sdiv returns twos complement signed division.
+func (x *BV) Sdiv(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsdiv(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Urem returns unsigned remainder.
+func (x *BV) Urem(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvurem(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Srem returns twos complement signed remainder.
+func (x *BV) Srem(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsrem(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Smod returns twos complement signed remainder (sign follows divisor).
+func (x *BV) Smod(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsrem(x.ctx, x.ast, y.ast),
+	}
+}
+
+// ULT is unsigned less than.
+func (x *BV) ULT(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvult(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SLT is twos complement signed less than.
+func (x *BV) SLT(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvslt(x.ctx, x.ast, y.ast),
+	}
+}
+
+// ULE is unsigned less than or equal to.
+func (x *BV) ULE(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvule(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SLE is twos complement signed less than or equal to.
 func (x *BV) SLE(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
 		ast: C.Z3_mk_bvsle(x.ctx, x.ast, y.ast),
+	}
+}
+
+// UGE is unsigned greater than or equal to.
+func (x *BV) UGE(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvuge(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SGE is twos complement signed greater than or equal to.
+func (x *BV) SGE(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsge(x.ctx, x.ast, y.ast),
+	}
+}
+
+// UGT is unsigned greater than.
+func (x *BV) UGT(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvugt(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SGT is twos complement signed greater than.
+func (x *BV) SGT(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsgt(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Concat concatenates the given bit-vectors.
+func (x *BV) Concat(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_concat(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Extract the bits high down to low from a bit-vector of size m to yield a new bit-vector of size n, where n = high - low + 1.
+func (x *BV) Extract(high uint, low uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_extract(x.ctx, C.unsigned(high), C.unsigned(low), x.ast),
+	}
+}
+
+// SignExtend the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+func (x *BV) SignExtend(i uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_sign_ext(x.ctx, C.unsigned(i), x.ast),
+	}
+}
+
+// ZeroExtend extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
+func (x *BV) ZeroExtend(i uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_zero_ext(x.ctx, C.unsigned(i), x.ast),
+	}
+}
+
+// Repeat the given bit-vector up length i.
+func (x *BV) Repeat(i uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_repeat(x.ctx, C.unsigned(i), x.ast),
+	}
+}
+
+// Lsh returns x << y.
+func (x *BV) Lsh(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvshl(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Rsh returns x >> y.
+func (x *BV) Rsh(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvlshr(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Srsh returns the arithmetic right shift of x by y.
+func (x *BV) Srsh(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvashr(x.ctx, x.ast, y.ast),
+	}
+}
+
+// RotateLeftConst rotates the bits of x to the left i times.
+func (x *BV) RotateLeftConst(i uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_rotate_left(x.ctx, C.unsigned(i), x.ast),
+	}
+}
+
+// RotateRightConst rotates the bits of x to the right i times.
+func (x *BV) RotateRightConst(i uint) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_rotate_right(x.ctx, C.unsigned(i), x.ast),
+	}
+}
+
+// RotateLeft rotates the bits of x to the left y times.
+func (x *BV) RotateLeft(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_ext_rotate_left(x.ctx, x.ast, y.ast),
+	}
+}
+
+// RotateRight rotates the bits of x to the right y times.
+func (x *BV) RotateRight(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_ext_rotate_right(x.ctx, x.ast, y.ast),
 	}
 }

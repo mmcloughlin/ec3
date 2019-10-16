@@ -261,7 +261,6 @@ func (g *generator) Generate() ([]byte, error) {
 	g.Printf(`
 /*
 #cgo LDFLAGS: -lz3
-#include <stdint.h>
 #include <z3.h>
 */
 import "C"
