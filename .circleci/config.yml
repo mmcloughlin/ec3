@@ -9,6 +9,9 @@ aliases:
     <<: *env
     docker:
       - image: ${BUILD_IMAGE}:commit-${CIRCLE_SHA1}
+        auth:
+          username: ${DOCKERHUB_USERNAME}
+          password: ${DOCKERHUB_PASSWORD}
     working_directory: /go/src/github.com/mmcloughlin/ec3
   checkdirty: &checkdirty
     name: Git Status
