@@ -33,7 +33,7 @@ RUN wget --quiet \
     && \
     tar -xzf z3.tar.gz --strip-components=1 \
     && \
-    python scripts/mk_make.py --staticlib \
+    python scripts/mk_make.py --prefix /usr/local --staticlib \
     && \
     make -C build -j 8 install \
     ;
@@ -42,5 +42,8 @@ RUN wget --quiet \
 ENV GOPATH /go
 ENV PATH ${GOPATH}/bin:/usr/local/go/bin:${PATH}
 
-RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" && chmod -R 777 "${GOPATH}"
+RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
+    && \
+    chmod -R 777 "${GOPATH}" \
+    ;
 WORKDIR ${GOPATH}

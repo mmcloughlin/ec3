@@ -38,18 +38,23 @@ jobs:
             echo ${DOCKERHUB_PASSWORD} | docker login --username ${DOCKERHUB_USERNAME} --password-stdin
       - run:
           name: Docker Pull
-          command: docker pull ${BUILD_IMAGE}:${CACHE_TAG} || true
+          command: |
+            docker pull ${BUILD_IMAGE}:latest || true
+            docker pull ${BUILD_IMAGE}:${CACHE_TAG} || true
       - run:
           name: Docker Build
           command: |
             docker build \
+              --cache-from ${BUILD_IMAGE}:latest \
               --cache-from ${BUILD_IMAGE}:${CACHE_TAG} \
+              --tag ${BUILD_IMAGE}:latest \
               --tag ${BUILD_IMAGE}:${CACHE_TAG} \
               --tag ${BUILD_IMAGE}:${COMMIT_TAG} \
               .
       - run:
           name: Docker Push
           command: |
+            docker push ${BUILD_IMAGE}:latest
             docker push ${BUILD_IMAGE}:${CACHE_TAG}
             docker push ${BUILD_IMAGE}:${COMMIT_TAG}
   test:
