@@ -14,7 +14,7 @@ aliases:
 jobs:
   container:
     docker:
-      - image: docker:19.03.3
+      - image: circleci/buildpack-deps:bionic
     environment:
       BUILD_IMAGE: mmcloughlin/ec3-build
       DOCKERFILE: Dockerfile
@@ -24,8 +24,7 @@ jobs:
       - run:
           name: Configure Environment
           command: |
-            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV} \
-            source ${BASH_ENV}
+            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV}
       - run:
           name: Docker Login
           command: |
