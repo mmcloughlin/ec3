@@ -86,8 +86,9 @@ func main() {
 }
 
 type Identifier struct {
-	Name string
-	Type string
+	Name     string
+	Type     string
+	Variadic bool
 }
 
 type Function struct {
@@ -294,6 +295,10 @@ func identifier(field string) Identifier {
 	if len(parts) > 1 {
 		id.Type = parts[1]
 	}
+	if strings.HasSuffix(id.Name, "...") {
+		id.Variadic = true
+		id.Name = strings.TrimSuffix(id.Name, "...")
+	}
 	return id
 }
 
@@ -347,6 +352,17 @@ func (g *generator) wrapper(w *Wrapper) {
 
 	// Function body.
 	g.EnterBlock()
+
+	for _, param := range params {
+		if param.Variadic {
+			array := variadicname(param.Name)
+			g.Linef("%s := []C.Z3_ast{%s.ast}", array, receiver.Name)
+			g.Linef("for _, a := range %s {", param.Name)
+			g.Linef("%s = append(%s, a.ast)", array, array)
+			g.Linef("}")
+		}
+	}
+
 	g.Linef("return &%s{", returns)
 	g.Linef("ctx: %s.ctx,", receiver.Name)
 
@@ -362,19 +378,35 @@ func (g *generator) wrapper(w *Wrapper) {
 }
 
 func (g *generator) param(id Identifier) {
-	g.Printf("%s %s", id.Name, withdefault(id.Type, "*"+g.defaulttype))
+	g.Printf("%s %s%s", id.Name, ternary(id.Variadic, "...", ""), g.typ(id.Type))
 }
 
 func (g *generator) arg(id Identifier) {
-	if id.Type == "" {
+	switch {
+	case id.Variadic:
+		array := variadicname(id.Name)
+		g.Printf("C.unsigned(len(%s)), &%s[0]", array, array)
+	case id.Type == "":
 		g.Printf("%s.ast", id.Name)
-	} else {
+	default:
 		g.Printf("C.%s(%s)", id.Type, id.Name)
 	}
 }
 
+func (g *generator) typ(name string) string {
+	return withdefault(name, "*"+g.defaulttype)
+}
+
+func variadicname(name string) string {
+	return name + "s"
+}
+
 func withdefault(a, b string) string {
-	if a != "" {
+	return ternary(a != "", a, b)
+}
+
+func ternary(cond bool, a, b string) string {
+	if cond {
 		return a
 	}
 	return b

@@ -25,3 +25,47 @@ func (x *Bool) Iff(y *Bool) *Bool {
 		ast: C.Z3_mk_iff(x.ctx, x.ast, y.ast),
 	}
 }
+
+// Implies returns x implies y.
+// Corresponds to Z3_mk_implies.
+func (x *Bool) Implies(y *Bool) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_implies(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Xor returns x xor y.
+// Corresponds to Z3_mk_xor.
+func (x *Bool) Xor(y *Bool) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_xor(x.ctx, x.ast, y.ast),
+	}
+}
+
+// And returns the boolean and of all parameters.
+// Corresponds to Z3_mk_and.
+func (x *Bool) And(y ...*Bool) *Bool {
+	ys := []C.Z3_ast{x.ast}
+	for _, a := range y {
+		ys = append(ys, a.ast)
+	}
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_and(x.ctx, C.unsigned(len(ys)), &ys[0]),
+	}
+}
+
+// Or returns the boolean or of all parameters.
+// Corresponds to Z3_mk_or.
+func (x *Bool) Or(y ...*Bool) *Bool {
+	ys := []C.Z3_ast{x.ast}
+	for _, a := range y {
+		ys = append(ys, a.ast)
+	}
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_or(x.ctx, C.unsigned(len(ys)), &ys[0]),
+	}
+}
