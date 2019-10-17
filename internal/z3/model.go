@@ -6,11 +6,13 @@ package z3
 */
 import "C"
 
+// Model is a model from a solver.
 type Model struct {
 	ctx   C.Z3_context
 	model C.Z3_model
 }
 
+// Model retrieves the model from the last successful call to check.
 func (s *Solver) Model() *Model {
 	m := &Model{
 		ctx:   s.ctx,
@@ -20,6 +22,7 @@ func (s *Solver) Model() *Model {
 	return m
 }
 
+// Close frees memory associated with this model.
 func (m *Model) Close() error {
 	C.Z3_model_dec_ref(m.ctx, m.model)
 	return nil

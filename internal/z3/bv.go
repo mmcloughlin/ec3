@@ -7,11 +7,13 @@ package z3
 */
 import "C"
 
+// BVSort is a bit-vector sort.
 type BVSort struct {
 	ctx  *Context
 	sort C.Z3_sort
 }
 
+// BVSort returns a bit-vector sort of the given bit width.
 func (c *Context) BVSort(bits uint) *BVSort {
 	return &BVSort{
 		ctx:  c,
@@ -19,10 +21,12 @@ func (c *Context) BVSort(bits uint) *BVSort {
 	}
 }
 
+// Uint64 returns a bit-vector value with the value x.
 func (s *BVSort) Uint64(x uint64) *BV {
 	return s.wrap(C.Z3_mk_unsigned_int64(s.ctx.ctx, C.uint64_t(x), s.sort))
 }
 
+// Const returns a bit-vector constant with the given name.
 func (s *BVSort) Const(name string) *BV {
 	return s.wrap(C.Z3_mk_const(s.ctx.ctx, s.ctx.symbol(name), s.sort))
 }
@@ -34,6 +38,7 @@ func (s *BVSort) wrap(ast C.Z3_ast) *BV {
 	}
 }
 
+// BV is a bit-vector value.
 type BV struct {
 	ctx C.Z3_context
 	ast C.Z3_ast
