@@ -117,6 +117,7 @@ func Lint(ws []*Wrapper) errutil.Errors {
 	}
 
 	// Check documentation.
+	blacklist := []string{"t1", "t2"}
 	for _, w := range ws {
 		if len(w.Doc) == 0 {
 			errs.Add(xerrors.Errorf("function %q is undocumented", w.Go.Name))
@@ -124,6 +125,14 @@ func Lint(ws []*Wrapper) errutil.Errors {
 		}
 		if !strings.HasPrefix(w.Doc[0], w.Go.Name+" ") {
 			errs.Add(xerrors.Errorf("function %q documentation should start with %q", w.Go.Name, w.Go.Name))
+		}
+		for _, word := range blacklist {
+			for _, line := range w.Doc {
+				if strings.Contains(line, word) {
+					errs.Add(xerrors.Errorf("function %q documentation contains blacklisted word %q", w.Go.Name, word))
+					break
+				}
+			}
 		}
 	}
 

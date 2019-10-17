@@ -349,3 +349,75 @@ func (x *BV) ExtRotateRight(y *BV) *BV {
 		ast: C.Z3_mk_ext_rotate_right(x.ctx, x.ast, y.ast),
 	}
 }
+
+// AddNoOverflow returns a predicate that checks that the bit-wise addition of x and y does not overflow.
+// Corresponds to Z3_mk_bvadd_no_overflow.
+func (x *BV) AddNoOverflow(y *BV, signed bool) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvadd_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+	}
+}
+
+// AddNoUnderflow returns a predicate that checks that the bit-wise addition of x and y does not overflow.
+// Corresponds to Z3_mk_bvadd_no_underflow.
+func (x *BV) AddNoUnderflow(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvadd_no_underflow(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SubNoOverflow creates a predicate that checks that the bit-wise signed subtraction of x and y does not overflow.
+// Corresponds to Z3_mk_bvsub_no_overflow.
+func (x *BV) SubNoOverflow(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsub_no_overflow(x.ctx, x.ast, y.ast),
+	}
+}
+
+// SubNoUnderflow creates a predicate that checks that the bit-wise subtraction of x and y does not underflow.
+// Corresponds to Z3_mk_bvsub_no_underflow.
+func (x *BV) SubNoUnderflow(y *BV, signed bool) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsub_no_underflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+	}
+}
+
+// SdivNoOverflow creates a predicate that checks that the bit-wise signed division of x and y does not overflow.
+// Corresponds to Z3_mk_bvsdiv_no_overflow.
+func (x *BV) SdivNoOverflow(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvsdiv_no_overflow(x.ctx, x.ast, y.ast),
+	}
+}
+
+// NegNoOverflow check that bit-wise negation does not overflow when x is interpreted as a signed bit-vector.
+// Corresponds to Z3_mk_bvneg_no_overflow.
+func (x *BV) NegNoOverflow() *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvneg_no_overflow(x.ctx, x.ast),
+	}
+}
+
+// MulNoOverflow creates a predicate that checks that the bit-wise multiplication of x and y does not overflow.
+// Corresponds to Z3_mk_bvmul_no_overflow.
+func (x *BV) MulNoOverflow(y *BV, signed bool) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvmul_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+	}
+}
+
+// MulNoUnderflow creates a predicate that checks that the bit-wise signed multiplication of x and y does not underflow.
+// Corresponds to Z3_mk_bvmul_no_underflow.
+func (x *BV) MulNoUnderflow(y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_bvmul_no_underflow(x.ctx, x.ast, y.ast),
+	}
+}

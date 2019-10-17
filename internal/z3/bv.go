@@ -161,33 +161,29 @@ type BV struct {
 //wrap:doc ExtRotateRight rotates the bits of x to the right y times.
 //wrap:binary ExtRotateRight Z3_mk_ext_rotate_right
 
-//
-// Z3_ast Z3_API 	Z3_mk_int2bv (Z3_context c, unsigned n, Z3_ast t1)
-//  	Create an n bit bit-vector from the integer argument t1. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bv2int (Z3_context c, Z3_ast t1, bool is_signed)
-//  	Create an integer from the bit-vector argument t1. If is_signed is false, then the bit-vector t1 is treated as unsigned. So the result is non-negative and in the range [0..2^N-1], where N are the number of bits in t1. If is_signed is true, t1 is treated as a signed bit-vector. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvadd_no_overflow (Z3_context c, Z3_ast t1, Z3_ast t2, bool is_signed)
-//  	Create a predicate that checks that the bit-wise addition of t1 and t2 does not overflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvadd_no_underflow (Z3_context c, Z3_ast t1, Z3_ast t2)
-//  	Create a predicate that checks that the bit-wise signed addition of t1 and t2 does not underflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvsub_no_overflow (Z3_context c, Z3_ast t1, Z3_ast t2)
-//  	Create a predicate that checks that the bit-wise signed subtraction of t1 and t2 does not overflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvsub_no_underflow (Z3_context c, Z3_ast t1, Z3_ast t2, bool is_signed)
-//  	Create a predicate that checks that the bit-wise subtraction of t1 and t2 does not underflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvsdiv_no_overflow (Z3_context c, Z3_ast t1, Z3_ast t2)
-//  	Create a predicate that checks that the bit-wise signed division of t1 and t2 does not overflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvneg_no_overflow (Z3_context c, Z3_ast t1)
-//  	Check that bit-wise negation does not overflow when t1 is interpreted as a signed bit-vector. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvmul_no_overflow (Z3_context c, Z3_ast t1, Z3_ast t2, bool is_signed)
-//  	Create a predicate that checks that the bit-wise multiplication of t1 and t2 does not overflow. More...
-//
-// Z3_ast Z3_API 	Z3_mk_bvmul_no_underflow (Z3_context c, Z3_ast t1, Z3_ast t2)
-//  	Create a predicate that checks that the bit-wise signed multiplication of t1 and t2 does not underflow. More...
+//wrap:doc AddNoOverflow returns a predicate that checks that the bit-wise addition of x and y does not overflow.
+//wrap:go AddNoOverflow x y signed:bool
+//wrap:c Z3_mk_bvadd_no_overflow x y signed:bool
+
+//wrap:doc AddNoUnderflow returns a predicate that checks that the bit-wise addition of x and y does not overflow.
+//wrap:binary AddNoUnderflow Z3_mk_bvadd_no_underflow
+
+//wrap:doc SubNoOverflow creates a predicate that checks that the bit-wise signed subtraction of x and y does not overflow.
+//wrap:binary SubNoOverflow Z3_mk_bvsub_no_overflow
+
+//wrap:doc SubNoUnderflow creates a predicate that checks that the bit-wise subtraction of x and y does not underflow.
+//wrap:go SubNoUnderflow x y signed:bool
+//wrap:c Z3_mk_bvsub_no_underflow x y signed:bool
+
+//wrap:doc SdivNoOverflow creates a predicate that checks that the bit-wise signed division of x and y does not overflow.
+//wrap:binary SdivNoOverflow Z3_mk_bvsdiv_no_overflow
+
+//wrap:doc NegNoOverflow check that bit-wise negation does not overflow when x is interpreted as a signed bit-vector.
+//wrap:unary NegNoOverflow Z3_mk_bvneg_no_overflow
+
+//wrap:doc MulNoOverflow creates a predicate that checks that the bit-wise multiplication of x and y does not overflow.
+//wrap:go MulNoOverflow x y signed:bool
+//wrap:c Z3_mk_bvmul_no_overflow x y signed:bool
+
+//wrap:doc MulNoUnderflow creates a predicate that checks that the bit-wise signed multiplication of x and y does not underflow.
+//wrap:binary MulNoUnderflow Z3_mk_bvmul_no_underflow
