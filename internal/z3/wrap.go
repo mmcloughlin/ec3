@@ -49,6 +49,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Add common methods.
+	ws = append(ws, common...)
+
 	// Sanity checks.
 	if errs := Lint(ws); len(errs) > 0 {
 		for _, err := range errs {
@@ -100,6 +103,71 @@ type Wrapper struct {
 	Doc []string
 	Go  Function
 	C   Function
+}
+
+// common methods to be added to all types.
+var common = []*Wrapper{
+	// Equality.
+	{
+		Doc: []string{
+			"Eq returns x == y.",
+		},
+		Go: Function{
+			Identifier: Identifier{Name: "Eq", Type: "Bool"},
+			Parameters: []Identifier{
+				{Name: "x"},
+				{Name: "y"},
+			},
+		},
+		C: Function{
+			Identifier: Identifier{Name: "Z3_mk_eq"},
+			Parameters: []Identifier{
+				{Name: "x"},
+				{Name: "y"},
+			},
+		},
+	},
+	// Distinct.
+	{
+		Doc: []string{
+			"Distinct returns a predicate representing whether all input parameters are distinct.",
+		},
+		Go: Function{
+			Identifier: Identifier{Name: "Distinct", Type: "Bool"},
+			Parameters: []Identifier{
+				{Name: "x"},
+				{Name: "y", Variadic: true},
+			},
+		},
+		C: Function{
+			Identifier: Identifier{Name: "Z3_mk_distinct"},
+			Parameters: []Identifier{
+				{Name: "y", Variadic: true},
+			},
+		},
+	},
+	// If-then-else.
+	{
+		Doc: []string{
+			"ITE returns x if c else y.",
+		},
+		Go: Function{
+			Identifier: Identifier{Name: "ITE"},
+			Parameters: []Identifier{
+				{Name: "x"},
+				{Name: "c", Type: "Bool"},
+				{Name: "y"},
+			},
+		},
+		C: Function{
+			Identifier: Identifier{Name: "Z3_mk_ite"},
+			Parameters: []Identifier{
+				{Name: "c"},
+				{Name: "x"},
+				{Name: "y"},
+			},
+		},
+	},
 }
 
 // Lint runs some sanity checks on a set of wrappers.

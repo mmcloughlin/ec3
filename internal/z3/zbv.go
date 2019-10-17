@@ -421,3 +421,34 @@ func (x *BV) MulNoUnderflow(y *BV) *BV {
 		ast: C.Z3_mk_bvmul_no_underflow(x.ctx, x.ast, y.ast),
 	}
 }
+
+// Eq returns x == y.
+// Corresponds to Z3_mk_eq.
+func (x *BV) Eq(y *BV) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Distinct returns a predicate representing whether all input parameters are distinct.
+// Corresponds to Z3_mk_distinct.
+func (x *BV) Distinct(y ...*BV) *Bool {
+	ys := []C.Z3_ast{x.ast}
+	for _, a := range y {
+		ys = append(ys, a.ast)
+	}
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+	}
+}
+
+// ITE returns x if c else y.
+// Corresponds to Z3_mk_ite.
+func (x *BV) ITE(c Bool, y *BV) *BV {
+	return &BV{
+		ctx: x.ctx,
+		ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+	}
+}

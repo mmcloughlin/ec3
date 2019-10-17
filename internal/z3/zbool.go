@@ -69,3 +69,34 @@ func (x *Bool) Or(y ...*Bool) *Bool {
 		ast: C.Z3_mk_or(x.ctx, C.unsigned(len(ys)), &ys[0]),
 	}
 }
+
+// Eq returns x == y.
+// Corresponds to Z3_mk_eq.
+func (x *Bool) Eq(y *Bool) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+	}
+}
+
+// Distinct returns a predicate representing whether all input parameters are distinct.
+// Corresponds to Z3_mk_distinct.
+func (x *Bool) Distinct(y ...*Bool) *Bool {
+	ys := []C.Z3_ast{x.ast}
+	for _, a := range y {
+		ys = append(ys, a.ast)
+	}
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+	}
+}
+
+// ITE returns x if c else y.
+// Corresponds to Z3_mk_ite.
+func (x *Bool) ITE(c Bool, y *Bool) *Bool {
+	return &Bool{
+		ctx: x.ctx,
+		ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+	}
+}
