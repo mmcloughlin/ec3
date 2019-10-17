@@ -327,7 +327,7 @@ import "C"
 func (g *generator) wrapper(w *Wrapper) {
 	// Documentation.
 	g.Comment(w.Doc...)
-	g.Commentf("Wraps %s.", w.C.Name)
+	g.Commentf("Corresponds to %s.", w.C.Name)
 
 	// Go signature.
 	receiver := w.Go.Parameters[0]

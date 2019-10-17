@@ -9,7 +9,7 @@ package z3
 import "C"
 
 // Not returns bitwise negation of the vector.
-// Wraps Z3_mk_bvnot.
+// Corresponds to Z3_mk_bvnot.
 func (x *BV) Not() *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -18,7 +18,7 @@ func (x *BV) Not() *BV {
 }
 
 // ReduceAnd returns the conjunction of bits in the vector, as a vector of length 1.
-// Wraps Z3_mk_bvredand.
+// Corresponds to Z3_mk_bvredand.
 func (x *BV) ReduceAnd() *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -27,7 +27,7 @@ func (x *BV) ReduceAnd() *BV {
 }
 
 // ReduceOr returns the disjunction of bits in the vector, as a vector of length 1.
-// Wraps Z3_mk_bvredor.
+// Corresponds to Z3_mk_bvredor.
 func (x *BV) ReduceOr() *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -36,7 +36,7 @@ func (x *BV) ReduceOr() *BV {
 }
 
 // And returns the bitwise and of the input vectors.
-// Wraps Z3_mk_bvand.
+// Corresponds to Z3_mk_bvand.
 func (x *BV) And(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -45,7 +45,7 @@ func (x *BV) And(y *BV) *BV {
 }
 
 // Or returns the bitwise or of the input vectors.
-// Wraps Z3_mk_bvor.
+// Corresponds to Z3_mk_bvor.
 func (x *BV) Or(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -54,7 +54,7 @@ func (x *BV) Or(y *BV) *BV {
 }
 
 // Xor returns the bitwise exclusive-or of the input vectors.
-// Wraps Z3_mk_bvxor.
+// Corresponds to Z3_mk_bvxor.
 func (x *BV) Xor(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -63,7 +63,7 @@ func (x *BV) Xor(y *BV) *BV {
 }
 
 // Nand returns the bitwise nand of the input vectors.
-// Wraps Z3_mk_bvnand.
+// Corresponds to Z3_mk_bvnand.
 func (x *BV) Nand(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -72,7 +72,7 @@ func (x *BV) Nand(y *BV) *BV {
 }
 
 // Nor returns the bitwise nor of the input vectors.
-// Wraps Z3_mk_bvnor.
+// Corresponds to Z3_mk_bvnor.
 func (x *BV) Nor(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -81,7 +81,7 @@ func (x *BV) Nor(y *BV) *BV {
 }
 
 // Xnor returns the bitwise xnor of the input vectors.
-// Wraps Z3_mk_bvxnor.
+// Corresponds to Z3_mk_bvxnor.
 func (x *BV) Xnor(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -90,7 +90,7 @@ func (x *BV) Xnor(y *BV) *BV {
 }
 
 // Neg returns twos complement unary minus.
-// Wraps Z3_mk_bvneg.
+// Corresponds to Z3_mk_bvneg.
 func (x *BV) Neg() *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -99,7 +99,7 @@ func (x *BV) Neg() *BV {
 }
 
 // Add returns standard twos complement addition.
-// Wraps Z3_mk_bvadd.
+// Corresponds to Z3_mk_bvadd.
 func (x *BV) Add(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -108,7 +108,7 @@ func (x *BV) Add(y *BV) *BV {
 }
 
 // Sub returns standard twos complement subtraction.
-// Wraps Z3_mk_bvsub.
+// Corresponds to Z3_mk_bvsub.
 func (x *BV) Sub(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -117,7 +117,7 @@ func (x *BV) Sub(y *BV) *BV {
 }
 
 // Mul returns standard twos complement multiplication.
-// Wraps Z3_mk_bvmul.
+// Corresponds to Z3_mk_bvmul.
 func (x *BV) Mul(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -126,7 +126,7 @@ func (x *BV) Mul(y *BV) *BV {
 }
 
 // Udiv returns unsigned division.
-// Wraps Z3_mk_bvudiv.
+// Corresponds to Z3_mk_bvudiv.
 func (x *BV) Udiv(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -135,7 +135,7 @@ func (x *BV) Udiv(y *BV) *BV {
 }
 
 // Sdiv returns twos complement signed division.
-// Wraps Z3_mk_bvsdiv.
+// Corresponds to Z3_mk_bvsdiv.
 func (x *BV) Sdiv(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -144,7 +144,7 @@ func (x *BV) Sdiv(y *BV) *BV {
 }
 
 // Urem returns unsigned remainder.
-// Wraps Z3_mk_bvurem.
+// Corresponds to Z3_mk_bvurem.
 func (x *BV) Urem(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -153,7 +153,7 @@ func (x *BV) Urem(y *BV) *BV {
 }
 
 // Srem returns twos complement signed remainder.
-// Wraps Z3_mk_bvsrem.
+// Corresponds to Z3_mk_bvsrem.
 func (x *BV) Srem(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -162,7 +162,7 @@ func (x *BV) Srem(y *BV) *BV {
 }
 
 // Smod returns twos complement signed remainder (sign follows divisor).
-// Wraps Z3_mk_bvsmod.
+// Corresponds to Z3_mk_bvsmod.
 func (x *BV) Smod(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -171,7 +171,7 @@ func (x *BV) Smod(y *BV) *BV {
 }
 
 // ULT is unsigned less than.
-// Wraps Z3_mk_bvult.
+// Corresponds to Z3_mk_bvult.
 func (x *BV) ULT(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -180,7 +180,7 @@ func (x *BV) ULT(y *BV) *Bool {
 }
 
 // SLT is twos complement signed less than.
-// Wraps Z3_mk_bvslt.
+// Corresponds to Z3_mk_bvslt.
 func (x *BV) SLT(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -189,7 +189,7 @@ func (x *BV) SLT(y *BV) *Bool {
 }
 
 // ULE is unsigned less than or equal to.
-// Wraps Z3_mk_bvule.
+// Corresponds to Z3_mk_bvule.
 func (x *BV) ULE(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -198,7 +198,7 @@ func (x *BV) ULE(y *BV) *Bool {
 }
 
 // SLE is twos complement signed less than or equal to.
-// Wraps Z3_mk_bvsle.
+// Corresponds to Z3_mk_bvsle.
 func (x *BV) SLE(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -207,7 +207,7 @@ func (x *BV) SLE(y *BV) *Bool {
 }
 
 // UGE is unsigned greater than or equal to.
-// Wraps Z3_mk_bvuge.
+// Corresponds to Z3_mk_bvuge.
 func (x *BV) UGE(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -216,7 +216,7 @@ func (x *BV) UGE(y *BV) *Bool {
 }
 
 // SGE is twos complement signed greater than or equal to.
-// Wraps Z3_mk_bvsge.
+// Corresponds to Z3_mk_bvsge.
 func (x *BV) SGE(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -225,7 +225,7 @@ func (x *BV) SGE(y *BV) *Bool {
 }
 
 // UGT is unsigned greater than.
-// Wraps Z3_mk_bvugt.
+// Corresponds to Z3_mk_bvugt.
 func (x *BV) UGT(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -234,7 +234,7 @@ func (x *BV) UGT(y *BV) *Bool {
 }
 
 // SGT is twos complement signed greater than.
-// Wraps Z3_mk_bvsgt.
+// Corresponds to Z3_mk_bvsgt.
 func (x *BV) SGT(y *BV) *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -243,7 +243,7 @@ func (x *BV) SGT(y *BV) *Bool {
 }
 
 // Concat concatenates the given bit-vectors.
-// Wraps Z3_mk_concat.
+// Corresponds to Z3_mk_concat.
 func (x *BV) Concat(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -252,7 +252,7 @@ func (x *BV) Concat(y *BV) *BV {
 }
 
 // Extract the bits high down to low from a bit-vector of size m to yield a new bit-vector of size n, where n = high - low + 1.
-// Wraps Z3_mk_extract.
+// Corresponds to Z3_mk_extract.
 func (x *BV) Extract(high uint, low uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -261,7 +261,7 @@ func (x *BV) Extract(high uint, low uint) *BV {
 }
 
 // SignExt the given bit-vector to the (signed) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
-// Wraps Z3_mk_sign_ext.
+// Corresponds to Z3_mk_sign_ext.
 func (x *BV) SignExt(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -270,7 +270,7 @@ func (x *BV) SignExt(i uint) *BV {
 }
 
 // ZeroExt extends the given bit-vector with zeros to the (unsigned) equivalent bit-vector of size m+i, where m is the size of the given bit-vector.
-// Wraps Z3_mk_zero_ext.
+// Corresponds to Z3_mk_zero_ext.
 func (x *BV) ZeroExt(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -279,7 +279,7 @@ func (x *BV) ZeroExt(i uint) *BV {
 }
 
 // Repeat the given bit-vector up length i.
-// Wraps Z3_mk_repeat.
+// Corresponds to Z3_mk_repeat.
 func (x *BV) Repeat(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -288,7 +288,7 @@ func (x *BV) Repeat(i uint) *BV {
 }
 
 // Shl returns x << y.
-// Wraps Z3_mk_bvshl.
+// Corresponds to Z3_mk_bvshl.
 func (x *BV) Shl(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -297,7 +297,7 @@ func (x *BV) Shl(y *BV) *BV {
 }
 
 // LogicShr returns x >> y.
-// Wraps Z3_mk_bvlshr.
+// Corresponds to Z3_mk_bvlshr.
 func (x *BV) LogicShr(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -306,7 +306,7 @@ func (x *BV) LogicShr(y *BV) *BV {
 }
 
 // ArithShr returns the arithmetic right shift of x by y.
-// Wraps Z3_mk_bvashr.
+// Corresponds to Z3_mk_bvashr.
 func (x *BV) ArithShr(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -315,7 +315,7 @@ func (x *BV) ArithShr(y *BV) *BV {
 }
 
 // RotateLeft rotates the bits of x to the left i times.
-// Wraps Z3_mk_rotate_left.
+// Corresponds to Z3_mk_rotate_left.
 func (x *BV) RotateLeft(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -324,7 +324,7 @@ func (x *BV) RotateLeft(i uint) *BV {
 }
 
 // RotateRight rotates the bits of x to the right i times.
-// Wraps Z3_mk_rotate_right.
+// Corresponds to Z3_mk_rotate_right.
 func (x *BV) RotateRight(i uint) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -333,7 +333,7 @@ func (x *BV) RotateRight(i uint) *BV {
 }
 
 // ExtRotateLeft rotates the bits of x to the left y times.
-// Wraps Z3_mk_ext_rotate_left.
+// Corresponds to Z3_mk_ext_rotate_left.
 func (x *BV) ExtRotateLeft(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,
@@ -342,7 +342,7 @@ func (x *BV) ExtRotateLeft(y *BV) *BV {
 }
 
 // ExtRotateRight rotates the bits of x to the right y times.
-// Wraps Z3_mk_ext_rotate_right.
+// Corresponds to Z3_mk_ext_rotate_right.
 func (x *BV) ExtRotateRight(y *BV) *BV {
 	return &BV{
 		ctx: x.ctx,

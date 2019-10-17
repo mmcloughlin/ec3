@@ -9,7 +9,7 @@ package z3
 import "C"
 
 // Not returns not(x).
-// Wraps Z3_mk_not.
+// Corresponds to Z3_mk_not.
 func (x *Bool) Not() *Bool {
 	return &Bool{
 		ctx: x.ctx,
@@ -18,7 +18,7 @@ func (x *Bool) Not() *Bool {
 }
 
 // Iff returns x iff y.
-// Wraps Z3_mk_iff.
+// Corresponds to Z3_mk_iff.
 func (x *Bool) Iff(y *Bool) *Bool {
 	return &Bool{
 		ctx: x.ctx,
