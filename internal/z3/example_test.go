@@ -45,3 +45,45 @@ func Example_bitVectorInequality() {
 	// Output:
 	// result: false
 }
+
+// Find x and y such that: x ^ y - 103 == x * y.
+func Example_bitVectorEquation() {
+	// Initialize context.
+	cfg := z3.NewConfig()
+	defer cfg.Close()
+	ctx := z3.NewContext(cfg)
+	defer ctx.Close()
+
+	// Initialize solver.
+	solver := ctx.Solver()
+	defer solver.Close()
+
+	// Construct x ^ y - 103 == x * y.
+	bv := ctx.BVSort(32)
+	x, y := bv.Const("x"), bv.Const("y")
+	xor := x.Xor(y)
+	c103 := bv.Uint64(103)
+	lhs := xor.Sub(c103)
+	rhs := x.Mul(y)
+	ctr := lhs.Eq(rhs)
+
+	// Add constraint to solver and check.
+	solver.Assert(ctr)
+	sat, err := solver.Check()
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+
+	fmt.Println("satisfiable:", sat)
+
+	// Inspect the model.
+	m := solver.Model()
+	defer m.Close()
+	fmt.Printf("model:\n%s", m)
+	// Output:
+	// satisfiable: true
+	// model:
+	// y -> #xf4fce4c5
+	// x -> #x2a3854c5
+}
