@@ -49,17 +49,17 @@ func (s *BVSort) Const(name string) *BV {
 
 func (s *BVSort) wrap(ast C.Z3_ast) *BV {
 	return &BV{
-		ctx: s.ctx.ctx,
+		ctx:  s.ctx.ctx,
 		sort: s.sort,
-		ast: ast,
+		ast:  ast,
 	}
 }
 
 // BV is a bit-vector value.
 type BV struct {
-	ctx C.Z3_context
+	ctx  C.Z3_context
 	sort C.Z3_sort
-	ast C.Z3_ast
+	ast  C.Z3_ast
 }
 
 // Bits returns the size of the bit-vector.
