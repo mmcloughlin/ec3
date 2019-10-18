@@ -1,9 +1,12 @@
-package eval
+package eval_test
 
 import (
 	"math"
+	"reflect"
 	"testing"
 
+	"github.com/mmcloughlin/ec3/arith/eval"
+	"github.com/mmcloughlin/ec3/arith/eval/m64"
 	"github.com/mmcloughlin/ec3/arith/ir"
 	"github.com/mmcloughlin/ec3/internal/assert"
 )
@@ -14,7 +17,7 @@ type Expectation struct {
 }
 
 func Execute(t *testing.T, p *ir.Program, expectations []Expectation) {
-	e := NewEvaluator()
+	e := eval.NewEvaluator(m64.New())
 	if err := e.Execute(p); err != nil {
 		t.Fatal(err)
 	}
@@ -23,7 +26,7 @@ func Execute(t *testing.T, p *ir.Program, expectations []Expectation) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got != expect.Value {
+		if !reflect.DeepEqual(got, m64.Word(expect.Value)) {
 			t.Errorf("%s = %#x; expect %#x", expect.Register, got, expect.Value)
 		}
 	}
@@ -185,7 +188,7 @@ func TestUndefinedRegister(t *testing.T) {
 			},
 		},
 	}
-	e := NewEvaluator()
+	e := eval.NewEvaluator(m64.New())
 	err := e.Execute(p)
 	assert.ErrorContains(t, err, "undefined")
 }
@@ -202,7 +205,7 @@ func TestInvalidFlag(t *testing.T) {
 			},
 		},
 	}
-	e := NewEvaluator()
+	e := eval.NewEvaluator(m64.New())
 	err := e.Execute(p)
 	assert.ErrorContains(t, err, "1-bit value")
 }
