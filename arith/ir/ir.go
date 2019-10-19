@@ -16,6 +16,11 @@ type Constant uint64
 
 func (Constant) operand() {}
 
+// Flag is a single-bit constant operand.
+type Flag uint64
+
+func (Flag) operand() {}
+
 // Program is a sequence of instructions.
 type Program struct {
 	Instructions []Instruction

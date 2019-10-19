@@ -16,7 +16,8 @@ type Value interface {
 
 // Processor is an implementation of the arithmetic instruction set.
 type Processor interface {
-	Uint64(x uint64) Value
+	Bits() uint
+	Const(x uint64, n uint) Value
 	ADD(x, y, cin Value) (sum, cout Value)
 	SUB(x, y, bin Value) (diff, bout Value)
 	MUL(x, y Value) (hi, lo Value)
@@ -38,6 +39,11 @@ func NewEvaluator(proc Processor) *Evaluator {
 		proc: proc,
 		mem:  map[string]Value{},
 	}
+}
+
+// SetRegister sets register r to value x.
+func (e *Evaluator) SetRegister(r ir.Register, x Value) {
+	e.setregister(r, x)
 }
 
 // Register returns the value in the given register.
@@ -100,10 +106,12 @@ func (e *Evaluator) operand(operand ir.Operand) Value {
 	case ir.Register:
 		return e.register(op)
 	case ir.Constant:
-		return e.proc.Uint64(uint64(op))
+		return e.proc.Const(uint64(op), e.proc.Bits())
+	case ir.Flag:
+		return e.proc.Const(uint64(op), 1)
 	default:
 		e.adderror(errutil.UnexpectedType(op))
-		return e.proc.Uint64(0)
+		return nil
 	}
 }
 
@@ -124,7 +132,7 @@ func (e *Evaluator) load(name string) Value {
 	x, ok := e.mem[name]
 	if !ok {
 		e.errorf("operand %q undefined", name)
-		return e.proc.Uint64(0)
+		return nil
 	}
 	return x
 }

@@ -31,8 +31,11 @@ func (p *Processor) Errors() []error {
 	return p.errs
 }
 
-// Uint64 returns x as a processor word.
-func (Processor) Uint64(x uint64) eval.Value { return Word(x) }
+// Bits returns the word size.
+func (Processor) Bits() uint { return 64 }
+
+// Const builds an n-bit constant.
+func (Processor) Const(x uint64, n uint) eval.Value { return Word(x) }
 
 // ADD executes an add with carry instruction.
 func (p *Processor) ADD(x, y, cin eval.Value) (sum, cout eval.Value) {

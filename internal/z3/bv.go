@@ -3,9 +3,15 @@ package z3
 /*
 #cgo LDFLAGS: -lz3
 #include <stdint.h>
+#include <stdlib.h>
 #include <z3.h>
 */
 import "C"
+
+import (
+	"math/big"
+	"unsafe"
+)
 
 // BVSort is a bit-vector sort.
 type BVSort struct {
@@ -19,6 +25,21 @@ func (c *Context) BVSort(bits uint) *BVSort {
 		ctx:  c,
 		sort: C.Z3_mk_bv_sort(c.ctx, C.unsigned(bits)),
 	}
+}
+
+// Bits returns the size of the bit-vector sort.
+func (s *BVSort) Bits() uint {
+	return uint(C.Z3_get_bv_sort_size(s.ctx.ctx, s.sort))
+}
+
+func (s *BVSort) Numeral(lit string) *BV {
+	cstr := C.CString(lit)
+	defer C.free(unsafe.Pointer(cstr))
+	return s.wrap(C.Z3_mk_numeral(s.ctx.ctx, cstr, s.sort))
+}
+
+func (s *BVSort) Int(x *big.Int) *BV {
+	return s.Numeral(x.Text(10))
 }
 
 // Uint64 returns a bit-vector value with the value x.
@@ -42,6 +63,12 @@ func (s *BVSort) wrap(ast C.Z3_ast) *BV {
 type BV struct {
 	ctx C.Z3_context
 	ast C.Z3_ast
+}
+
+// Bits returns the size of the bit-vector.
+func (x *BV) Bits() uint {
+	sort := C.Z3_get_sort(x.ctx, x.ast)
+	return uint(C.Z3_get_bv_sort_size(x.ctx, sort))
 }
 
 //go:generate go run wrap.go -type BV -input $GOFILE -output zbv.go
