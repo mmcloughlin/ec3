@@ -1,7 +1,7 @@
-FROM ubuntu:bionic
+FROM ubuntu:bionic-20191010
 
-ARG GO_VERSION=1.13.1
 ARG Z3_VERSION=4.8.6
+ARG GO_VERSION=1.13.3
 
 # Install required packages.
 RUN apt-get update
@@ -16,15 +16,6 @@ RUN apt-get install --yes \
         wget \
     ;
 
-# Install go.
-WORKDIR /tmp/go
-RUN wget --quiet \
-        --output-document go.tar.gz \
-        https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
-    && \
-    tar -C /usr/local -xzf go.tar.gz \
-    ;
-
 # Install z3.
 WORKDIR /tmp/z3
 RUN wget --quiet \
@@ -36,6 +27,15 @@ RUN wget --quiet \
     python scripts/mk_make.py --prefix /usr/local --staticlib \
     && \
     make -C build -j 8 install \
+    ;
+
+# Install go.
+WORKDIR /tmp/go
+RUN wget --quiet \
+        --output-document go.tar.gz \
+        https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz \
+    && \
+    tar -C /usr/local -xzf go.tar.gz \
     ;
 
 # Setup environment.
