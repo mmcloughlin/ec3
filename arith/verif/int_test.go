@@ -4,10 +4,9 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/internal/z3"
-	"github.com/mmcloughlin/ec3/prime"
 )
 
-func TestFieldAddCommutative(t *testing.T) {
+func TestLimbsRoundTrip(t *testing.T) {
 	// Initialize context.
 	cfg := z3.NewConfig()
 	defer cfg.Close()
@@ -18,20 +17,13 @@ func TestFieldAddCommutative(t *testing.T) {
 	solver := ctx.Solver()
 	defer solver.Close()
 
-	// Construct field.
+	// Break a variable x into limbs and then reform.
 	sort := ctx.BVSort(256)
-	f, err := NewField(sort, prime.NISTP256.Int())
-	if err != nil {
-		t.Fatal(err)
-	}
+	x := sort.Const("x")
+	limbs := Limbs(x, 64)
+	xr := FromLimbs(limbs)
 
-	// Variables.
-	x, y := f.Const("x"), f.Const("y")
-
-	sum := f.Add(x, y)
-	alt := f.Add(y, x)
-
-	thm := sum.Eq(alt)
+	thm := x.Eq(xr)
 
 	// Prove.
 	result, err := solver.Prove(thm)
