@@ -18,7 +18,16 @@ type Solver struct {
 func (c *Context) Solver() *Solver {
 	solver := C.Z3_mk_solver(c.ctx)
 	C.Z3_solver_inc_ref(c.ctx, solver)
+	return &Solver{
+		ctx:    c.ctx,
+		solver: solver,
+	}
+}
 
+// SolverFor builds a solver customized for the given logic.
+func (c *Context) SolverForLogic(logic string) *Solver {
+	solver := C.Z3_mk_solver_for_logic(c.ctx, c.symbol(logic))
+	C.Z3_solver_inc_ref(c.ctx, solver)
 	return &Solver{
 		ctx:    c.ctx,
 		solver: solver,

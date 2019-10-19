@@ -18,7 +18,7 @@ func TestInterface(t *testing.T) {
 func TestUint64(t *testing.T) {
 	proc := New()
 	x := rand.Uint64()
-	v := proc.Uint64(x)
+	v := proc.Const(x, 64)
 	if uint64(v.(Word)) != x {
 		t.Fail()
 	}

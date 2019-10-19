@@ -19,13 +19,14 @@ func TestFieldAddCommutative(t *testing.T) {
 	defer solver.Close()
 
 	// Construct field.
-	f, err := NewField(ctx, 256, prime.NISTP256.Int())
+	sort := ctx.BVSort(256)
+	f, err := NewField(sort, prime.NISTP256.Int())
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Variables.
-	x, y := f.Var("x"), f.Var("y")
+	x, y := f.Const("x"), f.Const("y")
 
 	sum := f.Add(x, y)
 	alt := f.Add(y, x)
@@ -54,16 +55,11 @@ func TestFieldLimbsRoundTrip(t *testing.T) {
 	solver := ctx.Solver()
 	defer solver.Close()
 
-	// Construct field.
-	f, err := NewField(ctx, 256, prime.NISTP256.Int())
-	if err != nil {
-		t.Fatal(err)
-	}
-
 	// Break a variable x into limbs and then reform.
-	x := f.Var("x")
-	limbs := f.Limbs(x, 64)
-	xr := f.FromLimbs(limbs)
+	sort := ctx.BVSort(256)
+	x := sort.Const("x")
+	limbs := Limbs(x, 64)
+	xr := FromLimbs(limbs)
 
 	thm := x.Eq(xr)
 

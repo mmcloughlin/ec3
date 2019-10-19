@@ -27,6 +27,11 @@ func (c *Context) BVSort(bits uint) *BVSort {
 	}
 }
 
+// Bits returns the size of the bit-vector sort.
+func (s *BVSort) Bits() uint {
+	return uint(C.Z3_get_bv_sort_size(s.ctx.ctx, s.sort))
+}
+
 func (s *BVSort) Numeral(lit string) *BV {
 	cstr := C.CString(lit)
 	defer C.free(unsafe.Pointer(cstr))
@@ -49,22 +54,21 @@ func (s *BVSort) Const(name string) *BV {
 
 func (s *BVSort) wrap(ast C.Z3_ast) *BV {
 	return &BV{
-		ctx:  s.ctx.ctx,
-		sort: s.sort,
-		ast:  ast,
+		ctx: s.ctx.ctx,
+		ast: ast,
 	}
 }
 
 // BV is a bit-vector value.
 type BV struct {
-	ctx  C.Z3_context
-	sort C.Z3_sort
-	ast  C.Z3_ast
+	ctx C.Z3_context
+	ast C.Z3_ast
 }
 
 // Bits returns the size of the bit-vector.
 func (x *BV) Bits() uint {
-	return uint(C.Z3_get_bv_sort_size(x.ctx, x.sort))
+	sort := C.Z3_get_sort(x.ctx, x.ast)
+	return uint(C.Z3_get_bv_sort_size(x.ctx, sort))
 }
 
 //go:generate go run wrap.go -type BV -input $GOFILE -output zbv.go
