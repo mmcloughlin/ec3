@@ -5,6 +5,7 @@ import (
 
 	"github.com/mmcloughlin/ec3/arith/eval"
 	"github.com/mmcloughlin/ec3/arith/ir"
+	"github.com/mmcloughlin/ec3/arith/mp"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/z3"
 )
@@ -12,12 +13,14 @@ import (
 // Evaluator can evaluate arithmetic programs over bit-vector integers.
 type Evaluator struct {
 	eval *eval.Evaluator
+	n    uint
 }
 
 func NewEvaluator(ctx *z3.Context, n uint) *Evaluator {
 	proc := newprocessor(ctx, n)
 	return &Evaluator{
 		eval: eval.NewEvaluator(proc),
+		n:    n,
 	}
 }
 
@@ -31,6 +34,24 @@ func (e *Evaluator) Register(r ir.Register) (*z3.BV, error) {
 		return nil, err
 	}
 	return v.(*z3.BV), nil
+}
+
+func (e *Evaluator) SetInt(z mp.Int, x *z3.BV) {
+	for i, limb := range Limbs(x, e.n) {
+		e.SetRegister(z[i], limb)
+	}
+}
+
+func (e *Evaluator) Int(x mp.Int) (*z3.BV, error) {
+	var limbs []*z3.BV
+	for _, r := range x {
+		limb, err := e.Register(r)
+		if err != nil {
+			return nil, err
+		}
+		limbs = append(limbs, limb)
+	}
+	return FromLimbs(limbs), nil
 }
 
 func (e *Evaluator) Execute(p *ir.Program) error {
@@ -54,6 +75,11 @@ func newprocessor(ctx *z3.Context, n uint) *processor {
 func (p *processor) Errors() []error { return p.errs }
 
 func (p *processor) Const(x uint64, n uint) eval.Value { return p.ctx.BVSort(n).Uint64(x) }
+
+func (p *processor) ITE(l, r, x, y eval.Value) eval.Value {
+	cond := p.bit(l).Eq(p.bit(r))
+	return p.word(x).ITE(cond, p.word(y))
+}
 
 func (p *processor) ADD(x, y, cin eval.Value) (sum, cout eval.Value) {
 	n := p.Bits()

@@ -94,7 +94,7 @@ func (x *Bool) Distinct(y ...*Bool) *Bool {
 
 // ITE returns x if c else y.
 // Corresponds to Z3_mk_ite.
-func (x *Bool) ITE(c Bool, y *Bool) *Bool {
+func (x *Bool) ITE(c *Bool, y *Bool) *Bool {
 	return &Bool{
 		ctx: x.ctx,
 		ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),

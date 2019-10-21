@@ -155,7 +155,7 @@ var common = []*Wrapper{
 			Identifier: Identifier{Name: "ITE"},
 			Parameters: []Identifier{
 				{Name: "x"},
-				{Name: "c", Type: "Bool"},
+				{Name: "c", Type: "*Bool"},
 				{Name: "y"},
 			},
 		},

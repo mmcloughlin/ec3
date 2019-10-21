@@ -39,6 +39,16 @@ type MOV struct {
 
 func (MOV) instruction() {}
 
+// CMOV is a conditional move.
+type CMOV struct {
+	Source      Operand
+	Destination Register
+	Flag        Operand
+	Equals      Flag
+}
+
+func (CMOV) instruction() {}
+
 // ADD is an add with carry instruction.
 type ADD struct {
 	X        Operand

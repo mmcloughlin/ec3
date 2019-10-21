@@ -16,13 +16,23 @@ type Value interface {
 
 // Processor is an implementation of the arithmetic instruction set.
 type Processor interface {
+	// Bits returns the word size of the processor.
 	Bits() uint
+	// Const builds the n-bit constant with value x.
 	Const(x uint64, n uint) Value
+	// ITE returns x if l≡r else y.
+	ITE(l, r, x, y Value) Value
+	// ADD is addition with carry in/out.
 	ADD(x, y, cin Value) (sum, cout Value)
+	// SUB is subtraction with borrow in/out.
 	SUB(x, y, bin Value) (diff, bout Value)
+	// MUL is multiply with upper/lower parts of the result.
 	MUL(x, y Value) (hi, lo Value)
+	// SHL shifts left by s.
 	SHL(x Value, s uint) Value
+	// SHR shifts right by s.
 	SHR(x Value, s uint) Value
+	// Errors returns any accumulated errors.
 	Errors() []error
 }
 
@@ -68,6 +78,13 @@ func (e *Evaluator) instruction(inst ir.Instruction) error {
 	switch i := inst.(type) {
 	case ir.MOV:
 		e.setregister(i.Destination, e.operand(i.Source))
+	case ir.CMOV:
+		src := e.operand(i.Source)
+		dst := e.operand(i.Destination)
+		flag := e.flag(i.Flag)
+		eq := e.flag(i.Equals)
+		result := e.proc.ITE(flag, eq, src, dst)
+		e.setregister(i.Destination, result)
 	case ir.ADD:
 		x := e.operand(i.X)
 		y := e.operand(i.Y)
