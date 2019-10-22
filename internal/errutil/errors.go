@@ -28,6 +28,11 @@ func (e *Errors) Add(err ...error) {
 	*e = append(*e, err...)
 }
 
+// Addf adds a formatted error to the list.
+func (e *Errors) Addf(format string, args ...interface{}) {
+	e.Add(xerrors.Errorf(format, args...))
+}
+
 // Err returns an error equivalent to this error list.
 // If the list is empty, Err returns nil.
 func (e Errors) Err() error {

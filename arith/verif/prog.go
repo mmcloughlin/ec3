@@ -1,8 +1,6 @@
 package verif
 
 import (
-	"golang.org/x/xerrors"
-
 	"github.com/mmcloughlin/ec3/arith/eval"
 	"github.com/mmcloughlin/ec3/arith/ir"
 	"github.com/mmcloughlin/ec3/arith/mp"
@@ -139,7 +137,7 @@ func (p *processor) bv(v eval.Value, n uint) *z3.BV {
 		return p.zero(n)
 	}
 	if x.Bits() != n {
-		p.errs.Add(xerrors.Errorf("incorrect bit-vector size: got %d require %d", x.Bits(), n))
+		p.errs.Addf("incorrect bit-vector size: got %d require %d", x.Bits(), n)
 		return p.zero(n)
 	}
 	return x

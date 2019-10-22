@@ -17,18 +17,21 @@ func (f SequenceFunc) New() string {
 func Indexed(format string) Sequence {
 	i := 0
 	return SequenceFunc(func() string {
-		v := fmt.Sprintf(format, i)
+		n := fmt.Sprintf(format, i)
 		i++
-		return string(v)
+		return n
 	})
 }
 
-// Temporaries generates temporary variables in a standard form.
+// Temporaries generates temporary names in a standard form.
 func Temporaries() Sequence {
 	return Indexed("t%d")
 }
 
 type Uniquer interface {
+	// Used reports whether a name is used.
+	Used(string) bool
+
 	// MarkUsed marks names as used.
 	MarkUsed(...string)
 }
@@ -46,25 +49,29 @@ type uniquegenerator struct {
 }
 
 // NewUniqueGenerator builds a UniqueGenerator based on a function that
-// produces a sequence of possible variable names.
+// produces a sequence of possible names.
 func NewUniqueGenerator() UniqueGenerator {
 	return &uniquegenerator{
 		used: make(map[string]bool),
 	}
 }
 
-func (g *uniquegenerator) MarkUsed(vs ...string) {
-	for _, v := range vs {
-		g.used[v] = true
+func (g *uniquegenerator) Used(name string) bool {
+	return g.used[name]
+}
+
+func (g *uniquegenerator) MarkUsed(names ...string) {
+	for _, name := range names {
+		g.used[name] = true
 	}
 }
 
 func (g uniquegenerator) New(s Sequence) string {
 	for {
-		v := s.New()
-		if !g.used[v] {
-			g.MarkUsed(v)
-			return v
+		n := s.New()
+		if !g.Used(n) {
+			g.MarkUsed(n)
+			return n
 		}
 	}
 }

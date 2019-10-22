@@ -179,7 +179,7 @@ func Lint(ws []*Wrapper) errutil.Errors {
 	for _, w := range ws {
 		name := w.C.Name
 		if funcs[name] {
-			errs.Add(xerrors.Errorf("function %q is wrapped multiple times", name))
+			errs.Addf("function %q is wrapped multiple times", name)
 		}
 		funcs[name] = true
 	}
@@ -188,16 +188,16 @@ func Lint(ws []*Wrapper) errutil.Errors {
 	blacklist := []string{"t1", "t2"}
 	for _, w := range ws {
 		if len(w.Doc) == 0 {
-			errs.Add(xerrors.Errorf("function %q is undocumented", w.Go.Name))
+			errs.Addf("function %q is undocumented", w.Go.Name)
 			continue
 		}
 		if !strings.HasPrefix(w.Doc[0], w.Go.Name+" ") {
-			errs.Add(xerrors.Errorf("function %q documentation should start with %q", w.Go.Name, w.Go.Name))
+			errs.Addf("function %q documentation should start with %q", w.Go.Name, w.Go.Name)
 		}
 		for _, word := range blacklist {
 			for _, line := range w.Doc {
 				if strings.Contains(line, word) {
-					errs.Add(xerrors.Errorf("function %q documentation contains blacklisted word %q", w.Go.Name, word))
+					errs.Addf("function %q documentation contains blacklisted word %q", w.Go.Name, word)
 					break
 				}
 			}
@@ -214,7 +214,7 @@ func Lint(ws []*Wrapper) errutil.Errors {
 		goname := strings.ToLower(abbrev.Replace(w.Go.Name))
 		cname := strings.ToLower(strings.ReplaceAll(w.C.Name, "_", ""))
 		if !strings.HasSuffix(cname, goname) {
-			errs.Add(xerrors.Errorf("function name %q expected to match suffix of %q", w.Go.Name, w.C.Name))
+			errs.Addf("function name %q expected to match suffix of %q", w.Go.Name, w.C.Name)
 		}
 	}
 

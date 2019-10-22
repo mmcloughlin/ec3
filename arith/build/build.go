@@ -2,20 +2,29 @@ package build
 
 import (
 	"github.com/mmcloughlin/ec3/arith/ir"
+	"github.com/mmcloughlin/ec3/internal/errutil"
+	"github.com/mmcloughlin/ec3/name"
 )
 
 type Context struct {
 	prog *ir.Program
+	regs name.UniqueGenerator
+	errs errutil.Errors
 }
 
 func NewContext() *Context {
 	return &Context{
 		prog: &ir.Program{},
+		regs: name.NewUniqueGenerator(),
 	}
 }
 
-func (ctx *Context) Program() *ir.Program {
-	return ctx.prog
+func (ctx *Context) Program() (*ir.Program, error) {
+	return ctx.prog, ctx.errs.Err()
+}
+
+func (ctx *Context) Register(s name.Sequence) ir.Register {
+	return ir.Register(ctx.regs.New(s))
 }
 
 func (ctx *Context) MOV(src ir.Operand, dst ir.Register) {
@@ -71,5 +80,14 @@ func (ctx *Context) SHR(x ir.Operand, s ir.Constant, r ir.Register) {
 }
 
 func (ctx *Context) instruction(i ir.Instruction) {
+	// Check register naming.
+	for _, reg := range ir.Registers(i.Operands()) {
+		if !name.IsExported(string(reg)) && !ctx.regs.Used(string(reg)) {
+			ctx.errs.Addf("unexported names must be managed by the build context: %q is unknown", reg)
+			return
+		}
+	}
+
+	// Add instruction.
 	ctx.prog.Instructions = append(ctx.prog.Instructions, i)
 }
