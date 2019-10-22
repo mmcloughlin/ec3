@@ -1,13 +1,16 @@
 package op3
 
-import "github.com/mmcloughlin/ec3/efd/op3/ast"
+import (
+	"github.com/mmcloughlin/ec3/efd/op3/ast"
+	"github.com/mmcloughlin/ec3/name"
+)
 
 // AliasCorrect ensures that the program p will compute the same result if the
 // given variables are aliased. Aliased variables are pointers to the same
 // memory location. If the program is already robust to the given alias sets, no
 // changes will be made. Otherwise the program will be modified with additional
 // temporaries.
-func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variable, vars VariableGenerator) *ast.Program {
+func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variable, vars name.VariableGenerator) *ast.Program {
 	isinput := InputSet(p)
 	isoutput := VariableSet(outputs)
 
@@ -15,7 +18,9 @@ func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variab
 	g := BuildInterferenceGraph(p, outputs)
 
 	// Populate the variable generator.
-	vars.MarkUsed(Variables(p)...)
+	for _, v := range Variables(p) {
+		vars.MarkUsed(string(v))
+	}
 
 	replacements := map[ast.Variable]ast.Variable{}
 	pre := []ast.Assignment{}
@@ -39,7 +44,7 @@ func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variab
 			}
 
 			// Replace v with a new variable.
-			r := vars.New()
+			r := ast.Variable(vars.New())
 			replacements[v] = r
 
 			if isinput[v] {

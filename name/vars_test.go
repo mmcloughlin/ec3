@@ -1,9 +1,7 @@
-package op3
+package name
 
 import (
 	"testing"
-
-	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
 func TestIndexedVariables(t *testing.T) {
@@ -13,7 +11,7 @@ func TestIndexedVariables(t *testing.T) {
 	g.MarkUsed("x2", "x4", "x7", "x8", "x9")
 
 	// Generate 10 variables.
-	expect := []ast.Variable{
+	expect := []string{
 		"x0",
 		"x1",
 		// x2

@@ -14,6 +14,7 @@ import (
 	"github.com/mmcloughlin/ec3/internal/assert"
 	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/test"
+	"github.com/mmcloughlin/ec3/name"
 )
 
 func TestAliasCorrectCases(t *testing.T) {
@@ -53,7 +54,7 @@ func TestAliasCorrectCases(t *testing.T) {
 		expect, err := parse.String(c.Expect)
 		assert.NoError(t, err)
 
-		q := AliasCorrect(p, c.Aliases, c.Outputs, IndexedVariables(tmpfmt))
+		q := AliasCorrect(p, c.Aliases, c.Outputs, name.IndexedVariables(tmpfmt))
 		if !reflect.DeepEqual(q, expect) {
 			t.Logf("got:\n%s", q)
 			t.Logf("expect:\n%s", expect)
@@ -109,7 +110,7 @@ func TestAliasCorrectEFDBinaryXYZ(t *testing.T) {
 				{"Z1", "Z2", "Z3"},
 			}
 			outputs := []ast.Variable{"X3", "Y3", "Z3"}
-			q := AliasCorrect(p, aliases, outputs, Temporaries())
+			q := AliasCorrect(p, aliases, outputs, name.Temporaries())
 
 			// This should work when aliased.
 			QL := LeftAliasedEvaluator(t, q)

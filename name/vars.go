@@ -1,42 +1,40 @@
-package op3
+package name
 
 import (
 	"fmt"
-
-	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
 // VariableGenerator is a method of generating new variable names.
 type VariableGenerator interface {
 	// MarkUsed marks a variable as used, ensuring it will not be returned by any
 	// future call to New().
-	MarkUsed(...ast.Variable)
+	MarkUsed(...string)
 
 	// New generates a new unique variable name.
-	New() ast.Variable
+	New() string
 }
 
 type variablegenerator struct {
-	used map[ast.Variable]bool
-	next func() ast.Variable
+	used map[string]bool
+	next func() string
 }
 
 // NewVariableGeneratorFunc builds a VariableGenerator based on a function that
 // produces a sequence of possible variable names.
-func NewVariableGeneratorFunc(next func() ast.Variable) VariableGenerator {
+func NewVariableGeneratorFunc(next func() string) VariableGenerator {
 	return &variablegenerator{
-		used: make(map[ast.Variable]bool),
+		used: make(map[string]bool),
 		next: next,
 	}
 }
 
-func (g *variablegenerator) MarkUsed(vs ...ast.Variable) {
+func (g *variablegenerator) MarkUsed(vs ...string) {
 	for _, v := range vs {
 		g.used[v] = true
 	}
 }
 
-func (g *variablegenerator) New() ast.Variable {
+func (g *variablegenerator) New() string {
 	for {
 		v := g.next()
 		if !g.used[v] {
@@ -49,10 +47,10 @@ func (g *variablegenerator) New() ast.Variable {
 // IndexedVariables generates variables using an increasing index and
 func IndexedVariables(format string) VariableGenerator {
 	i := 0
-	return NewVariableGeneratorFunc(func() ast.Variable {
+	return NewVariableGeneratorFunc(func() string {
 		v := fmt.Sprintf(format, i)
 		i++
-		return ast.Variable(v)
+		return string(v)
 	})
 }
 
