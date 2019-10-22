@@ -4,11 +4,11 @@ import (
 	"testing"
 )
 
-func TestIndexedVariables(t *testing.T) {
-	g := IndexedVariables("x%d")
+func TestUniquedIndexed(t *testing.T) {
+	s := Uniqued(Indexed("x%d"))
 
 	// Mark some already used.
-	g.MarkUsed("x2", "x4", "x7", "x8", "x9")
+	s.MarkUsed("x2", "x4", "x7", "x8", "x9")
 
 	// Generate 10 variables.
 	expect := []string{
@@ -26,7 +26,7 @@ func TestIndexedVariables(t *testing.T) {
 		"x11",
 	}
 	for i := range expect {
-		got := g.New()
+		got := s.New()
 		if got != expect[i] {
 			t.Fail()
 		}

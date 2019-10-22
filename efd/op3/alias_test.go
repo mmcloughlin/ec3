@@ -54,7 +54,7 @@ func TestAliasCorrectCases(t *testing.T) {
 		expect, err := parse.String(c.Expect)
 		assert.NoError(t, err)
 
-		q := AliasCorrect(p, c.Aliases, c.Outputs, name.IndexedVariables(tmpfmt))
+		q := AliasCorrect(p, c.Aliases, c.Outputs, name.Uniqued(name.Indexed(tmpfmt)))
 		if !reflect.DeepEqual(q, expect) {
 			t.Logf("got:\n%s", q)
 			t.Logf("expect:\n%s", expect)
@@ -110,7 +110,7 @@ func TestAliasCorrectEFDBinaryXYZ(t *testing.T) {
 				{"Z1", "Z2", "Z3"},
 			}
 			outputs := []ast.Variable{"X3", "Y3", "Z3"}
-			q := AliasCorrect(p, aliases, outputs, name.Temporaries())
+			q := AliasCorrect(p, aliases, outputs, name.Uniqued(name.Temporaries()))
 
 			// This should work when aliased.
 			QL := LeftAliasedEvaluator(t, q)

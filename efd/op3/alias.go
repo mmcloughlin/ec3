@@ -10,7 +10,7 @@ import (
 // memory location. If the program is already robust to the given alias sets, no
 // changes will be made. Otherwise the program will be modified with additional
 // temporaries.
-func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variable, vars name.VariableGenerator) *ast.Program {
+func AliasCorrect(p *ast.Program, aliases [][]ast.Variable, outputs []ast.Variable, vars name.UniqueSequence) *ast.Program {
 	isinput := InputSet(p)
 	isoutput := VariableSet(outputs)
 
