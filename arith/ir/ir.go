@@ -11,8 +11,8 @@ type Register string
 
 func (Register) operand() {}
 
-// Registers selects the registers from the list of operands.
-func Registers(ops []Operand) []Register {
+// SelectRegisters selects the registers from the list of operands.
+func SelectRegisters(ops []Operand) []Register {
 	var rs []Register
 	for _, op := range ops {
 		if r, ok := op.(Register); ok {
@@ -26,6 +26,9 @@ func Registers(ops []Operand) []Register {
 type Constant uint64
 
 func (Constant) operand() {}
+
+// Zero is the zero constant.
+var Zero = Constant(0)
 
 // Flag is a single-bit constant operand.
 type Flag uint64

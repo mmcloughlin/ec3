@@ -3,7 +3,6 @@ package verif
 import (
 	"github.com/mmcloughlin/ec3/arith/eval"
 	"github.com/mmcloughlin/ec3/arith/ir"
-	"github.com/mmcloughlin/ec3/arith/mp"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/z3"
 )
@@ -34,13 +33,13 @@ func (e *Evaluator) Register(r ir.Register) (*z3.BV, error) {
 	return v.(*z3.BV), nil
 }
 
-func (e *Evaluator) SetInt(z mp.Int, x *z3.BV) {
+func (e *Evaluator) SetInt(z ir.Registers, x *z3.BV) {
 	for i, limb := range Limbs(x, e.n) {
 		e.SetRegister(z[i], limb)
 	}
 }
 
-func (e *Evaluator) Int(x mp.Int) (*z3.BV, error) {
+func (e *Evaluator) Int(x ir.Registers) (*z3.BV, error) {
 	var limbs []*z3.BV
 	for _, r := range x {
 		limb, err := e.Register(r)
