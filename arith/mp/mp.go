@@ -35,8 +35,8 @@ func add(ctx *build.Context, x, y ir.Int, k int) ir.Int {
 	return z
 }
 
-// Sub sets z = x-y using borrow register b.
-func Sub(ctx *build.Context, z, x, y ir.Int, b ir.Register) {
+// SubInto sets z = x-y using borrow register b.
+func SubInto(ctx *build.Context, z, x, y ir.Int, b ir.Register) {
 	var bin ir.Operand = ir.Flag(0)
 	for i := 0; i < z.Len(); i++ {
 		ctx.SUB(ir.Limb(x, i), ir.Limb(y, i), bin, z.Limb(i), b)
