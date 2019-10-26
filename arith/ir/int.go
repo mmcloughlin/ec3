@@ -1,7 +1,10 @@
 package ir
 
 import (
+	"math/big"
 	"strconv"
+
+	"github.com/mmcloughlin/ec3/internal/bigint"
 )
 
 // Int represents a multi-precision integer.
@@ -54,6 +57,32 @@ func (r Registers) Limbs() Operands {
 	operands := make(Operands, len(r))
 	for i := range r {
 		operands[i] = r[i]
+	}
+	return operands
+}
+
+// Constants is a multi-precision integer formed of constants.
+type Constants []Constant
+
+// NewConstantsFromInt represents x as s-bit integers.
+func NewConstantsFromInt(x *big.Int, s uint) Constants {
+	c := Constants{}
+	mask := bigint.Ones(s)
+	for bigint.IsNonZero(x) {
+		limb := new(big.Int).And(x, mask).Uint64()
+		c = append(c, Constant(limb))
+		x.Rsh(x, s)
+	}
+	return c
+}
+
+func (c Constants) Len() int           { return len(c) }
+func (c Constants) Limb(i int) Operand { return c[i] }
+
+func (c Constants) Limbs() Operands {
+	operands := make(Operands, len(c))
+	for i := range c {
+		operands[i] = c[i]
 	}
 	return operands
 }
