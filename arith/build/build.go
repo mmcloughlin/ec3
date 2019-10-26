@@ -41,10 +41,19 @@ func (ctx *Context) Int(namespace string, k int) ir.Registers {
 	return x
 }
 
-func (ctx *Context) MOV(src ir.Operand, dst ir.Register) {
+func (ctx *Context) MOV(src, dst ir.Operand) {
 	ctx.instruction(ir.MOV{
 		Source:      src,
-		Destination: dst,
+		Destination: ctx.reg(dst),
+	})
+}
+
+func (ctx *Context) CMOV(src, dst, f ir.Operand, eq ir.Flag) {
+	ctx.instruction(ir.CMOV{
+		Source:      src,
+		Destination: ctx.reg(dst),
+		Flag:        f,
+		Equals:      eq,
 	})
 }
 
