@@ -3,8 +3,8 @@ package verif
 import (
 	"testing"
 
-	"github.com/mmcloughlin/ec3/z3"
 	"github.com/mmcloughlin/ec3/prime"
+	"github.com/mmcloughlin/ec3/z3"
 )
 
 func TestFieldAddCommutative(t *testing.T) {
