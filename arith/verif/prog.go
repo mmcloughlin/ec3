@@ -4,7 +4,7 @@ import (
 	"github.com/mmcloughlin/ec3/arith/eval"
 	"github.com/mmcloughlin/ec3/arith/ir"
 	"github.com/mmcloughlin/ec3/internal/errutil"
-	"github.com/mmcloughlin/ec3/internal/z3"
+	"github.com/mmcloughlin/ec3/z3"
 )
 
 // Evaluator can evaluate arithmetic programs over bit-vector integers.

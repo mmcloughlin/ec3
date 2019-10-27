@@ -3,7 +3,7 @@ package z3_test
 import (
 	"fmt"
 
-	"github.com/mmcloughlin/ec3/internal/z3"
+	"github.com/mmcloughlin/ec3/z3"
 )
 
 // This example disproves that x - 10 ⩽ 0 IFF x ⩽ 10 for (32-bit) machine integers.

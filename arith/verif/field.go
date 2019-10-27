@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/xerrors"
 
-	"github.com/mmcloughlin/ec3/internal/z3"
+	"github.com/mmcloughlin/ec3/z3"
 )
 
 type Field struct {

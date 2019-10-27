@@ -1,6 +1,6 @@
 package verif
 
-import "github.com/mmcloughlin/ec3/internal/z3"
+import "github.com/mmcloughlin/ec3/z3"
 
 // Limbs breaks x into s-bit limbs.
 func Limbs(x *z3.BV, s uint) []*z3.BV {

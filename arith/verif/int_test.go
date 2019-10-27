@@ -3,7 +3,7 @@ package verif
 import (
 	"testing"
 
-	"github.com/mmcloughlin/ec3/internal/z3"
+	"github.com/mmcloughlin/ec3/z3"
 )
 
 func TestLimbsRoundTrip(t *testing.T) {
