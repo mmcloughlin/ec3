@@ -5,8 +5,14 @@ import (
 	"github.com/mmcloughlin/ec3/z3"
 )
 
+// Add returns a specification for addition on multi-precision k*s-bit integers.
 func Add(ctx *z3.Context, s, k uint) *Spec {
 	return NewBinarySpec(ctx, s, k, (*z3.BV).Add)
+}
+
+// Sub returns a specification for subtraction on multi-precision k*s-bit integers.
+func Sub(ctx *z3.Context, s, k uint) *Spec {
+	return NewBinarySpec(ctx, s, k, (*z3.BV).Sub)
 }
 
 func NewBinarySpec(ctx *z3.Context, s, k uint, op func(x, y *z3.BV) *z3.BV) *Spec {
