@@ -11,7 +11,7 @@ import (
 type Operand interface {
 	fmt.Stringer
 
-	operand()
+	operand() // sealed
 }
 
 // Register is a machine word operand.
@@ -66,7 +66,7 @@ func (p *Program) String() string {
 type Instruction interface {
 	Operands() []Operand
 
-	instruction()
+	instruction() // sealed
 }
 
 // FormatInstruction returns a string representation of the instruction.

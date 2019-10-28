@@ -39,6 +39,30 @@ func (c *Context) Close() error {
 	return nil
 }
 
+// True returns the boolean true value.
+func (c *Context) True() *Bool {
+	return &Bool{
+		ctx: c.ctx,
+		ast: C.Z3_mk_true(c.ctx),
+	}
+}
+
+// False returns the boolean false value.
+func (c *Context) False() *Bool {
+	return &Bool{
+		ctx: c.ctx,
+		ast: C.Z3_mk_false(c.ctx),
+	}
+}
+
+// Bool returns a boolean with the value v.
+func (c *Context) Bool(v bool) *Bool {
+	if v {
+		return c.True()
+	}
+	return c.False()
+}
+
 func (c *Context) symbol(name string) C.Z3_symbol {
 	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
