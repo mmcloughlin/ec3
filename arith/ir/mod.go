@@ -9,7 +9,7 @@ type Module struct {
 }
 
 type Function struct {
-	Program
+	*Program
 
 	Name      string
 	Signature *Signature
@@ -22,12 +22,17 @@ type Signature struct {
 	Results []*Var
 }
 
+// Vars returns all variables in s, with results appearing before parameters.
+func (s *Signature) Vars() []*Var {
+	var vars []*Var
+	vars = append(vars, s.Results...)
+	vars = append(vars, s.Params...)
+	return vars
+}
+
 // Var looks up a variable among parameters and results, returning nil if not found.
 func (s *Signature) Var(name string) *Var {
-	vars := []*Var{}
-	vars = append(vars, s.Params...)
-	vars = append(vars, s.Results...)
-	return lookupvar(name, vars)
+	return lookupvar(name, s.Vars())
 }
 
 // Param looks up a parameter by name, returning nil if not found.

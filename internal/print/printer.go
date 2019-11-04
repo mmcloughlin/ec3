@@ -43,8 +43,13 @@ func (p *Printer) Linef(format string, args ...interface{}) {
 }
 
 func (p *Printer) NL() {
-	p.Printf("\n")
+	p.Print("\n")
 	p.pending = true
+}
+
+func (p *Printer) Print(args ...interface{}) {
+	_, err := fmt.Fprint(p.out, args...)
+	p.SetError(err)
 }
 
 func (p *Printer) Printf(format string, args ...interface{}) {
