@@ -1,6 +1,8 @@
 package verif
 
 import (
+	"math/big"
+
 	"github.com/mmcloughlin/ec3/arith/ir"
 	"github.com/mmcloughlin/ec3/z3"
 )
@@ -15,6 +17,16 @@ func Sub(ctx *z3.Context, s, k uint) *Spec {
 	return NewBinarySpec(ctx, s, k, (*z3.BV).Sub)
 }
 
+// AddMod returns a specification for addition modulo mod on k*s-bit integers.
+func AddMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
+	f, err := NewField(ctx.BVSort(s*k), mod)
+	if err != nil {
+		return nil, err
+	}
+	return NewBinarySpec(ctx, s, k, f.Add), nil
+}
+
+// NewBinarySpec returns a specification for a binary operator on k*s-bit integers.
 func NewBinarySpec(ctx *z3.Context, s, k uint, op func(x, y *z3.BV) *z3.BV) *Spec {
 	t := ir.Integer{K: k}
 	sig := &ir.Signature{

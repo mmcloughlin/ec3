@@ -9,6 +9,8 @@ import (
 	"github.com/mmcloughlin/ec3/z3"
 )
 
+// TODO(mbm): reduce verification testing boilerplate
+
 func TestAddInto(t *testing.T) {
 	// Initialize context.
 	cfg := z3.NewConfig()

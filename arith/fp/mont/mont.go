@@ -12,6 +12,10 @@ type Field struct {
 	p prime.Prime
 }
 
+func New(p prime.Prime) *Field {
+	return &Field{p: p}
+}
+
 func (f Field) ElementBits() int {
 	n := f.p.Bits()
 	return ints.NextMultiple(n, 64)

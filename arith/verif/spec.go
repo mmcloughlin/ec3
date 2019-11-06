@@ -1,6 +1,7 @@
 package verif
 
 import (
+	"math/big"
 	"strings"
 
 	"golang.org/x/xerrors"
@@ -17,7 +18,8 @@ type Spec struct {
 
 	vars map[string]*z3.BV
 
-	ctx *z3.Context
+	ctx   *z3.Context
+	model *z3.Model
 }
 
 func NewSpec(ctx *z3.Context, sig *ir.Signature, s uint) *Spec {
@@ -158,5 +160,26 @@ func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	solver := s.ctx.SolverForLogic("QF_BV")
 	defer solver.Close()
 
-	return solver.Prove(equiv)
+	result, err := solver.Prove(equiv)
+	if err != nil {
+		return result, err
+	}
+
+	// Obtain a model if proving failed.
+	s.model = nil
+	if !result {
+		s.model = solver.Model()
+	}
+
+	return result, nil
+}
+
+// Counterexample returns a set of failing assignments, if a previous call to Prove
+// returned false.
+func (s *Spec) Counterexample() (map[string]*big.Int, error) {
+	if s.model == nil {
+		return nil, xerrors.New("no counterexample available")
+	}
+
+	return nil, nil
 }

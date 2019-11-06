@@ -86,7 +86,10 @@ func newprinter(cfg Config) *printer {
 func (p *printer) Generate(mod *ir.Module) ([]byte, error) {
 	p.CodeGenerationWarning(gen.GeneratedBy)
 	p.Package(p.PackageName)
-	p.Import("math/bits")
+	p.Import(
+		"math/bits",
+		"unsafe",
+	)
 
 	for _, s := range mod.Sections {
 		p.section(s)
@@ -105,17 +108,55 @@ func (p *printer) section(sec ir.Section) {
 }
 
 func (p *printer) function(f *ir.Function) {
+	// Function header.
 	s, err := p.Signature(f.Signature)
 	if err != nil {
 		p.SetError(err)
 		return
 	}
-
 	p.Function(f.Name, s)
 	p.enterscope()
+
+	// Load parameters.
+	for _, param := range f.Signature.Params {
+		switch t := param.Type.(type) {
+		case ir.Integer:
+			limbs := param.Name + "l"
+			p.Linef("%s := (*[%d]uint64)(unsafe.Pointer(%s))", limbs, p.ElementSize/8, param.Name)
+			for i := 0; i < int(t.K); i++ {
+				r := ir.Register(strings.ToUpper(param.Name) + strconv.Itoa(i))
+				p.assign(r)
+				p.Linef("%s[%d]", limbs, i)
+			}
+		default:
+			p.SetError(errutil.UnexpectedType(t))
+			return
+		}
+	}
+
+	// Issue instructions.
+	p.NL()
 	for _, i := range f.Instructions {
 		p.instruction(i)
 	}
+
+	// Store results.
+	p.NL()
+	for _, result := range f.Signature.Results {
+		switch t := result.Type.(type) {
+		case ir.Integer:
+			limbs := result.Name + "l"
+			p.Linef("%s := (*[%d]uint64)(unsafe.Pointer(%s))", limbs, p.ElementSize/8, result.Name)
+			for i := 0; i < int(t.K); i++ {
+				reg := strings.ToUpper(result.Name) + strconv.Itoa(i)
+				p.Linef("%s[%d] = %s", limbs, i, reg)
+			}
+		default:
+			p.SetError(errutil.UnexpectedType(t))
+			return
+		}
+	}
+
 	p.LeaveBlock()
 }
 
