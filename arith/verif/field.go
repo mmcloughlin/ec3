@@ -24,6 +24,9 @@ func NewField(sort *z3.BVSort, mod *big.Int) (*Field, error) {
 	}, nil
 }
 
+// Modulus returns the field modulus.
+func (f *Field) Modulus() *z3.BV { return f.m }
+
 // Add returns an expression for the addition of x and y in the field.
 func (f *Field) Add(x, y *z3.BV) *z3.BV {
 	xext := x.ZeroExt(1)

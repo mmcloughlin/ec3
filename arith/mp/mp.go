@@ -11,7 +11,7 @@ import (
 func ConditionalMove(ctx *build.Context, dst, src ir.Int, f ir.Operand, eq ir.Flag) {
 	k := ints.Min(dst.Len(), src.Len())
 	for i := 0; i < k; i++ {
-		ctx.CMOV(dst.Limb(i), src.Limb(i), f, eq)
+		ctx.CMOV(src.Limb(i), dst.Limb(i), f, eq)
 	}
 }
 

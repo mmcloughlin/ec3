@@ -23,7 +23,16 @@ func AddMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewBinarySpec(ctx, s, k, f.Add), nil
+
+	spec := NewBinarySpec(ctx, s, k, f.Add)
+
+	m := f.Modulus()
+	for _, name := range []string{"x", "y"} {
+		x := must(spec.Param(name))
+		spec.AddPrecondition(x.ULT(m))
+	}
+
+	return spec, nil
 }
 
 // NewBinarySpec returns a specification for a binary operator on k*s-bit integers.

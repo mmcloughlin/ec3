@@ -17,6 +17,7 @@ type Spec struct {
 	s   uint
 
 	vars map[string]*z3.BV
+	pre  []*z3.Bool
 
 	ctx   *z3.Context
 	model *z3.Model
@@ -100,6 +101,12 @@ func (s *Spec) SetResult(name string, x *z3.BV) error {
 	return nil
 }
 
+// AddPrecondition sets a precondition for the function, a predicate which must
+// be true prior to function execution.
+func (s *Spec) AddPrecondition(cond *z3.Bool) {
+	s.pre = append(s.pre, cond)
+}
+
 // Prove the program p meets the specification.
 func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	e := NewEvaluator(s.ctx, s.s)
@@ -159,6 +166,10 @@ func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	// Pass problem to solver.
 	solver := s.ctx.SolverForLogic("QF_BV")
 	defer solver.Close()
+
+	for _, cond := range s.pre {
+		solver.Assert(cond)
+	}
 
 	result, err := solver.Prove(equiv)
 	if err != nil {

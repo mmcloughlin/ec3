@@ -100,7 +100,7 @@ type CMOV struct {
 }
 
 func (i CMOV) Operands() []Operand {
-	return []Operand{i.Source, i.Destination, i.Flag}
+	return []Operand{i.Source, i.Destination, i.Flag, i.Equals}
 }
 
 func (CMOV) instruction() {}
