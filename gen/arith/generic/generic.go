@@ -30,11 +30,11 @@ func (c Config) PointerType() *types.Pointer {
 	return types.NewPointer(c.Type())
 }
 
-//func (c Config) Param(name string) *types.Var {
+// func (c Config) Param(name string) *types.Var {
 //	return types.NewParam(token.NoPos, nil, name, c.PointerType())
 //}
 //
-//func (c Config) Params(params ...string) []*types.Var {
+// func (c Config) Params(params ...string) []*types.Var {
 //	vars := []*types.Var{}
 //	for _, param := range params {
 //		vars = append(vars, c.Param(param))
@@ -42,7 +42,7 @@ func (c Config) PointerType() *types.Pointer {
 //	return vars
 //}
 //
-//func (c Config) Signature(params ...string) *types.Signature {
+// func (c Config) Signature(params ...string) *types.Signature {
 //	tuple := types.NewTuple(c.Params(params...)...)
 //	return types.NewSignature(nil, tuple, nil, false)
 //}

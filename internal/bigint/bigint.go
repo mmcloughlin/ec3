@@ -16,32 +16,35 @@ func One() *big.Int {
 	return big.NewInt(1)
 }
 
-// Hex constructs an integer from a hex string, returning the integer and a
+// Hex is a convenience for Parse with base 16.
+func Hex(s string) (*big.Int, bool) { return Parse(s, 16) }
+
+// MustHex is a convenience for MustParse with base 16.
+func MustHex(s string) *big.Int { return MustParse(s, 16) }
+
+// Binary is a convenience for Parse with base 2.
+func Binary(s string) (*big.Int, bool) { return Parse(s, 2) }
+
+// MustBinary is a convenience for MustParse with base 2.
+func MustBinary(s string) *big.Int { return MustParse(s, 2) }
+
+// Decimal is a convenience for Parse with base 10.
+func Decimal(s string) (*big.Int, bool) { return Parse(s, 10) }
+
+// MustDecimal is a convenience for MustParse with base 10.
+func MustDecimal(s string) *big.Int { return MustParse(s, 10) }
+
+// Parse a string in the given base into an integer, returning the integer and a
 // boolean indicating success. Underscore may be used as a separator.
-func Hex(s string) (*big.Int, bool) {
-	return new(big.Int).SetString(stripliteral(s), 16)
+func Parse(s string, base int) (*big.Int, bool) {
+	return new(big.Int).SetString(stripliteral(s), base)
 }
 
-// MustHex constructs an integer from a hex string. It panics on error.
-func MustHex(s string) *big.Int {
-	x, ok := Hex(s)
+// MustParse calls Parse and panics on error.
+func MustParse(s string, base int) *big.Int {
+	x, ok := Parse(s, base)
 	if !ok {
-		panic("failed to parse hex integer")
-	}
-	return x
-}
-
-// Binary parses a binary string into an integer, returning the integer and a
-// boolean indicating success. Underscore may be used as a separator.
-func Binary(s string) (*big.Int, bool) {
-	return new(big.Int).SetString(stripliteral(s), 2)
-}
-
-// MustBinary constructs an integer from a binary string. It panics on error.
-func MustBinary(s string) *big.Int {
-	x, ok := Binary(s)
-	if !ok {
-		panic("failed to parse binary integer")
+		panic("failed to parse integer")
 	}
 	return x
 }

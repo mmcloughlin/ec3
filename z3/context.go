@@ -42,16 +42,20 @@ func (c *Context) Close() error {
 // True returns the boolean true value.
 func (c *Context) True() *Bool {
 	return &Bool{
-		ctx: c.ctx,
-		ast: C.Z3_mk_true(c.ctx),
+		value: value{
+			ctx: c.ctx,
+			ast: C.Z3_mk_true(c.ctx),
+		},
 	}
 }
 
 // False returns the boolean false value.
 func (c *Context) False() *Bool {
 	return &Bool{
-		ctx: c.ctx,
-		ast: C.Z3_mk_false(c.ctx),
+		value: value{
+			ctx: c.ctx,
+			ast: C.Z3_mk_false(c.ctx),
+		},
 	}
 }
 

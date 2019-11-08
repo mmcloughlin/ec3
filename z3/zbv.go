@@ -12,8 +12,10 @@ import "C"
 // Corresponds to Z3_mk_bvnot.
 func (x *BV) Not() *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvnot(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvnot(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -21,8 +23,10 @@ func (x *BV) Not() *BV {
 // Corresponds to Z3_mk_bvredand.
 func (x *BV) ReduceAnd() *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvredand(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvredand(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -30,8 +34,10 @@ func (x *BV) ReduceAnd() *BV {
 // Corresponds to Z3_mk_bvredor.
 func (x *BV) ReduceOr() *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvredor(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvredor(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -39,8 +45,10 @@ func (x *BV) ReduceOr() *BV {
 // Corresponds to Z3_mk_bvand.
 func (x *BV) And(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvand(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvand(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -48,8 +56,10 @@ func (x *BV) And(y *BV) *BV {
 // Corresponds to Z3_mk_bvor.
 func (x *BV) Or(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvor(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvor(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -57,8 +67,10 @@ func (x *BV) Or(y *BV) *BV {
 // Corresponds to Z3_mk_bvxor.
 func (x *BV) Xor(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvxor(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvxor(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -66,8 +78,10 @@ func (x *BV) Xor(y *BV) *BV {
 // Corresponds to Z3_mk_bvnand.
 func (x *BV) Nand(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvnand(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvnand(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -75,8 +89,10 @@ func (x *BV) Nand(y *BV) *BV {
 // Corresponds to Z3_mk_bvnor.
 func (x *BV) Nor(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvnor(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvnor(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -84,8 +100,10 @@ func (x *BV) Nor(y *BV) *BV {
 // Corresponds to Z3_mk_bvxnor.
 func (x *BV) Xnor(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvxnor(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvxnor(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -93,8 +111,10 @@ func (x *BV) Xnor(y *BV) *BV {
 // Corresponds to Z3_mk_bvneg.
 func (x *BV) Neg() *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvneg(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvneg(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -102,8 +122,10 @@ func (x *BV) Neg() *BV {
 // Corresponds to Z3_mk_bvadd.
 func (x *BV) Add(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvadd(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvadd(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -111,8 +133,10 @@ func (x *BV) Add(y *BV) *BV {
 // Corresponds to Z3_mk_bvsub.
 func (x *BV) Sub(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsub(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsub(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -120,8 +144,10 @@ func (x *BV) Sub(y *BV) *BV {
 // Corresponds to Z3_mk_bvmul.
 func (x *BV) Mul(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvmul(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvmul(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -129,8 +155,10 @@ func (x *BV) Mul(y *BV) *BV {
 // Corresponds to Z3_mk_bvudiv.
 func (x *BV) Udiv(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvudiv(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvudiv(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -138,8 +166,10 @@ func (x *BV) Udiv(y *BV) *BV {
 // Corresponds to Z3_mk_bvsdiv.
 func (x *BV) Sdiv(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsdiv(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsdiv(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -147,8 +177,10 @@ func (x *BV) Sdiv(y *BV) *BV {
 // Corresponds to Z3_mk_bvurem.
 func (x *BV) Urem(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvurem(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvurem(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -156,8 +188,10 @@ func (x *BV) Urem(y *BV) *BV {
 // Corresponds to Z3_mk_bvsrem.
 func (x *BV) Srem(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsrem(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsrem(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -165,8 +199,10 @@ func (x *BV) Srem(y *BV) *BV {
 // Corresponds to Z3_mk_bvsmod.
 func (x *BV) Smod(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsmod(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsmod(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -174,8 +210,10 @@ func (x *BV) Smod(y *BV) *BV {
 // Corresponds to Z3_mk_bvult.
 func (x *BV) ULT(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvult(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvult(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -183,8 +221,10 @@ func (x *BV) ULT(y *BV) *Bool {
 // Corresponds to Z3_mk_bvslt.
 func (x *BV) SLT(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvslt(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvslt(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -192,8 +232,10 @@ func (x *BV) SLT(y *BV) *Bool {
 // Corresponds to Z3_mk_bvule.
 func (x *BV) ULE(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvule(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvule(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -201,8 +243,10 @@ func (x *BV) ULE(y *BV) *Bool {
 // Corresponds to Z3_mk_bvsle.
 func (x *BV) SLE(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsle(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsle(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -210,8 +254,10 @@ func (x *BV) SLE(y *BV) *Bool {
 // Corresponds to Z3_mk_bvuge.
 func (x *BV) UGE(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvuge(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvuge(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -219,8 +265,10 @@ func (x *BV) UGE(y *BV) *Bool {
 // Corresponds to Z3_mk_bvsge.
 func (x *BV) SGE(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsge(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsge(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -228,8 +276,10 @@ func (x *BV) SGE(y *BV) *Bool {
 // Corresponds to Z3_mk_bvugt.
 func (x *BV) UGT(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvugt(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvugt(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -237,8 +287,10 @@ func (x *BV) UGT(y *BV) *Bool {
 // Corresponds to Z3_mk_bvsgt.
 func (x *BV) SGT(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsgt(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsgt(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -246,8 +298,10 @@ func (x *BV) SGT(y *BV) *Bool {
 // Corresponds to Z3_mk_concat.
 func (x *BV) Concat(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_concat(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_concat(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -255,8 +309,10 @@ func (x *BV) Concat(y *BV) *BV {
 // Corresponds to Z3_mk_extract.
 func (x *BV) Extract(high uint, low uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_extract(x.ctx, C.unsigned(high), C.unsigned(low), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_extract(x.ctx, C.unsigned(high), C.unsigned(low), x.ast),
+		},
 	}
 }
 
@@ -264,8 +320,10 @@ func (x *BV) Extract(high uint, low uint) *BV {
 // Corresponds to Z3_mk_sign_ext.
 func (x *BV) SignExt(i uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_sign_ext(x.ctx, C.unsigned(i), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_sign_ext(x.ctx, C.unsigned(i), x.ast),
+		},
 	}
 }
 
@@ -273,8 +331,10 @@ func (x *BV) SignExt(i uint) *BV {
 // Corresponds to Z3_mk_zero_ext.
 func (x *BV) ZeroExt(i uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_zero_ext(x.ctx, C.unsigned(i), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_zero_ext(x.ctx, C.unsigned(i), x.ast),
+		},
 	}
 }
 
@@ -282,8 +342,10 @@ func (x *BV) ZeroExt(i uint) *BV {
 // Corresponds to Z3_mk_repeat.
 func (x *BV) Repeat(i uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_repeat(x.ctx, C.unsigned(i), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_repeat(x.ctx, C.unsigned(i), x.ast),
+		},
 	}
 }
 
@@ -291,8 +353,10 @@ func (x *BV) Repeat(i uint) *BV {
 // Corresponds to Z3_mk_bvshl.
 func (x *BV) Shl(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvshl(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvshl(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -300,8 +364,10 @@ func (x *BV) Shl(y *BV) *BV {
 // Corresponds to Z3_mk_bvlshr.
 func (x *BV) LogicShr(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvlshr(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvlshr(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -309,8 +375,10 @@ func (x *BV) LogicShr(y *BV) *BV {
 // Corresponds to Z3_mk_bvashr.
 func (x *BV) ArithShr(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvashr(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvashr(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -318,8 +386,10 @@ func (x *BV) ArithShr(y *BV) *BV {
 // Corresponds to Z3_mk_rotate_left.
 func (x *BV) RotateLeft(i uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_rotate_left(x.ctx, C.unsigned(i), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_rotate_left(x.ctx, C.unsigned(i), x.ast),
+		},
 	}
 }
 
@@ -327,8 +397,10 @@ func (x *BV) RotateLeft(i uint) *BV {
 // Corresponds to Z3_mk_rotate_right.
 func (x *BV) RotateRight(i uint) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_rotate_right(x.ctx, C.unsigned(i), x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_rotate_right(x.ctx, C.unsigned(i), x.ast),
+		},
 	}
 }
 
@@ -336,8 +408,10 @@ func (x *BV) RotateRight(i uint) *BV {
 // Corresponds to Z3_mk_ext_rotate_left.
 func (x *BV) ExtRotateLeft(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_ext_rotate_left(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_ext_rotate_left(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -345,8 +419,10 @@ func (x *BV) ExtRotateLeft(y *BV) *BV {
 // Corresponds to Z3_mk_ext_rotate_right.
 func (x *BV) ExtRotateRight(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_ext_rotate_right(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_ext_rotate_right(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -354,8 +430,10 @@ func (x *BV) ExtRotateRight(y *BV) *BV {
 // Corresponds to Z3_mk_bvadd_no_overflow.
 func (x *BV) AddNoOverflow(y *BV, signed bool) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvadd_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvadd_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		},
 	}
 }
 
@@ -363,8 +441,10 @@ func (x *BV) AddNoOverflow(y *BV, signed bool) *BV {
 // Corresponds to Z3_mk_bvadd_no_underflow.
 func (x *BV) AddNoUnderflow(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvadd_no_underflow(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvadd_no_underflow(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -372,8 +452,10 @@ func (x *BV) AddNoUnderflow(y *BV) *BV {
 // Corresponds to Z3_mk_bvsub_no_overflow.
 func (x *BV) SubNoOverflow(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsub_no_overflow(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsub_no_overflow(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -381,8 +463,10 @@ func (x *BV) SubNoOverflow(y *BV) *BV {
 // Corresponds to Z3_mk_bvsub_no_underflow.
 func (x *BV) SubNoUnderflow(y *BV, signed bool) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsub_no_underflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsub_no_underflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		},
 	}
 }
 
@@ -390,8 +474,10 @@ func (x *BV) SubNoUnderflow(y *BV, signed bool) *BV {
 // Corresponds to Z3_mk_bvsdiv_no_overflow.
 func (x *BV) SdivNoOverflow(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvsdiv_no_overflow(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvsdiv_no_overflow(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -399,8 +485,10 @@ func (x *BV) SdivNoOverflow(y *BV) *BV {
 // Corresponds to Z3_mk_bvneg_no_overflow.
 func (x *BV) NegNoOverflow() *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvneg_no_overflow(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvneg_no_overflow(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -408,8 +496,10 @@ func (x *BV) NegNoOverflow() *BV {
 // Corresponds to Z3_mk_bvmul_no_overflow.
 func (x *BV) MulNoOverflow(y *BV, signed bool) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvmul_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvmul_no_overflow(x.ctx, x.ast, y.ast, C.bool(signed)),
+		},
 	}
 }
 
@@ -417,8 +507,10 @@ func (x *BV) MulNoOverflow(y *BV, signed bool) *BV {
 // Corresponds to Z3_mk_bvmul_no_underflow.
 func (x *BV) MulNoUnderflow(y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_bvmul_no_underflow(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_bvmul_no_underflow(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -426,8 +518,10 @@ func (x *BV) MulNoUnderflow(y *BV) *BV {
 // Corresponds to Z3_mk_eq.
 func (x *BV) Eq(y *BV) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -439,8 +533,10 @@ func (x *BV) Distinct(y ...*BV) *Bool {
 		ys = append(ys, a.ast)
 	}
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		},
 	}
 }
 
@@ -448,7 +544,9 @@ func (x *BV) Distinct(y ...*BV) *Bool {
 // Corresponds to Z3_mk_ite.
 func (x *BV) ITE(c *Bool, y *BV) *BV {
 	return &BV{
-		ctx: x.ctx,
-		ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+		},
 	}
 }

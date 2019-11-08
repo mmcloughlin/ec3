@@ -441,6 +441,7 @@ func (g *generator) wrapper(w *Wrapper) {
 	}
 
 	g.Linef("return &%s{", returns)
+	g.Linef("value: value{")
 	g.Linef("ctx: %s.ctx,", receiver.Name)
 	g.Printf("ast: C.%s(%s.ctx", w.C.Name, receiver.Name)
 	for _, arg := range w.C.Parameters {
@@ -449,6 +450,7 @@ func (g *generator) wrapper(w *Wrapper) {
 	}
 	g.Linef("),")
 
+	g.Linef("},")
 	g.Linef("}")
 	g.LeaveBlock()
 }

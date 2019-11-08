@@ -12,8 +12,10 @@ import "C"
 // Corresponds to Z3_mk_not.
 func (x *Bool) Not() *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_not(x.ctx, x.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_not(x.ctx, x.ast),
+		},
 	}
 }
 
@@ -21,8 +23,10 @@ func (x *Bool) Not() *Bool {
 // Corresponds to Z3_mk_iff.
 func (x *Bool) Iff(y *Bool) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_iff(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_iff(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -30,8 +34,10 @@ func (x *Bool) Iff(y *Bool) *Bool {
 // Corresponds to Z3_mk_implies.
 func (x *Bool) Implies(y *Bool) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_implies(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_implies(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -39,8 +45,10 @@ func (x *Bool) Implies(y *Bool) *Bool {
 // Corresponds to Z3_mk_xor.
 func (x *Bool) Xor(y *Bool) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_xor(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_xor(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -52,8 +60,10 @@ func (x *Bool) And(y ...*Bool) *Bool {
 		ys = append(ys, a.ast)
 	}
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_and(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_and(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		},
 	}
 }
 
@@ -65,8 +75,10 @@ func (x *Bool) Or(y ...*Bool) *Bool {
 		ys = append(ys, a.ast)
 	}
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_or(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_or(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		},
 	}
 }
 
@@ -74,8 +86,10 @@ func (x *Bool) Or(y ...*Bool) *Bool {
 // Corresponds to Z3_mk_eq.
 func (x *Bool) Eq(y *Bool) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_eq(x.ctx, x.ast, y.ast),
+		},
 	}
 }
 
@@ -87,8 +101,10 @@ func (x *Bool) Distinct(y ...*Bool) *Bool {
 		ys = append(ys, a.ast)
 	}
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_distinct(x.ctx, C.unsigned(len(ys)), &ys[0]),
+		},
 	}
 }
 
@@ -96,7 +112,9 @@ func (x *Bool) Distinct(y ...*Bool) *Bool {
 // Corresponds to Z3_mk_ite.
 func (x *Bool) ITE(c *Bool, y *Bool) *Bool {
 	return &Bool{
-		ctx: x.ctx,
-		ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+		value: value{
+			ctx: x.ctx,
+			ast: C.Z3_mk_ite(x.ctx, c.ast, x.ast, y.ast),
+		},
 	}
 }

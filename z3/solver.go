@@ -72,8 +72,6 @@ func (s *Solver) Check() (bool, error) {
 
 // Prove attempts to prove that f is true. This is a convenience for checking that not(f) is unsatisfiable.
 func (s *Solver) Prove(f *Bool) (bool, error) {
-	s.Push()
-	defer s.Pop()
 	s.Assert(f.Not())
 	sat, err := s.Check()
 	if err != nil {

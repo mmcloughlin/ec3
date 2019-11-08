@@ -8,8 +8,7 @@ import "C"
 
 // Bool is a boolean value.
 type Bool struct {
-	ctx C.Z3_context
-	ast C.Z3_ast
+	value
 }
 
 //go:generate go run wrap.go -type Bool -input $GOFILE -output zbool.go

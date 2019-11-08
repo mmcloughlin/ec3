@@ -40,6 +40,23 @@ func TestBinary(t *testing.T) {
 	}
 }
 
+func TestDecimal(t *testing.T) {
+	cases := []struct {
+		Input  string
+		Expect int64
+	}{
+		{"0", 0},
+		{"1", 1},
+		{"7000_000", 7e6},
+		{"1_2_____3_4_567______8_9", 123456789},
+	}
+	for _, c := range cases {
+		if got := MustDecimal(c.Input); !EqualInt64(got, c.Expect) {
+			t.FailNow()
+		}
+	}
+}
+
 func TestMask(t *testing.T) {
 	if Mask(4, 16).Uint64() != 0xfff0 {
 		t.Fail()

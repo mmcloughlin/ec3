@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/mmcloughlin/ec3/arith/build"
-
 	"github.com/mmcloughlin/ec3/arith/verif"
 	"github.com/mmcloughlin/ec3/internal/assert"
 	"github.com/mmcloughlin/ec3/prime"
@@ -44,6 +43,6 @@ func TestAdd(t *testing.T) {
 	}
 
 	if !result {
-		t.Fatal("expected true")
+		t.Fatalf("expected true\nmodel:\n%s", spec.Model())
 	}
 }

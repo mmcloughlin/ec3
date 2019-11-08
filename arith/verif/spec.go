@@ -174,6 +174,10 @@ func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	return result, nil
 }
 
+func (s *Spec) Model() *z3.Model {
+	return s.model
+}
+
 // Counterexample returns a set of failing assignments, if a previous call to Prove
 // returned false.
 func (s *Spec) Counterexample() (map[string]*big.Int, error) {
