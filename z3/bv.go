@@ -66,6 +66,12 @@ type BV struct {
 	value
 }
 
+// Int converts x to a big integer. This is only valid if x has numeral kind,
+// therefore the second return value indicates whether the conversion is valid.
+func (x *BV) Int() (*big.Int, bool) {
+	return x.bigint()
+}
+
 // Bits returns the size of the bit-vector.
 func (x *BV) Bits() uint {
 	sort := C.Z3_get_sort(x.ctx, x.ast)

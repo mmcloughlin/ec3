@@ -174,6 +174,7 @@ func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	return result, nil
 }
 
+// Model returns the failing model, if a prior call to Prove returned false. Otherwise returns nil.
 func (s *Spec) Model() *z3.Model {
 	return s.model
 }
@@ -181,9 +182,35 @@ func (s *Spec) Model() *z3.Model {
 // Counterexample returns a set of failing assignments, if a previous call to Prove
 // returned false.
 func (s *Spec) Counterexample() (map[string]*big.Int, error) {
-	if s.model == nil {
+	m := s.Model()
+	if m == nil {
 		return nil, xerrors.New("no counterexample available")
 	}
 
-	return nil, nil
+	vs, err := m.Assignments()
+	if err != nil {
+		return nil, err
+	}
+
+	assign := map[string]*big.Int{}
+	for name, v := range vs {
+		if v == nil {
+			assign[name] = nil
+			continue
+		}
+
+		x, ok := v.(*z3.BV)
+		if !ok {
+			return nil, errutil.UnexpectedType(v)
+		}
+
+		i, ok := x.Int()
+		if !ok {
+			return nil, errutil.AssertionFailure("unable to convert %q to integer")
+		}
+
+		assign[name] = i
+	}
+
+	return assign, nil
 }

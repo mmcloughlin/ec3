@@ -43,6 +43,11 @@ func TestAdd(t *testing.T) {
 	}
 
 	if !result {
-		t.Fatalf("expected true\nmodel:\n%s", spec.Model())
+		assignments, err := spec.Counterexample()
+		assert.NoError(t, err)
+		for name, x := range assignments {
+			t.Logf("%s = %#x", name, x)
+		}
+		t.Fatal("expected true")
 	}
 }

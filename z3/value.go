@@ -28,7 +28,8 @@ func (value) val() {}
 // newvalue constructs a Value of unknown sort kind.
 func newvalue(ctx C.Z3_context, ast C.Z3_ast) (Value, error) {
 	v := value{ctx: ctx, ast: ast}
-	switch v.sortkind() {
+	kind := v.sortkind()
+	switch kind {
 	case C.Z3_BOOL_SORT:
 		return &Bool{v}, nil
 	case C.Z3_BV_SORT:
@@ -50,7 +51,7 @@ func (v value) kind() C.Z3_ast_kind {
 	return C.Z3_get_ast_kind(v.ctx, v.ast)
 }
 
-func (v value) asInt() (*big.Int, bool) {
+func (v value) bigint() (*big.Int, bool) {
 	if kind := v.kind(); kind != C.Z3_NUMERAL_AST {
 		return nil, false
 	}
