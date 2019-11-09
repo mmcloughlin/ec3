@@ -46,6 +46,19 @@ func (f *Field) Add(ctx *build.Context, z, x, y ir.Int) {
 	f.ConditionalSubtractModulus(ctx, sum)
 }
 
+func (f *Field) Sub(ctx *build.Context, z, x, y ir.Int) {
+	// Subtract as multi-precision integers.
+	b := ctx.Register("b")
+	mp.SubInto(ctx, z, x, y, b)
+
+	// Speculatively compute z + p.
+	addp := ctx.Int("addp", z.Len())
+	mp.AddInto(ctx, addp, z, f.Modulus(), ctx.Register("c"))
+
+	// Keep the result if the original subtraction borrowed.
+	mp.ConditionalMove(ctx, z, addp, b, 1)
+}
+
 // ConditionalSubtractModulus subtracts p from x if x ⩾ p in constant time.
 func (f *Field) ConditionalSubtractModulus(ctx *build.Context, x ir.Int) {
 	k := f.Limbs()

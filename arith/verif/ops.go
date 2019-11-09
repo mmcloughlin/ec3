@@ -35,6 +35,24 @@ func AddMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
 	return spec, nil
 }
 
+// SubMod returns a specification for subtraction modulo mod on k*s-bit integers.
+func SubMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
+	f, err := NewField(ctx.BVSort(s*k), mod)
+	if err != nil {
+		return nil, err
+	}
+
+	spec := NewBinarySpec(ctx, s, k, f.Sub)
+
+	m := f.Modulus()
+	for _, name := range []string{"x", "y"} {
+		x := must(spec.Param(name))
+		spec.AddPrecondition(x.ULT(m))
+	}
+
+	return spec, nil
+}
+
 // NewBinarySpec returns a specification for a binary operator on k*s-bit integers.
 func NewBinarySpec(ctx *z3.Context, s, k uint, op func(x, y *z3.BV) *z3.BV) *Spec {
 	t := ir.Integer{K: k}

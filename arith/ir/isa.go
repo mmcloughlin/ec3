@@ -71,12 +71,12 @@ type Instruction interface {
 
 // FormatInstruction returns a string representation of the instruction.
 func FormatInstruction(i Instruction) string {
-	mneumonic := reflect.TypeOf(i).Name()
+	mnemonic := reflect.TypeOf(i).Name()
 	ops := []string{}
 	for _, op := range i.Operands() {
 		ops = append(ops, op.String())
 	}
-	return mneumonic + "\t" + strings.Join(ops, ", ")
+	return mnemonic + "\t" + strings.Join(ops, ", ")
 }
 
 // MOV is a move instruction.

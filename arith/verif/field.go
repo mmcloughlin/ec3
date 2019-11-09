@@ -32,7 +32,17 @@ func (f *Field) Add(x, y *z3.BV) *z3.BV {
 	xext := x.ZeroExt(1)
 	yext := y.ZeroExt(1)
 	sum := xext.Add(yext)
-	mext := f.m.ZeroExt(1)
+	mext := f.Modulus().ZeroExt(1)
 	reduced := sum.Urem(mext)
+	return reduced.Extract(f.Bits()-1, 0)
+}
+
+// Sub returns an expression for the subtraction of x and y in the field.
+func (f *Field) Sub(x, y *z3.BV) *z3.BV {
+	xext := x.ZeroExt(1)
+	yext := y.ZeroExt(1)
+	mext := f.Modulus().ZeroExt(1)
+	diff := xext.Add(mext).Sub(yext)
+	reduced := diff.Urem(mext)
 	return reduced.Extract(f.Bits()-1, 0)
 }
