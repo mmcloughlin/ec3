@@ -40,6 +40,11 @@ func (s *Solver) Close() error {
 	return nil
 }
 
+// Configure the solver with the given parameter set.
+func (s *Solver) SetParams(p *Params) {
+	C.Z3_solver_set_params(s.ctx, s.solver, p.params)
+}
+
 // Push creates a backtracking point.
 func (s *Solver) Push() {
 	C.Z3_solver_push(s.ctx, s.solver)
@@ -78,4 +83,9 @@ func (s *Solver) Prove(f *Bool) (bool, error) {
 		return false, err
 	}
 	return !sat, nil
+}
+
+// Help returns a string describing all available solver parameters.
+func (s *Solver) Help() string {
+	return C.GoString(C.Z3_solver_get_help(s.ctx, s.solver))
 }
