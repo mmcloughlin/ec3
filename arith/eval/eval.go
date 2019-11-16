@@ -156,6 +156,9 @@ func (e *Evaluator) load(name string) Value {
 
 // setregister sets register r to value x.
 func (e *Evaluator) setregister(r ir.Register, x Value) {
+	if r == ir.Discard {
+		return
+	}
 	e.store(string(r), x)
 }
 

@@ -51,3 +51,17 @@ func SubInto(ctx *build.Context, z, x, y ir.Int, b ir.Register) {
 		bin = b
 	}
 }
+
+// MulInto sets z = x*y.
+func MulInto(ctx *build.Context, z, x, y ir.Int) {
+	acc := NewAccumulator(ctx, z)
+	acc.s = 16
+	for i, a := range x.Limbs() {
+		for j, b := range y.Limbs() {
+			acc.Flush()
+			lo, hi := ctx.Register("lo"), ctx.Register("hi")
+			ctx.MUL(a, b, hi, lo)
+			acc.AddProduct(hi, lo, i+j)
+		}
+	}
+}

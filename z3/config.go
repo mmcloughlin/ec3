@@ -52,6 +52,16 @@ func (c *Config) SetProof(enabled bool) {
 	c.SetParamBool("proof", enabled)
 }
 
+// SetTrace configures tracing support for VCC.
+func (c *Config) SetTrace(enabled bool) {
+	c.SetParamBool("trace", enabled)
+}
+
+// SetTraceFilename sets the trace output file for VCC traces.
+func (c *Config) SetTraceFilename(filename string) {
+	c.SetParam("trace_file_name", filename)
+}
+
 // SetTimeout configures the default timeout used for solvers.
 func (c *Config) SetTimeout(d time.Duration) {
 	c.SetParam("timeout", strconv.FormatInt(d.Milliseconds(), 10))

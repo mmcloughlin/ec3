@@ -9,7 +9,11 @@ extern void errorhandler(Z3_context c, Z3_error_code e);
 */
 import "C"
 
-import "unsafe"
+import (
+	"github.com/mmcloughlin/ec3/internal/errutil"
+
+	"unsafe"
+)
 
 // errorhandler is a callback for Z3 errors. Currently panics, simply to ensure errors do not go unnoticed.
 // TODO(mbm): handle z3 errors more gracefully
@@ -71,4 +75,33 @@ func (c *Context) symbol(name string) C.Z3_symbol {
 	n := C.CString(name)
 	defer C.free(unsafe.Pointer(n))
 	return C.Z3_mk_string_symbol(c.ctx, n)
+}
+
+// PrintMode is a pretty printing mode.
+type PrintMode uint
+
+// Supported pretty printing modes.
+const (
+	PrintModeSMTLIBFull       PrintMode = iota // Print AST nodes in SMTLIB verbose format.
+	PrintModeLowLevel                          // Print AST nodes using a low-level format.
+	PrintModeSMTLIB2Compliant                  // Print AST nodes in SMTLIB 2.x compliant format.
+)
+
+// printmode returns the corresponding internal Z3 code.
+func (p PrintMode) printmode() C.Z3_ast_print_mode {
+	switch p {
+	case PrintModeSMTLIBFull:
+		return C.Z3_PRINT_SMTLIB_FULL
+	case PrintModeLowLevel:
+		return C.Z3_PRINT_LOW_LEVEL
+	case PrintModeSMTLIB2Compliant:
+		return C.Z3_PRINT_SMTLIB2_COMPLIANT
+	default:
+		panic(errutil.AssertionFailure("unknown print mode %d", p))
+	}
+}
+
+// SetASTPrintMode selects format used for pretty-printing AST nodes.
+func (c *Context) SetASTPrintMode(p PrintMode) {
+	C.Z3_set_ast_print_mode(c.ctx, p.printmode())
 }

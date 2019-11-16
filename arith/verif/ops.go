@@ -9,12 +9,22 @@ import (
 
 // Add returns a specification for addition on multi-precision k*s-bit integers.
 func Add(ctx *z3.Context, s, k uint) *Spec {
-	return NewBinarySpec(ctx, s, k, (*z3.BV).Add)
+	return NewSpecBinary(ctx, s, k, (*z3.BV).Add)
 }
 
 // Sub returns a specification for subtraction on multi-precision k*s-bit integers.
 func Sub(ctx *z3.Context, s, k uint) *Spec {
-	return NewBinarySpec(ctx, s, k, (*z3.BV).Sub)
+	return NewSpecBinary(ctx, s, k, (*z3.BV).Sub)
+}
+
+// MulFull returns a specification for a full multiply on multi-precision k*s-bit integers.
+func MulFull(ctx *z3.Context, s, k uint) *Spec {
+	bits := s * k
+	return NewSpecBinarySizes(ctx, s, k, 2*k, func(x, y *z3.BV) *z3.BV {
+		xext := x.ZeroExt(bits)
+		yext := y.ZeroExt(bits)
+		return xext.Mul(yext)
+	})
 }
 
 // AddMod returns a specification for addition modulo mod on k*s-bit integers.
@@ -24,7 +34,7 @@ func AddMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
 		return nil, err
 	}
 
-	spec := NewBinarySpec(ctx, s, k, f.Add)
+	spec := NewSpecBinary(ctx, s, k, f.Add)
 
 	m := f.Modulus()
 	for _, name := range []string{"x", "y"} {
@@ -42,7 +52,7 @@ func SubMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
 		return nil, err
 	}
 
-	spec := NewBinarySpec(ctx, s, k, f.Sub)
+	spec := NewSpecBinary(ctx, s, k, f.Sub)
 
 	m := f.Modulus()
 	for _, name := range []string{"x", "y"} {
@@ -53,12 +63,19 @@ func SubMod(ctx *z3.Context, s, k uint, mod *big.Int) (*Spec, error) {
 	return spec, nil
 }
 
-// NewBinarySpec returns a specification for a binary operator on k*s-bit integers.
-func NewBinarySpec(ctx *z3.Context, s, k uint, op func(x, y *z3.BV) *z3.BV) *Spec {
-	t := ir.Integer{K: k}
+// NewSpecBinary returns a specification for a binary operator on k*s-bit integers.
+func NewSpecBinary(ctx *z3.Context, s, k uint, op func(x, y *z3.BV) *z3.BV) *Spec {
+	return NewSpecBinarySizes(ctx, s, k, k, op)
+}
+
+// NewSpecBinarySizes returns a specification for a binary operator on kin*s-bit
+// integers, returning kout*s-bit integers.
+func NewSpecBinarySizes(ctx *z3.Context, s, kin, kout uint, op func(x, y *z3.BV) *z3.BV) *Spec {
+	tin := ir.Integer{K: kin}
+	tout := ir.Integer{K: kout}
 	sig := &ir.Signature{
-		Params:  ir.NewVars(t, "x", "y"),
-		Results: ir.NewVars(t, "z"),
+		Params:  ir.NewVars(tin, "x", "y"),
+		Results: ir.NewVars(tout, "z"),
 	}
 	spec := NewSpec(ctx, sig, s)
 	x := must(spec.Param("x"))

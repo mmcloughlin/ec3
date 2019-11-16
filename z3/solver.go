@@ -6,7 +6,10 @@ package z3
 */
 import "C"
 
-import "errors"
+import (
+	"errors"
+	"log"
+)
 
 // Solver checks a collection of predicates for satisfiability.
 type Solver struct {
@@ -40,6 +43,10 @@ func (s *Solver) Close() error {
 	return nil
 }
 
+func (s *Solver) String() string {
+	return C.GoString(C.Z3_solver_to_string(s.ctx, s.solver))
+}
+
 // Configure the solver with the given parameter set.
 func (s *Solver) SetParams(p *Params) {
 	C.Z3_solver_set_params(s.ctx, s.solver, p.params)
@@ -67,6 +74,7 @@ func (s *Solver) Assert(c *Bool) {
 
 // Check whether the assertions in a given solver are consistent or not.
 func (s *Solver) Check() (bool, error) {
+	log.Printf("solver:\n%s", s.String())
 	res := C.Z3_solver_check(s.ctx, s.solver)
 	if res == C.Z3_L_UNDEF {
 		reason := C.Z3_solver_get_reason_unknown(s.ctx, s.solver)

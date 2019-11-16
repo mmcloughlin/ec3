@@ -21,11 +21,14 @@ func (r Register) String() string { return string(r) }
 
 func (Register) operand() {}
 
+// Discard is a special register to ignore an output of an instruction.
+var Discard = Register("_")
+
 // SelectRegisters selects the registers from the list of operands.
 func SelectRegisters(ops []Operand) []Register {
 	var rs []Register
 	for _, op := range ops {
-		if r, ok := op.(Register); ok {
+		if r, ok := op.(Register); ok && r != Discard {
 			rs = append(rs, r)
 		}
 	}

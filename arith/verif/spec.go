@@ -167,6 +167,10 @@ func (s *Spec) Prove(p *ir.Program) (bool, error) {
 	solver := s.ctx.SolverForLogic("QF_BV")
 	defer solver.Close()
 
+	// params := s.ctx.Params()
+	// params.SetUint("threads", uint(runtime.NumCPU()))
+	// solver.SetParams(params)
+
 	for _, cond := range s.pre {
 		solver.Assert(cond)
 	}
