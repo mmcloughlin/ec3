@@ -10,11 +10,12 @@ import (
 	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/addchain/acc/parse"
 	"github.com/mmcloughlin/ec3/addchain/acc/pass"
+	"github.com/mmcloughlin/ec3/internal/cli"
 )
 
 // eval subcommand.
 type eval struct {
-	command
+	cli.Command
 }
 
 func (*eval) Name() string     { return "eval" }

@@ -9,11 +9,12 @@ import (
 	"github.com/mmcloughlin/ec3/addchain/acc"
 	"github.com/mmcloughlin/ec3/addchain/acc/parse"
 	"github.com/mmcloughlin/ec3/addchain/acc/printer"
+	"github.com/mmcloughlin/ec3/internal/cli"
 )
 
 // format subcommand.
 type format struct {
-	command
+	cli.Command
 
 	build bool
 }
