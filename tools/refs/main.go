@@ -41,7 +41,10 @@ func (*lint) Linter() Linter {
 		ReferenceLinterFunc(RequireTitle),
 		ReferenceLinterFunc(ValidURL),
 		ReferenceLinterFunc(AuthorPeriod),
-		ReferenceLinterFunc(EprintCanonical),
+		ReferenceLinterFunc(IACRCanonical),
+		ReferenceLinterFunc(CheckNewlines),
+		LinterFunc(DuplicateURLs),
+		LinterFunc(CheckSectionTags),
 	)
 }
 

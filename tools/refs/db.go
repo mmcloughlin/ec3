@@ -7,11 +7,11 @@ import (
 )
 
 type Database struct {
-	Categories []*Category  `yaml:"categories"`
+	Sections   []*Section   `yaml:"sections"`
 	References []*Reference `yaml:"references"`
 }
 
-type Category struct {
+type Section struct {
 	ID   string `yaml:"id"`
 	Name string `yaml:"name"`
 }
@@ -20,6 +20,7 @@ type Reference struct {
 	Title       string       `yaml:"title"`
 	URL         string       `yaml:"url"`
 	Author      string       `yaml:"author"`
+	Note        string       `yaml:"note"`
 	Section     string       `yaml:"section"`
 	Supplements []Supplement `yaml:"supplement"`
 }

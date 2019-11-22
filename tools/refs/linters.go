@@ -41,6 +41,7 @@ func (f ReferenceLinterFunc) Lint(db *Database) []error {
 	return errs
 }
 
+// RequireURL checks that a reference has a URL field.
 func RequireURL(r *Reference) []error {
 	if r.URL != "" {
 		return nil
@@ -48,6 +49,7 @@ func RequireURL(r *Reference) []error {
 	return singleerror("missing url")
 }
 
+// RequireTitle checks that a reference has a title.
 func RequireTitle(r *Reference) []error {
 	if r.Title != "" {
 		return nil
@@ -55,6 +57,7 @@ func RequireTitle(r *Reference) []error {
 	return singleerror("missing title")
 }
 
+// ValidURL checks that a reference has a valid URL.
 func ValidURL(r *Reference) []error {
 	_, err := url.Parse(r.URL)
 	if err != nil {
@@ -63,6 +66,7 @@ func ValidURL(r *Reference) []error {
 	return nil
 }
 
+// AuthorPeriod confirms the author field does not end in a period.
 func AuthorPeriod(r *Reference) []error {
 	if strings.HasSuffix(r.Author, ".") {
 		return singleerror("author %q ends with period", r.Author)
@@ -70,7 +74,8 @@ func AuthorPeriod(r *Reference) []error {
 	return nil
 }
 
-func EprintCanonical(r *Reference) []error {
+// IACRCanonical ensures that IACR eprint references conform to a canonical form.
+func IACRCanonical(r *Reference) []error {
 	u, err := url.Parse(r.URL)
 	if err != nil {
 		return []error{err}
@@ -105,19 +110,64 @@ func EprintCanonical(r *Reference) []error {
 	return nil
 }
 
-// Done:
-// * all fields recognized
-// * title and url are present, all other fields optional
-// * valid url
-// * author field does not end in period "."
-// * eprint links do not include ".pdf"
-//
+// DuplicateURLs checks for duplicate URLs on the reference database.
+func DuplicateURLs(db *Database) []error {
+	count := map[string]int{}
+	for _, ref := range db.References {
+		count[ref.URL]++
+	}
+
+	var errs []error
+	for u, n := range count {
+		if n > 1 {
+			errs = append(errs, fmt.Errorf("url %s occurs %d times", u, n))
+		}
+	}
+
+	return errs
+}
+
+// CheckNewlines confirms fields do not have newlines in them.
+func CheckNewlines(r *Reference) (errs []error) {
+	fields := []string{r.Title, r.Author, r.Note}
+	for _, field := range fields {
+		if strings.Contains(field, "\n") {
+			err := fmt.Errorf("%q contains newline", field)
+			errs = append(errs, err)
+		}
+	}
+	return
+}
+
+// CheckSectionTags verifies that every section tag is defined.
+func CheckSectionTags(db *Database) (errs []error) {
+	// Collect valid section IDs.
+	defined := map[string]bool{}
+	for _, section := range db.Sections {
+		defined[section.ID] = true
+	}
+
+	// Check each reference.
+	undef := map[string]bool{}
+	for _, ref := range db.References {
+		s := ref.Section
+		if s != "" && !defined[s] {
+			undef[s] = true
+		}
+	}
+
+	for name := range undef {
+		err := fmt.Errorf("section %q undefined", name)
+		errs = append(errs, err)
+	}
+
+	return errs
+}
+
 // Remaining:
 // * section/tags map to defined section
-// * URLs are valid (link checker)
-// * no fields have newlines in them (title/author/note)
 // * no private links (drive.google.com)
-// * repeat URLs
+// * URLs exist (link checker)
 
 func singleerror(format string, args ...interface{}) []error {
 	return []error{fmt.Errorf(format, args...)}
