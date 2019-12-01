@@ -26,7 +26,7 @@ type Reference struct {
 	Note        string       `yaml:"note"`
 	Section     string       `yaml:"section"`
 	Highlight   bool         `yaml:"highlight"`
-	Supplements []Supplement `yaml:"supplement"`
+	Supplements []Supplement `yaml:"supplements"`
 }
 
 // Supplement is another resource associated with a reference. For example, in

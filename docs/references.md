@@ -3,7 +3,7 @@
 * [**Selecting Elliptic Curves for Cryptography: An Efficiency and Security Analysis**](https://eprint.iacr.org/2014/130) Joppe W. Bos and Craig Costello and Patrick Longa and Michael Naehrig. _Note:_ Supurbly detailed paper on the implementation of the MSR Elliptic Curve Cryptography Library, with code provided.
 * [MSR Elliptic Curve Cryptography Library](https://www.microsoft.com/en-us/research/project/msr-elliptic-curve-cryptography-library/)
 * [Elliptic curves and their implementation](https://www.imperialviolet.org/2010/12/04/ecc.html) Adam Langley. _Note:_ Friendly introduction.
-* [Multiprecision Arithmetic for Cryptology in C++](https://arxiv.org/abs/1804.07236) Niek J. Bouman.
+* [Multiprecision Arithmetic for Cryptology in C++](https://arxiv.org/abs/1804.07236) ([slides](https://martindale.info/eipsi/ctbignum_slides_2018.pdf), [code](https://github.com/niekbouman/ctbignum)) Niek J. Bouman.
 * [The Design and Application of a Retargetable Peephole Optimizer](http://www.well.com/~cwf/pro/Davidson%20and%20Fraser.%20The%20design%20and%20application%20of%20a%20retargetable%20peephole%20optimizer.pdf) Davidson and Fraser. _Note:_ First description of an RTL language.
 * [New Instructions Supporting Large Integer Arithmetic on Intel Architecture Processors](https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-large-integer-arithmetic-paper.pdf) Intel White Paper. _Note:_ Concise and easy description of how to exploit the `MULX/ADCX/ADOX` instructions, illustrated with a 512x512-bit multiply.
 * [Large Integer Squaring on Intel Architecture Processors](https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/large-integer-squaring-ia-paper.pdf) Intel White Paper. _Note:_ Extension of the multiplcation paper to the squaring case.
@@ -95,7 +95,7 @@
 * [Efficient Arithmetic In (Pseudo-)Mersenne Prime Order Fields](https://eprint.iacr.org/2018/985) Kaushik Nath and Palash Sarkar.
 * [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798v2/document)
 * [Systematic Support of Parallel Bit Streams in LLVM](https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf) Meng Lin.
-* [Montgomery Multiplication Using Vector Instructions](https://eprint.iacr.org/2013/519) Joppe W. Bos and Peter L. Montgomery and Daniel Shumow and Gregory M. Zaverucha.
+* [Montgomery Multiplication Using Vector Instructions](https://eprint.iacr.org/2013/519) ([slides](http://sac2013.irmacs.sfu.ca/slides/s26.pdf)) Joppe W. Bos and Peter L. Montgomery and Daniel Shumow and Gregory M. Zaverucha.
 * [Complete Systems of Two Addition Laws for Elliptic Curves](https://drive.google.com/file/d/12RLNZz1MdDXuBL4wTU8V33Ff6dFCoVRx/view?usp=sharing) Bosma W. Lenstra H.W.
 * [Crafting Certified Elliptic Curve Cryptography Implementations in Coq](http://adam.chlipala.net/theses/andreser_meng.pdf)
 * [Specification of Curve Selection and Supported Curve Parameters in MSR ECCLib](https://www.microsoft.com/en-us/research/publication/specification-of-curve-selection-and-supported-curve-parameters-in-msr-ecclib/)
