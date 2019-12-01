@@ -1,0 +1,12 @@
+# Resources
+{{ $references := .References -}}
+{{ range $_, $sec :=.Sections -}}
+## {{ $sec.Name }}
+{{ range $_, $ref := $references -}}
+{{ if eq $ref.Section $sec.ID -}}
+* [{{ $ref.Title }}]({{ $ref.URL }})
+    {{- if $ref.Author }} {{ $ref.Author }}.{{- end}}
+    {{- if $ref.Note }} _Note:_ {{ $ref.Note }}{{- end}}
+{{ end -}}
+{{- end -}}
+{{- end -}}
