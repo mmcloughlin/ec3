@@ -171,11 +171,6 @@ func CheckSectionTags(db *Database) (errs []error) {
 	return errs
 }
 
-// Remaining:
-// * section/tags map to defined section
-// * no private links (drive.google.com)
-// * URLs exist (link checker)
-
 func singleerror(format string, args ...interface{}) []error {
 	return []error{fmt.Errorf(format, args...)}
 }
