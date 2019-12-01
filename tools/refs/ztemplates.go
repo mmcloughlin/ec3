@@ -13,7 +13,7 @@ func loadtemplate(name string) ([]byte, error) {
 ## {{ $sec.Name }}
 {{ range $_, $ref := $references -}}
 {{ if eq $ref.Section $sec.ID -}}
-* [{{ $ref.Title }}]({{ $ref.URL }})
+* [{{ if $ref.Highlight }}**{{ end }}{{ $ref.Title }}{{ if $ref.Highlight }}**{{ end }}]({{ $ref.URL }})
     {{- if $ref.Author }} {{ $ref.Author }}.{{- end}}
     {{- if $ref.Note }} _Note:_ {{ $ref.Note }}{{- end}}
 {{ end -}}

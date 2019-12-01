@@ -22,6 +22,7 @@ type Reference struct {
 	Author      string       `yaml:"author"`
 	Note        string       `yaml:"note"`
 	Section     string       `yaml:"section"`
+	Highlight   bool         `yaml:"highlight"`
 	Supplements []Supplement `yaml:"supplement"`
 }
 
