@@ -119,6 +119,8 @@ func (cmd *gen) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) su
 	return subcommands.ExitSuccess
 }
 
+// LoadDatabaseFile loads the database at filename, falling back to standard
+// input if the filename is empty.
 func LoadDatabaseFile(filename string) (*Database, error) {
 	_, f, err := cli.OpenInput(filename)
 	if err != nil {

@@ -8,3 +8,4 @@ linters:
   - unparam
   - gochecknoglobals
   - gochecknoinits
+  - wsl

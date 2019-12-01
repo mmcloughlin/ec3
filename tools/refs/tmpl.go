@@ -8,6 +8,7 @@ import (
 
 //go:generate assets -pkg main -func loadtemplate -output ztemplates.go *.tmpl
 
+// LoadOutputTypeTemplate returns a template for the given output type.
 func LoadOutputTypeTemplate(name string) (*template.Template, error) {
 	tmplname := name + ".tmpl"
 	data, err := loadtemplate(tmplname)

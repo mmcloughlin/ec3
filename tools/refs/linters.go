@@ -7,16 +7,20 @@ import (
 	"strings"
 )
 
+// Linter checks a database for errors.
 type Linter interface {
 	Lint(*Database) []error
 }
 
+// LinterFunc adapts a function to the Linter interface.
 type LinterFunc func(*Database) []error
 
+// Lint calls f.
 func (f LinterFunc) Lint(db *Database) []error {
 	return f(db)
 }
 
+// ConcatLinter builds a composite linter from the given linter.
 func ConcatLinter(linters ...Linter) Linter {
 	return LinterFunc(func(db *Database) []error {
 		var errs []error
@@ -29,8 +33,11 @@ func ConcatLinter(linters ...Linter) Linter {
 	})
 }
 
+// ReferenceLinterFunc adapts a function that lints a single reference to a
+// linter for an entire database.
 type ReferenceLinterFunc func(*Reference) []error
 
+// Lint calls f on every reference in the database and concatencates the results.
 func (f ReferenceLinterFunc) Lint(db *Database) []error {
 	var errs []error
 	for _, r := range db.References {
