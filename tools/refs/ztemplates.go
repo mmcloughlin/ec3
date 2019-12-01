@@ -7,7 +7,7 @@ import "fmt"
 func loadtemplate(name string) ([]byte, error) {
 	switch name {
 	case "markdown.tmpl":
-		return []byte(`# Resources
+		return []byte(`# References
 {{ $references := .References -}}
 {{ range $_, $sec :=.Sections -}}
 ## {{ $sec.Name }}

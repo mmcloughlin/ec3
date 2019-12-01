@@ -14,6 +14,7 @@ lint:
 
 .PHONY: generate
 generate:
+	make -C docs --always-make
 	go generate -x ./...
 
 .PHONY: bootstrap
@@ -24,6 +25,7 @@ bootstrap:
 		github.com/mna/pigeon
 	go install \
 		./tools/mathfmt \
+		./tools/refs \
 		./tools/bib \
 		./tools/assets
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ${GOPATH}/bin v1.17.1
