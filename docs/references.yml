@@ -164,9 +164,9 @@ references:
         url: https://github.com/niekbouman/ctbignum
     section: impl
   - title: The Design and Application of a Retargetable Peephole Optimizer
-    url: http://www.well.com/~cwf/pro/Davidson%20and%20Fraser.%20The%20design%20and%20application%20of%20a%20retargetable%20peephole%20optimizer.pdf
+    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.64.7226&rep=rep1&type=pdf
     author: Davidson and Fraser
-    note: First description of an RTL language.
+    note: Early description of an RTL language.
     section: impl
   - title: "New Instructions Supporting Large Integer Arithmetic on Intel Architecture Processors"
     url: https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-large-integer-arithmetic-paper.pdf

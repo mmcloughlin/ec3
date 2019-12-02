@@ -14,6 +14,7 @@ func main() {
 	base := cli.NewBaseCommand("refs")
 	subcommands.Register(&gen{Command: base}, "")
 	subcommands.Register(&lint{Command: base}, "")
+	subcommands.Register(&linkcheck{Command: base}, "")
 	subcommands.Register(subcommands.HelpCommand(), "")
 
 	flag.Parse()
@@ -117,6 +118,40 @@ func (cmd *gen) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) su
 	}
 
 	return subcommands.ExitSuccess
+}
+
+// linkcheck subcommand.
+type linkcheck struct {
+	cli.Command
+}
+
+func (*linkcheck) Name() string     { return "linkcheck" }
+func (*linkcheck) Synopsis() string { return "check whether all urls exist" }
+func (*linkcheck) Usage() string {
+	return `Usage: gen <filename>
+
+Check whether all URLs in the database exist.
+
+`
+}
+
+func (cmd *linkcheck) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	// Load database.
+	db, err := LoadDatabaseFile(f.Arg(0))
+	if err != nil {
+		return cmd.Error(err)
+	}
+
+	// Check all URLs.
+	status := subcommands.ExitSuccess
+	for _, reference := range db.References {
+		if err := CheckLink(reference.URL); err != nil {
+			cmd.Log.Printf("url %s failed: %s", reference.URL, err)
+			status = subcommands.ExitFailure
+		}
+	}
+
+	return status
 }
 
 // LoadDatabaseFile loads the database at filename, falling back to standard
