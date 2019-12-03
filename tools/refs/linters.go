@@ -117,6 +117,22 @@ func IACRCanonical(r *Reference) []error {
 	return nil
 }
 
+// DisallowHost builds a linter that errors for URLs with the given host.
+func DisallowHost(host string) Linter {
+	return ReferenceLinterFunc(func(r *Reference) []error {
+		u, err := url.Parse(r.URL)
+		if err != nil {
+			return []error{err}
+		}
+
+		if u.Host == host {
+			return singleerror("host %s disallowed", host)
+		}
+
+		return nil
+	})
+}
+
 // DuplicateURLs checks for duplicate URLs on the reference database.
 func DuplicateURLs(db *Database) []error {
 	count := map[string]int{}

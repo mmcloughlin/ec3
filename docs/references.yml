@@ -72,15 +72,14 @@ references:
       - type: slides
         url: http://sac2013.irmacs.sfu.ca/slides/s26.pdf
   - title: Complete Systems of Two Addition Laws for Elliptic Curves
-    url: https://drive.google.com/file/d/12RLNZz1MdDXuBL4wTU8V33Ff6dFCoVRx/view?usp=sharing
+    url: https://doi.org/10.1006/jnth.1995.1088
     author: Bosma W. Lenstra H.W
   - title: Crafting Certified Elliptic Curve Cryptography Implementations in Coq
     url: http://adam.chlipala.net/theses/andreser_meng.pdf
   - title: Specification of Curve Selection and Supported Curve Parameters in MSR ECCLib
     url: https://www.microsoft.com/en-us/research/publication/specification-of-curve-selection-and-supported-curve-parameters-in-msr-ecclib/
-  - title: Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication
-      algorithm
-    url: https://drive.google.com/open?id=1oRbgAyqN8H3ne8nDBhbvCA4NkyE9zi6z
+  - title: Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication algorithm
+    url: https://doi.org/10.1016/j.ipl.2013.02.002
     author: Yoo-Jin Baek
   - title: Signed Binary Representations Revisited
     url: https://eprint.iacr.org/2004/195
@@ -88,9 +87,8 @@ references:
   - title: Some Explicit Formulae of NAF and its Left-to-Right Analogue
     url: https://eprint.iacr.org/2005/384
     author: Dong-Guk Han and Tetsuya Izu and Tsuyoshi Takagi
-  - title: Software Implementation of Modular Exponentiation Using Advanced Vector Instructions
-      Architectures
-    url: https://drive.google.com/file/d/1l9-ZEOl9-cgVUjTwkTeI7YyrEid1y4BG/view?usp=sharing
+  - title: Software Implementation of Modular Exponentiation Using Advanced Vector Instructions Architectures
+    url: https://doi.org/10.1007/978-3-642-31662-3_9
     author: Shay Gueron and Vlad Krasnov
   - title: "Simple High-Level Code For Cryptographic Arithmetic \u2013 With Proofs,\
       \ Without Compromises"
@@ -218,7 +216,7 @@ references:
     note: Adapts continued fractions to subtraction chains. Nice clear review of continued fractions strategies.
     section: addchain
   - title: Addition chains using continued fractions
-    url: https://drive.google.com/file/d/1FiCIhWXQl5FY6pcpriAeHQJaBCYZVcvi/view
+    url: https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf
     author: BBBD
     note: _Original_ continued fractions paper.
     section: addchain
@@ -266,7 +264,7 @@ references:
     section: scalarmult
   - title: The Width-w NAF Method Provides Small Memory and Fast Elliptic Scalar Multiplications
       Secure against Side Channel Attacks
-    url: https://drive.google.com/file/d/1VUMq5ef9f4L3kHtKLDPbY4wkIJobLtvz/view?usp=sharing
+    url: https://doi.org/10.1007/3-540-36563-X_23
     note: Signed windows using all _odd_ digits.
     section: scalarmult
   - title: Securing Elliptic Curve Point Multiplication against Side-Channel Attacks
@@ -284,7 +282,7 @@ references:
     author: Joost Renes and Craig Costello and Lejla Batina
     section: ecarith
   - title: A Compact and Exception-Free Ladder for All Short Weierstrass Elliptic Curves
-    url: https://drive.google.com/file/d/1f6K2vvn067hxkTxsAf7Z7W2UNJAbsSB4/view?usp=sharing
+    url: https://doi.org/10.1007/978-3-319-54669-8_10
     author: Ruggero Susella and Sofia Montrasio
     section: ecarith
   - title: A Binary Redundant Scalar Point Multiplication in Secure Elliptic Curve Cryptosystems
@@ -329,14 +327,14 @@ references:
     url: http://www.math.ucsd.edu/~ronspubs/78_11_addition_chains.pdf
     note: Theoretical result on number of multiplications.
   - title: On the evaluation of powers and related problems
-    url: https://drive.google.com/file/d/1vi2nO59glqWSgINX85yerWwW1omrktMY/view?usp=sharing
+    url: https://doi.org/10.1109/SFCS.1976.21
     author: Pippenger
     note: Matrix and graph-theoretical view of addition chain methods.
   - title: On string replacement exponentiation
-    url: https://drive.google.com/file/d/1zpbb0ZJzewMJGqKbT_pRcS7MXscDcglJ/view
+    url: https://doi.org/10.1023/A:1011212615791
     note: Mostly just theoretical results.
   - title: High-radix and bit recoding techniques for modular exponentiation
-    url: https://drive.google.com/file/d/1TD1v7E9qoFW5J2vt8bntmdQBLMw-VItU/view
+    url: https://doi.org/10.1080/00207169108804009
     note: Requires subtraction.
   - title: Fast Modular Exponentiation
     url: http://cryptocode.net/docs/c06.pdf
@@ -395,9 +393,6 @@ references:
   - title: 'MpNT: A Multi-Precision Number Theory Package. Number-Theoretic Algorithms.'
     url: https://profs.info.uaic.ro/~tr/tr03-02.pdf
     section: addchain
-  - title: 'Handbook of  Elliptic and  Hyperelliptic  Curve Cryptography: Section 9.2:
-      Fixed Exponent'
-    url: https://drive.google.com/file/d/10VG_UoYfvhkUon7_I2dGXI9BwQ-MKtND/view
     section: addchain
   - title: Redundant integer representations and fast exponentiation
     url: https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf
@@ -456,9 +451,9 @@ references:
   - title: Modular Multiplication Without Trial Division
     url: https://web.itu.edu.tr/~orssi/dersler/cryptography/Montgomery.pdf
   - title: The Montgomery Modular Inverse - Revisited
-    url: https://drive.google.com/file/d/1VGTCc9EasatNYM6rS2xkVahX1YFzkxX6/view
+    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.8377&rep=rep1&type=pdf
   - title: Efficient Software-Implementation of Finite Fields with Applications to Cryptography
-    url: https://drive.google.com/file/d/1sUJyBEtLTGVnqotHSZQBgbTecWtnDU1w/view
+    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.86.2495&rep=rep1&type=pdf
   - title: Efficient Software Implementations of Modular Exponentiation
     url: https://eprint.iacr.org/2011/239
   - title: The Montgomery Powering Ladder
@@ -535,8 +530,8 @@ references:
   - title: 'Handbook of Applied Cryptography: Chapter 14: Efficient Implementation'
     url: http://cacr.uwaterloo.ca/hac/about/chap14.pdf
   - title: Handbook of Elliptic and Hyperelliptic Curve Cryptography
-    url: https://drive.google.com/file/d/10VG_UoYfvhkUon7_I2dGXI9BwQ-MKtND/view
+    url: https://www.hyperelliptic.org/HEHCC/
   - title: Guide to Elliptic Curve Cryptography
-    url: https://drive.google.com/file/d/1_2t06CvYwTbZcvrn6nZ_ms3O__0xRl9B/view
+    url: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.394.3037&rep=rep1&type=pdf
   - title: Topics in Computational Number Theory Inspired by Peter L. Montgomery
     url: http://www.joppebos.com/_pages/montgomery/

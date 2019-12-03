@@ -15,7 +15,7 @@
 * [On the Evaluation of Powers](https://www.ii.uni.wroc.pl/~aje/WordEq2015/papers/addition_chains_Yao.pdf) Yao. _Note:_ _Original_ definition of Yao's algorithm.
 * [Exponentiating faster with addition chains](https://www.researchgate.net/publication/221348287_Exponentiating_Faster_with_Addition_Chains) Yacobi. _Note:_ LZ applied to dictionary creation. The _original_ definition of Yacobi's algorithm.
 * [Efficient computation of addition-subtraction chains using generalized continued Fractions](https://eprint.iacr.org/2013/466) Tall, Sanghare. _Note:_ Adapts continued fractions to subtraction chains. Nice clear review of continued fractions strategies.
-* [Addition chains using continued fractions](https://drive.google.com/file/d/1FiCIhWXQl5FY6pcpriAeHQJaBCYZVcvi/view) BBBD. _Note:_ _Original_ continued fractions paper.
+* [Addition chains using continued fractions](https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf) BBBD. _Note:_ _Original_ continued fractions paper.
 * [Calculating optimal addition chains](https://link.springer.com/content/pdf/10.1007%2Fs00607-010-0118-8.pdf)
 * [Efficient Generation of Minimal Length Addition Chains](https://pdfs.semanticscholar.org/6e33/657f2acf01c70fb66fbcc9c06416123c7ed6.pdf)
 * [Finding short and implementation-friendly addition chains with evolutionary algorithms](https://dspace.mit.edu/bitstream/handle/1721.1/115968/10732_2017_9340_ReferencePDF.pdf)
@@ -30,7 +30,6 @@
 * [Brauer Addition-Subtraction Chains](http://www.martin-otto.de/publications/docs/2001_MartinOtto_Diplom_BrauerAddition-SubtractionChains.pdf)
 * [Speeding up Subgroup Cryptosystems](https://cr.yp.to/bib/2003/stam-thesis.pdf)
 * [MpNT: A Multi-Precision Number Theory Package. Number-Theoretic Algorithms.](https://profs.info.uaic.ro/~tr/tr03-02.pdf)
-* [Handbook of  Elliptic and  Hyperelliptic  Curve Cryptography: Section 9.2: Fixed Exponent](https://drive.google.com/file/d/10VG_UoYfvhkUon7_I2dGXI9BwQ-MKtND/view)
 * [Redundant integer representations and fast exponentiation](https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf)
 * [High-speed high-security signatures](https://ed25519.cr.yp.to/ed25519-20110705.pdf)
 * [Cultivating Sapling: New Crypto Foundations](https://github.com/zcash/zcash-blog/blob/4268b1a9f7e523f59bb254b9fa7a9f9f9d7f75a7/_posts/2017-07-26-cultivating-sapling-new-crypto-foundations.md) _Note:_ Section "New multi-exponentiation algorithm"
@@ -56,12 +55,12 @@
 * [Scalar-multiplication algorithms](https://cryptojedi.org/peter/data/eccss-20130911b.pdf) Peter Schwabe. _Note:_ ECC 2013 Summer School. Simple introduction to scalar multiplication algorithms.
 * [Survey of Elliptic Curve Scalar Multiplication Algorithms](https://pdfs.semanticscholar.org/4da9/cfe2ff561a29bd90c8799873154b819f5cd9.pdf) _Note:_ Concise survey.
 * [Fast and Regular Algorithms for Scalar Multiplication over Elliptic Curves](https://eprint.iacr.org/2011/338) Matthieu Rivain. _Note:_ Only skimmed, but the sub-section on "Scalar Recoding" includes a dense summary of the approaches.
-* [The Width-w NAF Method Provides Small Memory and Fast Elliptic Scalar Multiplications Secure against Side Channel Attacks](https://drive.google.com/file/d/1VUMq5ef9f4L3kHtKLDPbY4wkIJobLtvz/view?usp=sharing) _Note:_ Signed windows using all _odd_ digits.
+* [The Width-w NAF Method Provides Small Memory and Fast Elliptic Scalar Multiplications Secure against Side Channel Attacks](https://doi.org/10.1007/3-540-36563-X_23) _Note:_ Signed windows using all _odd_ digits.
 * [Securing Elliptic Curve Point Multiplication against Side-Channel Attacks](https://www.bmoeller.de/pdf/ecc-sca-isc2001.pdf) Bodo Moller. _Note:_ Booth-like recoding that _avoids zero_ digits.
 ## Elliptic Curve Arithmetic
 * [Analysis and optimization of elliptic-curve single-scalar multiplication](http://www.hyperelliptic.org/EFD/precomp.pdf) DJB & Lange. _Note:_ the paper behind the Explicit Formula Database. Excellent overview.
 * [Complete addition formulas for prime order elliptic curves](https://eprint.iacr.org/2015/1060) Joost Renes and Craig Costello and Lejla Batina.
-* [A Compact and Exception-Free Ladder for All Short Weierstrass Elliptic Curves](https://drive.google.com/file/d/1f6K2vvn067hxkTxsAf7Z7W2UNJAbsSB4/view?usp=sharing) Ruggero Susella and Sofia Montrasio.
+* [A Compact and Exception-Free Ladder for All Short Weierstrass Elliptic Curves](https://doi.org/10.1007/978-3-319-54669-8_10) Ruggero Susella and Sofia Montrasio.
 * [A Binary Redundant Scalar Point Multiplication in Secure Elliptic Curve Cryptosystems](http://ijns.jalaxy.com.tw/contents/ijns-v3-n2/ijns-2006-v3-n2-p132-137.pdf) Sangook Moon. _Note:_ Suggests the use of a _quadruple_ formula in scalar multiplication.
 * [Trading Inversions for Multiplications in Elliptic Curve Cryptography](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.1336&rep=rep1&type=pdf) _Note:_ Explores alternative bases and formulae for scalar multiplication.
 * [Fast Elliptic Curve Arithmetic and Improved Weil Pairing Evaluation](https://arxiv.org/abs/math/0208038) Kirsten Eisentraeger, Kristin Lauter, Peter L. Montgomery. _Note:_ Merged double-add.
@@ -96,13 +95,13 @@
 * [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798v2/document)
 * [Systematic Support of Parallel Bit Streams in LLVM](https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf) Meng Lin.
 * [Montgomery Multiplication Using Vector Instructions](https://eprint.iacr.org/2013/519) ([slides](http://sac2013.irmacs.sfu.ca/slides/s26.pdf)) Joppe W. Bos and Peter L. Montgomery and Daniel Shumow and Gregory M. Zaverucha.
-* [Complete Systems of Two Addition Laws for Elliptic Curves](https://drive.google.com/file/d/12RLNZz1MdDXuBL4wTU8V33Ff6dFCoVRx/view?usp=sharing) Bosma W. Lenstra H.W.
+* [Complete Systems of Two Addition Laws for Elliptic Curves](https://doi.org/10.1006/jnth.1995.1088) Bosma W. Lenstra H.W.
 * [Crafting Certified Elliptic Curve Cryptography Implementations in Coq](http://adam.chlipala.net/theses/andreser_meng.pdf)
 * [Specification of Curve Selection and Supported Curve Parameters in MSR ECCLib](https://www.microsoft.com/en-us/research/publication/specification-of-curve-selection-and-supported-curve-parameters-in-msr-ecclib/)
-* [Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication algorithm](https://drive.google.com/open?id=1oRbgAyqN8H3ne8nDBhbvCA4NkyE9zi6z) Yoo-Jin Baek.
+* [Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication algorithm](https://doi.org/10.1016/j.ipl.2013.02.002) Yoo-Jin Baek.
 * [Signed Binary Representations Revisited](https://eprint.iacr.org/2004/195) Katsuyuki Okeya and Katja Schmidt-Samoa and Christian Spahn and Tsuyoshi Takagi.
 * [Some Explicit Formulae of NAF and its Left-to-Right Analogue](https://eprint.iacr.org/2005/384) Dong-Guk Han and Tetsuya Izu and Tsuyoshi Takagi.
-* [Software Implementation of Modular Exponentiation Using Advanced Vector Instructions Architectures](https://drive.google.com/file/d/1l9-ZEOl9-cgVUjTwkTeI7YyrEid1y4BG/view?usp=sharing) Shay Gueron and Vlad Krasnov.
+* [Software Implementation of Modular Exponentiation Using Advanced Vector Instructions Architectures](https://doi.org/10.1007/978-3-642-31662-3_9) Shay Gueron and Vlad Krasnov.
 * [Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without Compromises](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf) _Note:_ FIAT Crypto
 * [Exponent Recoding and Regular Exponentiation Algorithms](http://www.geocities.ws/mike.tunstall/papers/JT09.pdf) Joye-Tunstall.
 * [Efficient arithmetic on Koblitz curves](https://www.decred.org/research/solinas2000.pdf) Solinas.
@@ -119,9 +118,9 @@
 * [Go assembly language complementary reference](https://quasilyte.dev/blog/post/go-asm-complementary-reference/) Iskander Sharipov.
 * [Fast point multiplication algorithms for binary elliptic curves with and without precomputation](https://eprint.iacr.org/2014/427)
 * [Addition chains with multiplicative cost](http://www.math.ucsd.edu/~ronspubs/78_11_addition_chains.pdf) _Note:_ Theoretical result on number of multiplications.
-* [On the evaluation of powers and related problems](https://drive.google.com/file/d/1vi2nO59glqWSgINX85yerWwW1omrktMY/view?usp=sharing) Pippenger. _Note:_ Matrix and graph-theoretical view of addition chain methods.
-* [On string replacement exponentiation](https://drive.google.com/file/d/1zpbb0ZJzewMJGqKbT_pRcS7MXscDcglJ/view) _Note:_ Mostly just theoretical results.
-* [High-radix and bit recoding techniques for modular exponentiation](https://drive.google.com/file/d/1TD1v7E9qoFW5J2vt8bntmdQBLMw-VItU/view) _Note:_ Requires subtraction.
+* [On the evaluation of powers and related problems](https://doi.org/10.1109/SFCS.1976.21) Pippenger. _Note:_ Matrix and graph-theoretical view of addition chain methods.
+* [On string replacement exponentiation](https://doi.org/10.1023/A:1011212615791) _Note:_ Mostly just theoretical results.
+* [High-radix and bit recoding techniques for modular exponentiation](https://doi.org/10.1080/00207169108804009) _Note:_ Requires subtraction.
 * [Fast Modular Exponentiation](http://cryptocode.net/docs/c06.pdf) _Note:_ Requires subtraction.
 * [An improved binary algorithm for RSA](https://core.ac.uk/download/pdf/82735567.pdf) _Note:_ Requires subtraction.
 * [New Algorithm for Classical Modular Inverse](https://link.springer.com/content/pdf/10.1007%2F3-540-36400-5_6.pdf) _Note:_ Optimized for hardware, requires subtraction.
@@ -129,8 +128,8 @@
 * [SafeCurves: choosing safe curves for elliptic-curve cryptography](https://safecurves.cr.yp.to/)
 * [Fast Prime Field Elliptic Curve Cryptography with 256 Bit Primes](https://eprint.iacr.org/2013/816)
 * [Modular Multiplication Without Trial Division](https://web.itu.edu.tr/~orssi/dersler/cryptography/Montgomery.pdf)
-* [The Montgomery Modular Inverse - Revisited](https://drive.google.com/file/d/1VGTCc9EasatNYM6rS2xkVahX1YFzkxX6/view)
-* [Efficient Software-Implementation of Finite Fields with Applications to Cryptography](https://drive.google.com/file/d/1sUJyBEtLTGVnqotHSZQBgbTecWtnDU1w/view)
+* [The Montgomery Modular Inverse - Revisited](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.8377&rep=rep1&type=pdf)
+* [Efficient Software-Implementation of Finite Fields with Applications to Cryptography](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.86.2495&rep=rep1&type=pdf)
 * [Efficient Software Implementations of Modular Exponentiation](https://eprint.iacr.org/2011/239)
 * [The Montgomery Powering Ladder](http://cr.yp.to/bib/2003/joye-ladder.pdf)
 * [A note on how to (pre-)compute a ladder](https://eprint.iacr.org/2017/264)
@@ -161,6 +160,6 @@
 * [SEC2](https://safecurves.cr.yp.to/www.secg.org/sec2-v2.pdf)
 * [SIKE/SIDH Spec](https://sike.org/files/SIDH-spec.pdf)
 * [Handbook of Applied Cryptography: Chapter 14: Efficient Implementation](http://cacr.uwaterloo.ca/hac/about/chap14.pdf)
-* [Handbook of Elliptic and Hyperelliptic Curve Cryptography](https://drive.google.com/file/d/10VG_UoYfvhkUon7_I2dGXI9BwQ-MKtND/view)
-* [Guide to Elliptic Curve Cryptography](https://drive.google.com/file/d/1_2t06CvYwTbZcvrn6nZ_ms3O__0xRl9B/view)
+* [Handbook of Elliptic and Hyperelliptic Curve Cryptography](https://www.hyperelliptic.org/HEHCC/)
+* [Guide to Elliptic Curve Cryptography](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.394.3037&rep=rep1&type=pdf)
 * [Topics in Computational Number Theory Inspired by Peter L. Montgomery](http://www.joppebos.com/_pages/montgomery/)
