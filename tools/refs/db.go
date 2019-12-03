@@ -27,6 +27,7 @@ type Reference struct {
 	Section     string       `yaml:"section"`
 	Highlight   bool         `yaml:"highlight"`
 	Supplements []Supplement `yaml:"supplements"`
+	Queued      bool         `yaml:"queued"`
 }
 
 // Supplement is another resource associated with a reference. For example, in

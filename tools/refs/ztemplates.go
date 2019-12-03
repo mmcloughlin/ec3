@@ -12,7 +12,7 @@ func loadtemplate(name string) ([]byte, error) {
 {{ range $_, $sec :=.Sections -}}
 ## {{ $sec.Name }}
 {{ range $_, $ref := $references -}}
-{{ if eq $ref.Section $sec.ID -}}
+{{ if and (not $ref.Queued) (eq $ref.Section $sec.ID) -}}
 * [{{ if $ref.Highlight }}**{{ end }}{{ $ref.Title }}{{ if $ref.Highlight }}**{{ end }}]({{ $ref.URL }})
     {{- if $ref.Supplements }} (
         {{- range $i, $supp := $ref.Supplements -}}
