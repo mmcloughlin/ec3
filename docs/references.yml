@@ -535,3 +535,20 @@ references:
     url: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.394.3037&rep=rep1&type=pdf
   - title: Topics in Computational Number Theory Inspired by Peter L. Montgomery
     url: http://www.joppebos.com/_pages/montgomery/
+  - title: 'EverCrypt: A Fast, Verified, Cross-Platform Cryptographic Provider'
+    url: https://eprint.iacr.org/2019/757
+    queued: true
+  - title: On inversion modulo pseudo-Mersenne primes
+    url: https://eprint.iacr.org/2018/1038
+    author: Michael Scott
+    queued: true
+  - title: A new algorithm for residue multiplication modulo 2^521−1
+    url: https://eprint.iacr.org/2016/138
+    author: Shoukat Ali and Murat Cenk
+    queued: true
+  - title: Machine-Checked Proofs for Cryptographic Standards
+    url: https://eprint.iacr.org/2019/1155
+    queued: true
+  - title: 'HACL*: A Verified Modern Cryptographic Library'
+    url: https://eprint.iacr.org/2017/536
+    queued: true
