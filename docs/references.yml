@@ -666,7 +666,7 @@ references:
         of Waterloo
       number: CORR 99-39
       year: "1999"
-  - title: 'FIPS 186-2: Digital Signature Standard (DSS)'
+  - title: 'Digital Signature Standard (DSS)'
     url: https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf
     author: NIST
     id: fips186-2
@@ -720,7 +720,7 @@ references:
       year: "2013"
     note: Adapts continued fractions to subtraction chains. Nice clear review of continued fractions strategies.
     section: addchain
-  - title: 'Handbook of Applied Cryptography: Chapter 14: Efficient Implementation'
+  - title: Efficient Implementation
     url: http://cacr.uwaterloo.ca/hac/about/chap14.pdf
     author: Alfred J. Menezes and Paul C. van Oorschot and Scott A. Vanstone
     id: hac:impl

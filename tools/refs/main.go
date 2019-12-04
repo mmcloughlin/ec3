@@ -13,6 +13,7 @@ import (
 func main() {
 	base := cli.NewBaseCommand("refs")
 	subcommands.Register(&gen{Command: base}, "")
+	subcommands.Register(&bib{Command: base}, "")
 	subcommands.Register(&lint{Command: base}, "")
 	subcommands.Register(&linkcheck{Command: base}, "")
 	subcommands.Register(subcommands.HelpCommand(), "")
@@ -120,6 +121,52 @@ func (cmd *gen) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) su
 	return subcommands.ExitSuccess
 }
 
+// bib subcommand.
+type bib struct {
+	cli.Command
+
+	outputfile string
+}
+
+func (*bib) Name() string     { return "bib" }
+func (*bib) Synopsis() string { return "generate bibtex file from references" }
+func (*bib) Usage() string {
+	return `Usage: bib [-out <output>] <filename>
+
+Generate bibtex from references.
+
+`
+}
+
+func (cmd *bib) SetFlags(f *flag.FlagSet) {
+	f.StringVar(&cmd.outputfile, "out", "", "output file (default to stdout)")
+}
+
+func (cmd *bib) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	// Load database.
+	db, err := LoadDatabaseFile(f.Arg(0))
+	if err != nil {
+		return cmd.Error(err)
+	}
+
+	// Build bibtex.
+	b := DatabaseBibTex(db)
+
+	// Output.
+	_, w, err := cli.OpenOutput(cmd.outputfile)
+	if err != nil {
+		return cmd.Error(err)
+	}
+	defer w.Close()
+
+	s := b.PrettyString()
+	if _, err := w.Write([]byte(s)); err != nil {
+		return cmd.Error(err)
+	}
+
+	return subcommands.ExitSuccess
+}
+
 // linkcheck subcommand.
 type linkcheck struct {
 	cli.Command
@@ -128,7 +175,7 @@ type linkcheck struct {
 func (*linkcheck) Name() string     { return "linkcheck" }
 func (*linkcheck) Synopsis() string { return "check whether all urls exist" }
 func (*linkcheck) Usage() string {
-	return `Usage: gen <filename>
+	return `Usage: linkcheck <filename>
 
 Check whether all URLs in the database exist.
 

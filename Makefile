@@ -6,7 +6,7 @@ fmt:
 	find . -name '*.fmtbackup' -delete
 	find . -name '*.go' | xargs grep -L '// Code generated' | xargs gofumports -w -local $(REPO)
 	find . -name '*.go' | grep -v _test | xargs grep -L '// Code generated' | xargs mathfmt -w
-	find . -name '*.go' | xargs grep -L '// Code generated' | xargs bib -bib docs/bibliography.bib -w
+	find . -name '*.go' | xargs grep -L '// Code generated' | xargs bib -bib docs/references.bib -w
 
 .PHONY: lint
 lint:
