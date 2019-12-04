@@ -73,14 +73,6 @@ func ValidURL(r *Reference) []error {
 	return nil
 }
 
-// AuthorPeriod confirms the author field does not end in a period.
-func AuthorPeriod(r *Reference) []error {
-	if strings.HasSuffix(r.Author, ".") {
-		return singleerror("author %q ends with period", r.Author)
-	}
-	return nil
-}
-
 // IACRCanonical ensures that IACR eprint references conform to a canonical form.
 func IACRCanonical(r *Reference) []error {
 	u, err := url.Parse(r.URL)

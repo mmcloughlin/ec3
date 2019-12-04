@@ -42,7 +42,6 @@ func (*lint) Linter() Linter {
 		ReferenceLinterFunc(RequireURL),
 		ReferenceLinterFunc(RequireTitle),
 		ReferenceLinterFunc(ValidURL),
-		ReferenceLinterFunc(AuthorPeriod),
 		ReferenceLinterFunc(IACRCanonical),
 		ReferenceLinterFunc(CheckNewlines),
 		DisallowHost("drive.google.com"),
