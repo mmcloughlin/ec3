@@ -149,18 +149,15 @@ func (cmd *bib) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) su
 		return cmd.Error(err)
 	}
 
-	// Build bibtex.
-	b := DatabaseBibTex(db)
-
-	// Output.
+	// Open output.
 	_, w, err := cli.OpenOutput(cmd.outputfile)
 	if err != nil {
 		return cmd.Error(err)
 	}
 	defer w.Close()
 
-	s := b.PrettyString()
-	if _, err := w.Write([]byte(s)); err != nil {
+	// Generate.
+	if err := WriteBibTeX(w, db); err != nil {
 		return cmd.Error(err)
 	}
 
