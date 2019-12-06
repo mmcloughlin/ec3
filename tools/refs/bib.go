@@ -16,6 +16,9 @@ type bibtex struct {
 	print.Printer
 }
 
+// WriteBibTeX writes references in the database in BibTeX format, outputing to
+// the writer w. To be included in the output, a reference must specify an ID,
+// title, author and url at minimum.
 func WriteBibTeX(w io.Writer, db *Database) error {
 	p := &bibtex{
 		w:       w,
