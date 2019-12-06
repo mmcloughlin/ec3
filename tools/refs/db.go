@@ -20,14 +20,17 @@ type Section struct {
 
 // Reference describes a referenced resource.
 type Reference struct {
-	Title       string       `yaml:"title"`
-	URL         string       `yaml:"url"`
-	Author      string       `yaml:"author"`
-	Note        string       `yaml:"note"`
-	Section     string       `yaml:"section"`
-	Highlight   bool         `yaml:"highlight"`
-	Supplements []Supplement `yaml:"supplements"`
-	Queued      bool         `yaml:"queued"`
+	Title       string            `yaml:"title"`
+	URL         string            `yaml:"url"`
+	Author      string            `yaml:"author"`
+	Note        string            `yaml:"note"`
+	Section     string            `yaml:"section"`
+	Highlight   bool              `yaml:"highlight"`
+	Supplements []Supplement      `yaml:"supplements"`
+	Queued      bool              `yaml:"queued"`
+	ID          string            `yaml:"id"`
+	Type        string            `yaml:"type"`
+	Fields      map[string]string `yaml:"fields"`
 }
 
 // Supplement is another resource associated with a reference. For example, in
