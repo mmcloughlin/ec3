@@ -487,7 +487,6 @@ references:
   - title: 'HACL*: A Verified Modern Cryptographic Library'
     url: https://eprint.iacr.org/2017/536
     queued: true
-
   - title: A note on high-security general-purpose elliptic curves
     url: https://eprint.iacr.org/2013/647
     author: Diego F. Aranha and Paulo S. L. M. Barreto and Geovandro C. C. F. Pereira
