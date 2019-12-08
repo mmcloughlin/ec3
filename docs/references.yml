@@ -866,3 +866,23 @@ references:
     fields:
       year: "2014"
     section: software
+  - title: 'High-speed Curve25519 on 8-bit, 16-bit, and 32-bit microcontrollers'
+    author: Michael Düll and Björn Haase and Gesine Hinterwälder and Michael Hutter and Christof Paar and \
+      Ana Helena Sánchez and Peter Schwabe
+    url: https://doi.org/10.1007/s10623-015-0087-1
+    fields:
+      journal: Designs, Codes and Cryptography
+      year: 2015
+      month: Dec
+      day: 01
+      volume: 77
+      number: 2
+      pages: 493--514
+      doi: 10.1007/s10623-015-0087-1
+    section: impl
+    queued: true
+  - title: Verifying Branch-Free Assembly Code in Why3
+    author: Marc Schoolderman
+    url: http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
+    section: verif
+    queued: true
