@@ -45,6 +45,7 @@
 * [Addition Chains as Polymorphic Higher-order Functions](https://briansmith.org/addition-chains-as-higher-order-functions-01)
 * [additionchains.com](http://www.additionchains.com/)
 * [OEIS A003313: Length of shortest addition chain for n](https://oeis.org/A003313)
+* [On inversion modulo pseudo-Mersenne primes](https://eprint.iacr.org/2018/1038) Michael Scott. _Note:_ Heuristic approach for addition chains for inversion exponents usually seen in cryptographic applications.
 * [Efficient computation of addition chains](http://www.numdam.org/item/JTNB_1994__6_1_21_0) Bergeron, F. and Berstel, J. and Brlek, S..
 * [Addition Chain Heuristics](https://link.springer.com/content/pdf/10.1007/0-387-34805-0_37.pdf) Bos, Jurjen and Coster, Matthijs.
 * [Speeding up subgroup cryptosystems](https://cr.yp.to/bib/2003/stam-thesis.pdf) Stam, Martijn.

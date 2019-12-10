@@ -556,7 +556,8 @@ references:
   - title: On inversion modulo pseudo-Mersenne primes
     url: https://eprint.iacr.org/2018/1038
     author: Michael Scott
-    queued: true
+    note: Heuristic approach for addition chains for inversion exponents usually seen in cryptographic applications.
+    section: addchain
   - title: A new algorithm for residue multiplication modulo 2^521−1
     url: https://eprint.iacr.org/2016/138
     author: Shoukat Ali and Murat Cenk
