@@ -891,4 +891,19 @@ references:
   url: http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
   author: Marc Schoolderman
   section: verif
+- title: Verifying Curve25519 Software
+  url: https://cryptojedi.org/papers/verify25519-20140428.pdf
+  author: Yu-Fang Chen and Chang-Hong Hsu and Hsin-Hung Lin and Peter Schwabe and
+    Ming-Hsien Tsai and Bow-Yaw Wang and Bo-Yin Yang and and Shang-Yi Yang
+  section: verif
+  queued: true
+- title: Multiprecision multiplication on AVR revisited
+  url: https://eprint.iacr.org/2014/592
+  author: Michael Hutter and Peter Schwabe
+  section: field
+  queued: true
+- title: The Spirit of Ghost Code
+  url: https://hal.inria.fr/hal-00873187
+  author: Jean-Christophe Filliâtre and Léon Gondelman and Andrei Paskevich
+  section: verif
   queued: true
