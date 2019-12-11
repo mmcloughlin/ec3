@@ -5,3 +5,7 @@ all: references.md references.bib
 
 %.bib: %.yml
 	refs bib -out $@ $<
+
+.PHONY: lint
+lint:
+	refs lint references.yml
