@@ -16,6 +16,7 @@ func main() {
 	subcommands.Register(&bib{Command: base}, "")
 	subcommands.Register(&lint{Command: base}, "")
 	subcommands.Register(&linkcheck{Command: base}, "")
+	subcommands.Register(&format{Command: base}, "")
 	subcommands.Register(subcommands.HelpCommand(), "")
 
 	flag.Parse()
@@ -196,6 +197,55 @@ func (cmd *linkcheck) Execute(_ context.Context, f *flag.FlagSet, _ ...interface
 	}
 
 	return status
+}
+
+// format subcommand.
+type format struct {
+	cli.Command
+
+	write bool
+}
+
+func (*format) Name() string     { return "fmt" }
+func (*format) Synopsis() string { return "format database" }
+func (*format) Usage() string {
+	return `Usage: fmt [-w] <filename>
+
+Format references database.
+
+`
+}
+
+func (cmd *format) SetFlags(f *flag.FlagSet) {
+	f.BoolVar(&cmd.write, "w", false, "write result back to source file")
+}
+
+func (cmd *format) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	filename := f.Arg(0)
+
+	// Load database.
+	db, err := LoadDatabaseFile(filename)
+	if err != nil {
+		return cmd.Error(err)
+	}
+
+	// Open output.
+	output := ""
+	if cmd.write {
+		output = filename
+	}
+	_, w, err := cli.OpenOutput(output)
+	if err != nil {
+		return cmd.Error(err)
+	}
+	defer w.Close()
+
+	// Write database back.
+	if err := StoreDatabase(w, db); err != nil {
+		return cmd.Error(err)
+	}
+
+	return subcommands.ExitSuccess
 }
 
 // LoadDatabaseFile loads the database at filename, falling back to standard

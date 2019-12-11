@@ -7,6 +7,7 @@ fmt:
 	find . -name '*.go' | xargs grep -L '// Code generated' | xargs gofumports -w -local $(REPO)
 	find . -name '*.go' | grep -v _test | xargs grep -L '// Code generated' | xargs mathfmt -w
 	find . -name '*.go' | xargs grep -L '// Code generated' | xargs bib -bib docs/references.bib -w
+	refs fmt -w docs/references.yml
 
 .PHONY: lint
 lint:

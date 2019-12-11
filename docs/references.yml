@@ -1,889 +1,894 @@
 sections:
-  - id: impl
-    name: Implementation
-  - id: addchain
-    name: Addition Chains
-  - id: field
-    name: Finite Field Arithmetic
-  - id: scalarmult
-    name: Scalar Multiplication/Recoding
-  - id: ecarith
-    name: Elliptic Curve Arithmetic
-  - id: bugs
-    name: Bugs
-  - id: verif
-    name: Verification
-  - id: software
-    name: Software
-  - id: codegen
-    name: Code Generation
-  - id: book
-    name: Textbooks
-  - id: curves
-    name: Curves
-  - id: spec
-    name: Specifications
-  - id: asm
-    name: Assembly
+- id: impl
+  name: Implementation
+- id: addchain
+  name: Addition Chains
+- id: field
+  name: Finite Field Arithmetic
+- id: scalarmult
+  name: Scalar Multiplication/Recoding
+- id: ecarith
+  name: Elliptic Curve Arithmetic
+- id: bugs
+  name: Bugs
+- id: verif
+  name: Verification
+- id: software
+  name: Software
+- id: codegen
+  name: Code Generation
+- id: book
+  name: Textbooks
+- id: curves
+  name: Curves
+- id: spec
+  name: Specifications
+- id: asm
+  name: Assembly
 references:
-  - title: A Brief Overview of HOL4
-    url: https://ts.data61.csiro.au/publications/nicta_full_text/1482.pdf
-    section: verif
-  - title: On Construction of a Library of Formally Verified Low-level Arithmetic Functions
-    url: https://staff.aist.go.jp/reynald.affeldt/documents/arilib-affeldt.pdf
-    section: verif
-  - title: Verification of Machine Code Implementations of Arithmetic Functions for Cryptography
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.171.621&rep=rep1&type=pdf
-    section: verif
-  - title: A Verified Extensible Library of Elliptic Curves
-    url: https://hal.inria.fr/hal-01425957/document
-    author: Jean Karim Zinzindohoue, Evmorfia-Iro Bartzia, Karthikeyan Bhargavan
-    section: verif
-  - title: Formal Verification of a Big Integer Library Written in C0
-    url: http://www-wjp.cs.uni-sb.de/publikationen/Fi06.pdf
-    section: verif
-    author: Sabine Fischer
-  - title: 'Proof Pearl: A Verified Bignum Implementation in x86-64 Machine Code'
-    url: https://www.cl.cam.ac.uk/~mom22/cpp13/
-    author: Magnus O. Myreen and Gregorio Curello
-    section: verif
-  - title: Reconstruction of Z3's Bit-Vector Proofs in HOL4 and Isabelle/HOL
-    url: http://user.it.uu.se/~tjawe125/publications/boehme11reconstruction.html
-    section: verif
-  - title: A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms
-    url: https://hal.inria.fr/hal-01699754v1/document
-    section: verif
-  - title: How to Get an Efficient yet Verified Arbitrary-Precision Integer Library
-    url: https://hal.inria.fr/hal-01519732v2/document
-    section: verif
-  - title: Analyzing and Comparing Montgomery Multiplication Algorithms
-    url: https://pdfs.semanticscholar.org/5e39/41ff482ec3ee41dc53c3298f0be085c69483.pdf
-    author: Cetin K. Koc, Tolga Acar, Burton S. Kaliski Jr
-    section: field
-  - title: Optimizing Multiprecision Multiplication for Public Key Cryptography
-    url: https://eprint.iacr.org/2007/299
-    author: Michael Scott and Piotr Szczechowiak
-    section: field
-  - title: Fast Multi-Precision Multiplication for Public-Key Cryptography on Embedded
-      Microprocessors
-    url: https://www.iacr.org/archive/ches2011/69170459/69170459.pdf
-    author: Michael Hutter and Erich Wenger
-    section: field
-  - title: A Verified, Efficient Embedding of a Verifiable Assembly Language
-    url: https://www.microsoft.com/en-us/research/publication/a-verified-efficient-embedding-of-a-verifiable-assembly-language/
-    section: verif
-  - title: Twisted Edwards Curves Revisited
-    url: https://eprint.iacr.org/2008/522
-    author: Huseyin Hisil and Kenneth Koon-Ho Wong and Gary Carter and Ed Dawson
-    section: ecarith
-  - title: 'CAOVerif: An Open-Source Deductive Verification Platform for Cryptographic
-      Software Implementations'
-    url: https://haslab.uminho.pt/jsp/files/opencertjournal_ack.pdf
-    section: verif
-  - title: Efficient Arithmetic In (Pseudo-)Mersenne Prime Order Fields
-    url: https://eprint.iacr.org/2018/985
-    author: Kaushik Nath and Palash Sarkar
-    section: field
-  - title: A type-safe arbitrary precision arithmetic portability layer for HLS tools
-    url: https://hal.inria.fr/hal-02131798v2/document
-    section: verif
-  - title: Systematic Support of Parallel Bit Streams in LLVM
-    url: https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf
-    author: Meng Lin
-    section: asm
-  - title: Montgomery Multiplication Using Vector Instructions
-    url: https://eprint.iacr.org/2013/519
-    author: Joppe W. Bos and Peter L. Montgomery and Daniel Shumow and Gregory M. Zaverucha
-    supplements:
-      - type: slides
-        url: http://sac2013.irmacs.sfu.ca/slides/s26.pdf
-    section: impl
-  - title: Complete Systems of Two Addition Laws for Elliptic Curves
-    url: https://doi.org/10.1006/jnth.1995.1088
-    author: Bosma W. Lenstra H.W
-    section: ecarith
-  - title: Crafting Certified Elliptic Curve Cryptography Implementations in Coq
-    url: http://adam.chlipala.net/theses/andreser_meng.pdf
-    section: verif
-  - title: Specification of Curve Selection and Supported Curve Parameters in MSR ECCLib
-    url: https://www.microsoft.com/en-us/research/publication/specification-of-curve-selection-and-supported-curve-parameters-in-msr-ecclib/
-    section: curves
-  - title: Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication algorithm
-    url: https://doi.org/10.1016/j.ipl.2013.02.002
-    author: Yoo-Jin Baek
-    section: scalarmult
-  - title: Signed Binary Representations Revisited
-    url: https://eprint.iacr.org/2004/195
-    author: Katsuyuki Okeya and Katja Schmidt-Samoa and Christian Spahn and Tsuyoshi Takagi
-    section: scalarmult
-  - title: Some Explicit Formulae of NAF and its Left-to-Right Analogue
-    url: https://eprint.iacr.org/2005/384
-    author: Dong-Guk Han and Tetsuya Izu and Tsuyoshi Takagi
-    section: scalarmult
-  - title: Software Implementation of Modular Exponentiation Using Advanced Vector Instructions Architectures
-    url: https://doi.org/10.1007/978-3-642-31662-3_9
-    author: Shay Gueron and Vlad Krasnov
-    section: impl
-  - title: "Simple High-Level Code For Cryptographic Arithmetic \u2013 With Proofs,\
-      \ Without Compromises"
-    url: http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf
-    note: FIAT Crypto
-    section: verif
-  - title: Exponent Recoding and Regular Exponentiation Algorithms
-    url: http://www.geocities.ws/mike.tunstall/papers/JT09.pdf
-    author: Joye-Tunstall
-    section: scalarmult
-  - title: Efficient arithmetic on Koblitz curves
-    url: https://www.decred.org/research/solinas2000.pdf
-    author: Solinas
-    section: scalarmult
-  - title: A survey of fast exponentiation methods
-    url: https://www.dmgordon.org/papers/jalg.pdf
-    author: Daniel M. Gordon
-    section: scalarmult
-  - title: Parallel scalar multiplication on general elliptic curves over F_p hedged
-      against Non-Differential Side-Channel Attacks
-    url: https://pdfs.semanticscholar.org/ffa2/f1db6aeaf0fb03cf010bad12266da11d00e1.pdf
-    author: Wieland Fischer, Christophe Giraud, Erik Woodward Knudsen and Jean-Pierre Seifert
-    section: scalarmult
-  - title: Speeding the Pollard and Elliptic Curve Methods of Factorization
-    url: https://www.ams.org/journals/mcom/1987-48-177/S0025-5718-1987-0866113-7/S0025-5718-1987-0866113-7.pdf
-    author: Peter Montgomery
-    section: field
-  - title: Highly Regular Right-to-Left Algorithms for Scalar Multiplication
-    url: https://www.iacr.org/archive/ches2007/47270135/47270135.pdf
-    author: Marc Joye
-    section: scalarmult
-  - title: Slothful reduction
-    url: https://eprint.iacr.org/2017/437
-    author: Michael Scott
-    section: ecarith
-  - title: Faster addition and doubling on elliptic curves
-    url: https://eprint.iacr.org/2007/286
-    author: Daniel J. Bernstein and Tanja Lange
-    note: Found via citation "Thankfully efficient
-      exception-free formulations are now available [4], [11]".
-    section: ecarith
-  - title: RELIC Toolkit
-    url: https://github.com/relic-toolkit/relic
-    section: software
-  - title: Efficient Elliptic Curve Exponentiation Using Mixed Coordinates
-    url: https://link.springer.com/content/pdf/10.1007/3-540-49649-1_6.pdf
-    section: ecarith
-  - title: Improved Techniques for Fast Exponentiation
-    url: https://www.bmoeller.de/pdf/fastexp-icisc2002.pdf
-    section: scalarmult
-  - title: Finite Field Arithmetic (Chapter 11 of Handbook of Elliptic and Hyperelliptic
-      Curve Cryptogrpahy)
-    url: https://koclab.cs.ucsb.edu/teaching/ecc/eccPapers/Doche-ch11.pdf
-    author: Doche
-    section: field
-  - title: Go assembly language complementary reference
-    url: https://quasilyte.dev/blog/post/go-asm-complementary-reference/
-    author: Iskander Sharipov
-    section: asm
-  - title: Fast point multiplication algorithms for binary elliptic curves with and
-      without precomputation
-    url: https://eprint.iacr.org/2014/427
-    section: scalarmult
-  - title: Elliptic curves and their implementation
-    url: https://www.imperialviolet.org/2010/12/04/ecc.html
-    author: Adam Langley
-    note: Friendly introduction.
-    section: impl
-  - title: Multiprecision Arithmetic for Cryptology in C++
-    url: https://arxiv.org/abs/1804.07236
-    author: Niek J. Bouman
-    supplements:
-      - type: slides
-        url: https://martindale.info/eipsi/ctbignum_slides_2018.pdf
-      - type: code
-        url: https://github.com/niekbouman/ctbignum
-    section: impl
-  - title: The Design and Application of a Retargetable Peephole Optimizer
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.64.7226&rep=rep1&type=pdf
-    author: Davidson and Fraser
-    note: Early description of an RTL language.
-    section: asm
-  - title: "New Instructions Supporting Large Integer Arithmetic on Intel Architecture Processors"
-    url: https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-large-integer-arithmetic-paper.pdf
-    author: Intel White Paper
-    note: Concise and easy description of how to exploit the `MULX/ADCX/ADOX` instructions, illustrated with a 512x512-bit multiply.
-    section: impl
-  - title: "Large Integer Squaring on Intel Architecture Processors"
-    url: https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/large-integer-squaring-ia-paper.pdf
-    author: Intel White Paper
-    note: Extension of the multiplcation paper to the squaring case.
-    section: impl
-  - title: Software Implementation of Public-Key Cryptography (SAC Summer School)
-    highlight: true
-    url: https://irp-cdn.multiscreensite.com/7fa75f95/files/uploaded/Software%20Implementation%20of%20Public-Key%20Cryptography%20-%20SAC%20Summer%20School.pdf
-    author: Patrick Longa
-    note: Incredible survey.
-    section: impl
-  - title: Pippenger's exponentiation algorithm
-    url: https://cr.yp.to/papers/pippenger.pdf
-    author: DJB
-    note: Excellent summary. Matrix representation of chains.
-    section: addchain
-  - title: On addition chains
-    url: https://projecteuclid.org/euclid.bams/1183502136
-    author: Brauer
-    note: The _original_ Brauer paper.
-    section: addchain
-  - title: The Additive Complexity of a Natural Number
-    url: https://www.researchgate.net/publication/267016251_The_additive_complexity_of_a_natural_number
-    author: Belaga
-    note: Early introduction of the dictionary method, with the observation
-      that only odd window values are required (page 7). Used to prove upper bound.
-    section: addchain
-  - title: On the Evaluation of Powers
-    url: https://www.ii.uni.wroc.pl/~aje/WordEq2015/papers/addition_chains_Yao.pdf
-    author: Yao
-    note: _Original_ definition of Yao's algorithm.
-    section: addchain
-  - title: Exponentiating faster with addition chains
-    url: https://www.researchgate.net/publication/221348287_Exponentiating_Faster_with_Addition_Chains
-    author: Yacobi
-    note: LZ applied to dictionary creation. The _original_ definition
-      of Yacobi's algorithm.
-    section: addchain
-  - title: Addition chains using continued fractions
-    url: https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf
-    author: BBBD
-    note: _Original_ continued fractions paper.
-    section: addchain
-  - title: Faster Square Roots in Annoying Finite Fields
-    url: https://cr.yp.to/papers/sqroot.pdf
-    author: DJB
-    note: Methods for square roots modulo primes 1 (mod 4), with focus on the NIST P-224 prime.
-    section: field
-  - title: New Speed Records for Montgomery Modular Multiplication on 8-bit AVR Microcontrollers
-    url: https://eprint.iacr.org/2013/882
-    rest: "Zhe Liu and Johann Gro\xDFsch\xE4dl. _Note:_ various methods of structuring\
-      \ montgomery multiplies."
-    section: field
-  - title: High-Speed Cryptography
-    url: http://www.just.edu.jo/~tawalbeh/cpe776/notes/high.pdf
-    author: Cetin Koc
-    note: Lecture notes with survey of multiplication methods.
-    section: field
-  - title: High-Speed Algorithms & Architectures For Number-Theoretic Cryptosystems
-    url: https://www.microsoft.com/en-us/research/wp-content/uploads/1998/06/97Acar.pdf
-    author: Tolga Acar
-    note: Thesis. Various proposals for Montgomery multiplies, discussion
-      of how to extend the x86 instruction set for crypto.
-    section: field
-  - title: 'EE 371 Lecture 5: More Adders & Multipliers'
-    url: http://web.stanford.edu/class/archive/ee/ee371/ee371.1066/lectures/lect_05.pdf
-    author: Mark Horowitz
-    note: Nice coverage of Modified Booth Recoding.
-    section: scalarmult
-  - title: Scalar-multiplication algorithms
-    url: https://cryptojedi.org/peter/data/eccss-20130911b.pdf
-    author: Peter Schwabe
-    note: ECC 2013 Summer School. Simple introduction to scalar
-      multiplication algorithms.
-    section: scalarmult
-  - title: Survey of Elliptic Curve Scalar Multiplication Algorithms
-    url: https://pdfs.semanticscholar.org/4da9/cfe2ff561a29bd90c8799873154b819f5cd9.pdf
-    rest: Dr. E.Karthikeyan
-    note: Concise survey.
-    section: scalarmult
-  - title: Fast and Regular Algorithms for Scalar Multiplication over Elliptic Curves
-    url: https://eprint.iacr.org/2011/338
-    author: Matthieu Rivain
-    note: Only skimmed, but the sub-section on "Scalar Recoding" includes a dense summary of the approaches.
-    section: scalarmult
-  - title: The Width-w NAF Method Provides Small Memory and Fast Elliptic Scalar Multiplications
-      Secure against Side Channel Attacks
-    url: https://doi.org/10.1007/3-540-36563-X_23
-    note: Signed windows using all _odd_ digits.
-    section: scalarmult
-  - title: Securing Elliptic Curve Point Multiplication against Side-Channel Attacks
-    url: https://www.bmoeller.de/pdf/ecc-sca-isc2001.pdf
-    author: Bodo Moller
-    note: Booth-like recoding that _avoids zero_ digits.
-    section: scalarmult
-  - title: Analysis and optimization of elliptic-curve single-scalar multiplication
-    url: http://www.hyperelliptic.org/EFD/precomp.pdf
-    author: DJB & Lange
-    note: the paper behind the Explicit Formula Database. Excellent overview.
-    section: ecarith
-  - title: Complete addition formulas for prime order elliptic curves
-    url: https://eprint.iacr.org/2015/1060
-    author: Joost Renes and Craig Costello and Lejla Batina
-    section: ecarith
-  - title: A Compact and Exception-Free Ladder for All Short Weierstrass Elliptic Curves
-    url: https://doi.org/10.1007/978-3-319-54669-8_10
-    author: Ruggero Susella and Sofia Montrasio
-    section: ecarith
-  - title: A Binary Redundant Scalar Point Multiplication in Secure Elliptic Curve Cryptosystems
-    url: http://ijns.jalaxy.com.tw/contents/ijns-v3-n2/ijns-2006-v3-n2-p132-137.pdf
-    author: Sangook Moon
-    note: Suggests the use of a _quadruple_ formula in scalar multiplication.
-    section: ecarith
-  - title: Trading Inversions for Multiplications in Elliptic Curve Cryptography
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.1336&rep=rep1&type=pdf
-    note: Explores alternative bases and formulae for scalar multiplication.
-    section: ecarith
-  - title: Fast Elliptic Curve Arithmetic and Improved Weil Pairing Evaluation
-    url: https://arxiv.org/abs/math/0208038
-    author: Kirsten Eisentraeger, Kristin Lauter, Peter L. Montgomery
-    note: Merged double-add.
-    section: ecarith
-  - title: Improved Algorithms for Elliptic Curve Arithmetic in GF(2^n)
-    url: https://link.springer.com/content/pdf/10.1007/3-540-48892-8_16.pdf
-    author: Julio Lopez and Ricardo Dahab
-    note: Repeated doubling formulae.
-    section: ecarith
-  - title: '"Nice" Curves'
-    url: https://eprint.iacr.org/2019/1259
-    author: Kaushik Nath and Palash Sarkar
-    note: Proposes new pairs of Montgomery-Edwards curves
-      at both the 128-bit and the 224-bit security levels. _Note:_ performance boost
-      at the cost of a couple of bits of security. Additional free bits in the top limb
-      allow for savings in modular reduction.
-    section: ecarith
-  - title: Assessing and Exploiting BigNum Vulnerabilities
-    url: https://comsecuris.com/slides/slides-bignum-bhus2015.pdf
-    author: Ralf-Philipp Weinmann
-    note: Examples of specific arbitrary precision integer bugs and how to find them.
-    section: bugs
-  - title: Practical realisation and elimination of an ECC-related software bug attack
-    url: https://eprint.iacr.org/2011/633
-    author: B.B. Brumley and M. Barbosa and D. Page and F. Vercauteren
-    note: Exploit for bug in OpenSSL version 0.9.8g which permit an attack against ECDH-based functionality.
-      Some discussion of discovery and verification with `CAOverif`.
-    section: bugs
-  - title: Addition chains with multiplicative cost
-    url: http://www.math.ucsd.edu/~ronspubs/78_11_addition_chains.pdf
-    note: Theoretical result on number of multiplications.
-    section: addchain
-  - title: On the evaluation of powers and related problems
-    url: https://doi.org/10.1109/SFCS.1976.21
-    author: Pippenger
-    note: Matrix and graph-theoretical view of addition chain methods.
-    section: addchain
-  - title: On string replacement exponentiation
-    url: https://doi.org/10.1023/A:1011212615791
-    note: Mostly just theoretical results.
-    section: addchain
-  - title: High-radix and bit recoding techniques for modular exponentiation
-    url: https://doi.org/10.1080/00207169108804009
-    note: Requires subtraction.
-    section: scalarmult
-  - title: Fast Modular Exponentiation
-    url: http://cryptocode.net/docs/c06.pdf
-    note: Requires subtraction.
-    section: addchain
-  - title: An improved binary algorithm for RSA
-    url: https://core.ac.uk/download/pdf/82735567.pdf
-    note: Requires subtraction.
-    section: addchain
-  - title: New Algorithm for Classical Modular Inverse
-    url: https://link.springer.com/content/pdf/10.1007%2F3-540-36400-5_6.pdf
-    note: Optimized for hardware, requires subtraction.
-    section: addchain
-  - title: Algorithms for software implementations of RSA
-    url: http://www.chrismitchell.net/afsior.pdf
-    note: Lookup-table based.
-    section: field
-  - title: Calculating optimal addition chains
-    url: https://link.springer.com/content/pdf/10.1007%2Fs00607-010-0118-8.pdf
-    section: addchain
-  - title: Efficient Generation of Minimal Length Addition Chains
-    url: https://pdfs.semanticscholar.org/6e33/657f2acf01c70fb66fbcc9c06416123c7ed6.pdf
-    section: addchain
-  - title: Finding short and implementation-friendly addition chains with evolutionary
-      algorithms
-    url: https://dspace.mit.edu/bitstream/handle/1721.1/115968/10732_2017_9340_ReferencePDF.pdf
-    section: addchain
-  - title: Developing an automatic generation tool for cryptographic pairing functions
-    url: http://doras.dcu.ie/16002/1/thesis.pdf
-    section: addchain
-  - title: Optimizing linear maps modulo 2
-    url: https://binary.cr.yp.to/linearmod2-20090830.pdf
-    section: addchain
-  - title: An Artificial Immune System Heuristic for Generating Short Addition Chains
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.490.991&rep=rep1&type=pdf
-    section: addchain
-  - title: 'SPEED 2009 Proceedings: Software Performance Enhancement for Encryption
-      and Decryption and Cryptographic Compilers'
-    url: http://www.hyperelliptic.org/SPEED/record09.pdf
-    section: addchain
-  - title: Efficient exponentiation using precomputation and vector addition chains
-    url: https://link.springer.com/content/pdf/10.1007/BFb0053453.pdf
-    section: addchain
-  - title: Implementation of the GBD cryptosystem
-    url: https://eprints.qut.edu.au/441/1/08_brown04implementation.pdf
-    section: addchain
-  - title: Redundant integer representations and fast exponentiation
-    url: https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf
-    section: addchain
-  - title: High-speed high-security signatures
-    url: https://ed25519.cr.yp.to/ed25519-20110705.pdf
-    section: addchain
-  - title: 'Cultivating Sapling: New Crypto Foundations'
-    url: https://github.com/zcash/zcash-blog/blob/4268b1a9f7e523f59bb254b9fa7a9f9f9d7f75a7/_posts/2017-07-26-cultivating-sapling-new-crypto-foundations.md
-    note: Section "New multi-exponentiation algorithm"
-    section: addchain
-  - title: Faster batch forgery identification
-    url: https://eprint.iacr.org/2012/549
-    note: Special case of Pippenger's algorithm, Page 15.
-    section: addchain
-  - title: On Fast Calculation of Addition Chains for Isogeny-Based Cryptography
-    url: https://eprint.iacr.org/2016/1045
-    section: addchain
-  - title: Fast and simple constant-time hashing to the BLS12-381 elliptic curve
-    url: https://eprint.iacr.org/2019/403
-    section: codegen
-  - title: Designing a code generator of Pairing Based Cryptography functions
-    url: https://www.ucc.ie/en/media/academic/centreforplanningeducationresearch/LDominguez.pdf
-    section: codegen
-  - title: Ideas for a New Elliptic Curve Cryptography Library
-    url: https://briansmith.org/GFp-0
-    section: codegen
-  - title: Generalised Mersenne Numbers Revisited
-    url: https://eprint.iacr.org/2011/444
-    section: field
-  - title: '`zkcrypto/jubjub`'
-    url: https://github.com/zkcrypto/jubjub
-    section: software
-  - title: Modular Multiplication Without Trial Division
-    url: https://web.itu.edu.tr/~orssi/dersler/cryptography/Montgomery.pdf
-    section: field
-  - title: The Montgomery Modular Inverse - Revisited
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.8377&rep=rep1&type=pdf
-    section: field
-  - title: Efficient Software-Implementation of Finite Fields with Applications to Cryptography
-    url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.86.2495&rep=rep1&type=pdf
-    section: field
-  - title: Efficient Software Implementations of Modular Exponentiation
-    url: https://eprint.iacr.org/2011/239
-    section: field
-  - title: The Montgomery Powering Ladder
-    url: http://cr.yp.to/bib/2003/joye-ladder.pdf
-    section: ecarith
-  - title: A note on how to (pre-)compute a ladder
-    url: https://eprint.iacr.org/2017/264
-    section: ecarith
-  - title: A Faster Software Implementation of the Supersingular Isogeny Diffie-Hellman
-      Key Exchange Protocol
-    url: https://eprint.iacr.org/2017/1015
-    section: impl
-  - title: "Fast Arithmetic Modulo 2^xp^y\xB11"
-    url: https://eprint.iacr.org/2016/986
-    section: field
-  - title: 'RFC 7748: Elliptic Curves for Security'
-    url: https://www.rfc-editor.org/rfc/rfc7748.txt
-    section: spec
-  - title: Solinas primes of small weight for fixed sizes
-    url: https://eprint.iacr.org/2010/058
-    section: field
-  - title: Twisted Edwards Curves
-    url: https://eprint.iacr.org/2008/013
-    section: curves
-  - title: New software speed records for cryptographic pairings
-    url: https://cryptojedi.org/papers/dclxvi-20100714.pdf
-    section: impl
-  - title: Multiplication and Squaring on Pairing-Friendly Fields
-    url: https://eprint.iacr.org/2006/471
-    section: field
-  - title: Efficient Arithmetic Modulo Minimal Redundancy Cyclotomic Primes
-    url: https://pdfs.semanticscholar.org/45eb/cc684c6c5b1d0941a490280382012f1b2361.pdf
-    section: field
-  - title: Pairing-Friendly Curves
-    url: https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-00.html
-    section: curves
-  - title: Aspects of Hyperelliptic Curves over Large Prime Fields in Software Implementations
-    url: https://www.iacr.org/archive/ches2004/31560147/31560147.pdf
-    section: field
-  - title: Software implementation of the NIST elliptic curves over prime fields
-    url: http://delta.cs.cinvestav.mx/~francisco/arith/julio.pdf
-    section: impl
-  - title: Speeding up XTR
-    url: https://www.iacr.org/archive/asiacrypt2001/22480125.pdf
-    section: addchain
-  - title: 'Engineering Primes: Taking the Magic out of Magic Numbers'
-    url: https://speakerdeck.com/gtank/engineering-prime-numbers
-    section: field
-  - title: How to (pre-)compute a ladder
-    url: http://www.ic.unicamp.br/~ra142685/userfiles/papers/oliveira_sac2017.pdf
-    section: ecarith
-  - title: Double-Base Number System and Applications
-    url: http://www.hyperelliptic.org/tanja/conf/ECC08/slides/Christophe-Doche.pdf
-    section: scalarmult
-  - title: An Introduction & Supplement to Knuth's Introduction to Addition Chains
-    url: https://briansmith.org/addition-chain-intro-01
-    section: addchain
-  - title: Addition Chains as Polymorphic Higher-order Functions
-    url: https://briansmith.org/addition-chains-as-higher-order-functions-01
-    section: addchain
-  - title: additionchains.com
-    url: http://www.additionchains.com/
-    section: addchain
-  - title: 'OEIS A003313: Length of shortest addition chain for n'
-    url: https://oeis.org/A003313
-    section: addchain
-  - title: 'Ed25519: High-speed high-security signatures'
-    url: https://ed25519.cr.yp.to/ed25519-20110926.pdf
-    section: curves
-  - title: 'FourQ: four-dimensional decompositions on a Q-curve over the Mersenne prime'
-    url: https://eprint.iacr.org/2015/565
-    section: curves
-  - title: 'Curve4Q: `draft-ladd-cfrg-4q-01`'
-    url: https://tools.ietf.org/html/draft-ladd-cfrg-4q-01
-    section: curves
-  - title: Jacobian coordinates with a4=-3 for short Weierstrass curves
-    url: https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html
-    section: ecarith
-  - title: SIKE/SIDH Spec
-    url: https://sike.org/files/SIDH-spec.pdf
-    section: spec
-  - title: Handbook of Elliptic and Hyperelliptic Curve Cryptography
-    url: https://www.hyperelliptic.org/HEHCC/
-    section: book
-  - title: Guide to Elliptic Curve Cryptography
-    url: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.394.3037&rep=rep1&type=pdf
-    section: book
-  - title: Topics in Computational Number Theory Inspired by Peter L. Montgomery
-    url: http://www.joppebos.com/_pages/montgomery/
-    section: book
-  - title: 'EverCrypt: A Fast, Verified, Cross-Platform Cryptographic Provider'
-    url: https://eprint.iacr.org/2019/757
-    queued: true
-  - title: On inversion modulo pseudo-Mersenne primes
-    url: https://eprint.iacr.org/2018/1038
-    author: Michael Scott
-    note: Heuristic approach for addition chains for inversion exponents usually seen in cryptographic applications.
-    section: addchain
-  - title: A new algorithm for residue multiplication modulo 2^521−1
-    url: https://eprint.iacr.org/2016/138
-    author: Shoukat Ali and Murat Cenk
-    queued: true
-  - title: Machine-Checked Proofs for Cryptographic Standards
-    url: https://eprint.iacr.org/2019/1155
-    queued: true
-  - title: 'HACL*: A Verified Modern Cryptographic Library'
-    url: https://eprint.iacr.org/2017/536
-    queued: true
-  - title: A note on high-security general-purpose elliptic curves
-    url: https://eprint.iacr.org/2013/647
-    author: Diego F. Aranha and Paulo S. L. M. Barreto and Geovandro C. C. F. Pereira
-      and Jefferson E. Ricardini
-    id: aranha
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2013/647
-      year: "2013"
-    section: curves
-  - title: 'Curve25519: New Diffie-Hellman Speed Records'
-    url: https://cr.yp.to/ecdh/curve25519-20060209.pdf
-    author: Bernstein, Daniel J.
-    id: curve25519
-    type: inproceedings
-    fields:
-      abstract: 'This paper explains the design and implementation of a high-security
-        elliptic-curve-Diffie-Hellman function achieving record-setting speeds: e.g.,
-        832457 Pentium III cycles (with several side benefits: free key compression,
-        free key validation, and state-of-the-art timing-attack protection), more than
-        twice as fast as other authors'' results at the same conjectured security level
-        (with or without the side benefits).'
-      address: Berlin, Heidelberg
-      booktitle: Public Key Cryptography - PKC 2006
-      editor: Yung, Moti and Dodis, Yevgeniy and Kiayias, Aggelos and Malkin, Tal
-      isbn: 978-3-540-33852-9
-      pages: 207--228
-      publisher: Springer Berlin Heidelberg
-      year: "2006"
-    section: curves
-  - title: 'SafeCurves: choosing safe curves for elliptic-curve cryptography'
-    url: https://safecurves.cr.yp.to
-    author: Daniel J. Bernstein and Tanja Lange
-    id: safecurves
-    section: curves
-  - title: 'Elligator: Elliptic-curve points indistinguishable from uniform random strings'
-    url: https://eprint.iacr.org/2013/325
-    author: Daniel J. Bernstein and Mike Hamburg and Anna Krasnova and Tanja Lange
-    id: elligator
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2013/325
-      year: "2013"
-    section: curves
-  - title: Security dangers of the NIST curves
-    url: https://cr.yp.to/talks/2013.09.16/slides-djb-20130916-a4.pdf
-    author: Daniel J. Bernstein and Tanja Lange
-    id: nistdanger
-    fields:
-      year: "2013"
-    section: curves
-  - title: Efficient computation of addition chains
-    url: http://www.numdam.org/item/JTNB_1994__6_1_21_0
-    author: Bergeron, F. and Berstel, J. and Brlek, S.
-    id: efficientcompaddchain
-    type: article
-    fields:
-      journal: Journal de theorie des nombres de Bordeaux
-      language: en
-      mrnumber: "1305286"
-      number: "1"
-      pages: 21-38
-      publisher: Universite Bordeaux I
-      volume: "6"
-      year: "1994"
-      zbl: "0812.11072"
-    section: addchain
-  - title: Exponentiation
-    url: https://koclab.cs.ucsb.edu/teaching/ecc/eccPapers/Doche-ch09.pdf
-    author: Christophe Doche
-    id: hehcc:exp
-    type: inbook
-    fields:
-      booktitle: Handbook of Elliptic and Hyperelliptic Curve Cryptography
-      chapter: "9"
-      publisher: Chapman and Hall
-      year: "2006"
-    section: scalarmult
-  - title: Addition Chain Heuristics
-    url: https://link.springer.com/content/pdf/10.1007/0-387-34805-0_37.pdf
-    author: Bos, Jurjen and Coster, Matthijs
-    id: boscoster
-    type: inproceedings
-    section: addchain
-    fields:
-      abstract: Much current research focuses on fast evaluation of RSA, which consists
-        of computing powers modulo a large number n. While some try to increase the
-        speed of multiplica- tions, here we consider reducing the number of multiplications.
-        In particular, we present a precomputation method that reduces the number of
-        multiplications for the computation of a given power.
-      address: New York, NY
-      booktitle: Advances in Cryptology --- CRYPTO' 89 Proceedings
-      editor: Brassard, Gilles
-      isbn: 978-0-387-34805-6
-      pages: 400--407
-      publisher: Springer New York
-      year: "1990"
-  - title: Speeding up subgroup cryptosystems
-    url: https://cr.yp.to/bib/2003/stam-thesis.pdf
-    author: Stam, Martijn
-    id: speedsubgroup
-    type: phdthesis
-    fields:
-      school: Technische Universiteit Eindhoven
-      year: "2003"
-    section: addchain
-  - title: kwantam/addchain
-    url: https://github.com/kwantam/addchain
-    author: Riad S. Wahby
-    id: github:kwantam/addchain
-    note: Go library for addition chain generation.
-    section: addchain
-    fields:
-      howpublished: Github Repository
-      license: Apache License, Version 2.0
-      year: "2018"
-    section: software
-  - title: 'MpNT: A Multi-Precision Number Theory Package, Number Theoretical Algorithms
-      (I)'
-    url: https://profs.info.uaic.ro/~tr/tr03-02.pdf
-    author: F. L. Ţiplea and S. Iftene and C. Hriţcu and I. Goriac and R. Gordân and
-      E. Erbiceanu
-    id: mpnt
-    type: techreport
-    fields:
-      institution: Faculty of Computer Science, "Alexandru Ioan Cuza" University, Iasi
-      number: TR03-02
-      year: "2003"
-    section: addchain
-  - title: "Modifications of Bos and Coster\u2019s Heuristics in search of a shorter\
-      \ addition chain for faster exponentiation"
-    url: http://library.isical.ac.in:8080/jspui/bitstream/123456789/6441/1/DISS-285.pdf
-    author: Ayan Nandy
-    id: modboscoster
-    type: mastersthesis
-    fields:
-      school: Indian Statistical Institute Kolkata
-      year: "2011"
-    section: addchain
-  - title: On the final exponentiation for calculating pairings on ordinary elliptic
-      curves
-    url: https://eprint.iacr.org/2008/490
-    author: Michael Scott and Naomi Benger and Manuel Charlemagne and Luis J. Dominguez
-      Perez and Ezekiel J. Kachisa
-    id: pairingsfinalexp
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2008/490
-      year: "2008"
-    note: Contains various real-world examples of addition sequences.
-    section: addchain
-  - title: Brauer addition-subtraction chains
-    url: http://www.martin-otto.de/publications/docs/2001_MartinOtto_Diplom_BrauerAddition-SubtractionChains.pdf
-    author: Martin Otto
-    id: braueraddsubchains
-    type: phdthesis
-    fields:
-      school: Universitat Paderborn
-      year: "2001"
-    section: addchain
-  - title: New Methods for Generating Short Addition Chains
-    url: https://pdfs.semanticscholar.org/b398/d10faca35af9ce5a6026458b251fd0a5640c.pdf
-    author: Kunihiro, Noboru and Yamamoto, Hirosuke
-    id: genshortchains
-    type: article
-    section: addchain
-    fields:
-      journal: IEICE Transactions on Fundamentals of Electronics Communications and
-        Computer Sciences
-      month: "01"
-      volume: E83A
-      year: "2000"
-  - title: Method and apparatus for public key exchange in a cryptographic system
-    url: https://patents.google.com/patent/US5159632A
-    author: Richard E. Crandall
-    id: crandallprime
-    fields:
-      howpublished: US Patent 5,159,632
-      year: "1992"
-    section: field
-  - title: Generalized Mersenne Primes
-    url: http://cacr.uwaterloo.ca/techreports/1999/corr99-39.pdf
-    author: Jerome A. Solinas
-    id: solinasprime
-    type: techreport
-    fields:
-      institution: Centre for Applied Cryptographic Research (CACR) at the University
-        of Waterloo
-      number: CORR 99-39
-      year: "1999"
-    section: field
-  - title: 'Digital Signature Standard (DSS)'
-    url: https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf
-    author: NIST
-    id: fips186-2
-    fields:
-      howpublished: Federal Information Processing Standards Publication 186-2
-      year: "2000"
-    section: spec
-  - title: Ed448-Goldilocks, a new elliptic curve
-    url: https://eprint.iacr.org/2015/625
-    author: Mike Hamburg
-    id: goldilocks
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2015/625
-      year: "2015"
-    section: curves
-  - title: The Most Efficient Known Addition Chains for Field Element and Scalar Inversion
-      for the Most Popular and Most Unpopular Elliptic Curves
-    url: https://briansmith.org/ecc-inversion-addition-chains-01
-    author: Brian Smith
-    id: curvechains
-    fields:
-      urldate: "2019-06-30"
-      year: "2017"
-    highlight: true
-    section: addchain
-  - title: 'A Review on Heuristics for Addition Chain Problem: Towards Efficient Public
-      Key Cryptosystems'
-    url: https://pdfs.semanticscholar.org/7965/dfbf8b7faf6634247c2f0ec163c9588fc1bc.pdf
-    author: Adamu Muhammad Noma and Abdullah Muhammed and Mohamad Afendee Mohamed and
-      Zuriati Ahmad Zulkarnain
-    id: addchainreview
-    type: article
-    fields:
-      journal: Journal of Computer Science
-      number: "8"
-      pages: 275-289
-      volume: "13"
-      year: "2017"
-    section: addchain
-  - title: 'SEC 2: Recommended Elliptic Curve Domain Parameters, Version 2.0'
-    url: https://safecurves.cr.yp.to/www.secg.org/sec2-v2.pdf
-    author: Certicom Research
-    id: sec2
-    fields:
-      howpublished: Standards for Efficient Cryptography 2
-      year: "2010"
-    section: spec
-  - title: Efficient computation of addition-subtraction chains using generalized continued
-      Fractions
-    url: https://eprint.iacr.org/2013/466
-    author: Amadou Tall and Ali Yassin Sanghare
-    id: gencontfrac
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2013/466
-      year: "2013"
-    note: Adapts continued fractions to subtraction chains. Nice clear review of continued fractions strategies.
-    section: addchain
-  - title: Efficient Implementation
-    url: http://cacr.uwaterloo.ca/hac/about/chap14.pdf
-    author: Alfred J. Menezes and Paul C. van Oorschot and Scott A. Vanstone
-    id: hac:impl
-    type: inbook
-    fields:
-      booktitle: Handbook of Applied Cryptography
-      chapter: "14"
-      publisher: CRC Press
-      year: "1996"
-    section: impl
-  - title: Fast Prime Field Elliptic Curve Cryptography with 256 Bit Primes
-    highlight: true
-    url: https://eprint.iacr.org/2013/816
-    author: Shay Gueron and Vlad Krasnov
-    id: fastprimefieldecc
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2013/816
-      year: "2013"
-    section: impl
-  - title: Analysis and optimization of elliptic-curve single-scalar multiplication
-    url: https://eprint.iacr.org/2007/455
-    author: Daniel J. Bernstein and Tanja Lange
-    id: efdanalysis
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2007/455
-      year: "2007"
-    section: ecarith
-  - title: Explicit-Formulas Database
-    url: https://hyperelliptic.org/EFD
-    author: Daniel J. Bernstein and Tanja Lange
-    id: efd
-    fields:
-      urldate: "2019-07-14"
-    section: ecarith
-  - title: 'Selecting Elliptic Curves for Cryptography: An Efficiency and Security Analysis'
-    url: https://eprint.iacr.org/2014/130
-    author: Joppe W. Bos and Craig Costello and Patrick Longa and Michael Naehrig
-    id: msrecclibpaper
-    fields:
-      howpublished: Cryptology ePrint Archive, Report 2014/130
-      year: "2014"
-    highlight: true
-    note: Superbly detailed paper on the implementation of the
-      MSR Elliptic Curve Cryptography Library, with code provided.
-    section: impl
-  - title: MSR Elliptic Curve Cryptography Library
-    url: https://www.microsoft.com/en-us/research/project/msr-elliptic-curve-cryptography-library/
-    author: Microsoft Research
-    id: msrecclibcode
-    fields:
-      year: "2014"
-    section: software
-  - title: 'High-speed Curve25519 on 8-bit, 16-bit, and 32-bit microcontrollers'
-    author: Michael Düll and Björn Haase and Gesine Hinterwälder and Michael Hutter and Christof Paar and \
-      Ana Helena Sánchez and Peter Schwabe
-    url: https://doi.org/10.1007/s10623-015-0087-1
-    fields:
-      journal: Designs, Codes and Cryptography
-      year: 2015
-      month: Dec
-      day: 01
-      volume: 77
-      number: 2
-      pages: 493--514
-      doi: 10.1007/s10623-015-0087-1
-    section: impl
-    queued: true
-  - title: Verifying Branch-Free Assembly Code in Why3
-    author: Marc Schoolderman
-    url: http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
-    section: verif
-    queued: true
+- title: A Brief Overview of HOL4
+  url: https://ts.data61.csiro.au/publications/nicta_full_text/1482.pdf
+  section: verif
+- title: On Construction of a Library of Formally Verified Low-level Arithmetic Functions
+  url: https://staff.aist.go.jp/reynald.affeldt/documents/arilib-affeldt.pdf
+  section: verif
+- title: Verification of Machine Code Implementations of Arithmetic Functions for
+    Cryptography
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.171.621&rep=rep1&type=pdf
+  section: verif
+- title: A Verified Extensible Library of Elliptic Curves
+  url: https://hal.inria.fr/hal-01425957/document
+  author: Jean Karim Zinzindohoue, Evmorfia-Iro Bartzia, Karthikeyan Bhargavan
+  section: verif
+- title: Formal Verification of a Big Integer Library Written in C0
+  url: http://www-wjp.cs.uni-sb.de/publikationen/Fi06.pdf
+  author: Sabine Fischer
+  section: verif
+- title: 'Proof Pearl: A Verified Bignum Implementation in x86-64 Machine Code'
+  url: https://www.cl.cam.ac.uk/~mom22/cpp13/
+  author: Magnus O. Myreen and Gregorio Curello
+  section: verif
+- title: Reconstruction of Z3's Bit-Vector Proofs in HOL4 and Isabelle/HOL
+  url: http://user.it.uu.se/~tjawe125/publications/boehme11reconstruction.html
+  section: verif
+- title: A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms
+  url: https://hal.inria.fr/hal-01699754v1/document
+  section: verif
+- title: How to Get an Efficient yet Verified Arbitrary-Precision Integer Library
+  url: https://hal.inria.fr/hal-01519732v2/document
+  section: verif
+- title: Analyzing and Comparing Montgomery Multiplication Algorithms
+  url: https://pdfs.semanticscholar.org/5e39/41ff482ec3ee41dc53c3298f0be085c69483.pdf
+  author: Cetin K. Koc, Tolga Acar, Burton S. Kaliski Jr
+  section: field
+- title: Optimizing Multiprecision Multiplication for Public Key Cryptography
+  url: https://eprint.iacr.org/2007/299
+  author: Michael Scott and Piotr Szczechowiak
+  section: field
+- title: Fast Multi-Precision Multiplication for Public-Key Cryptography on Embedded
+    Microprocessors
+  url: https://www.iacr.org/archive/ches2011/69170459/69170459.pdf
+  author: Michael Hutter and Erich Wenger
+  section: field
+- title: A Verified, Efficient Embedding of a Verifiable Assembly Language
+  url: https://www.microsoft.com/en-us/research/publication/a-verified-efficient-embedding-of-a-verifiable-assembly-language/
+  section: verif
+- title: Twisted Edwards Curves Revisited
+  url: https://eprint.iacr.org/2008/522
+  author: Huseyin Hisil and Kenneth Koon-Ho Wong and Gary Carter and Ed Dawson
+  section: ecarith
+- title: 'CAOVerif: An Open-Source Deductive Verification Platform for Cryptographic
+    Software Implementations'
+  url: https://haslab.uminho.pt/jsp/files/opencertjournal_ack.pdf
+  section: verif
+- title: Efficient Arithmetic In (Pseudo-)Mersenne Prime Order Fields
+  url: https://eprint.iacr.org/2018/985
+  author: Kaushik Nath and Palash Sarkar
+  section: field
+- title: A type-safe arbitrary precision arithmetic portability layer for HLS tools
+  url: https://hal.inria.fr/hal-02131798v2/document
+  section: verif
+- title: Systematic Support of Parallel Bit Streams in LLVM
+  url: https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf
+  author: Meng Lin
+  section: asm
+- title: Montgomery Multiplication Using Vector Instructions
+  url: https://eprint.iacr.org/2013/519
+  author: Joppe W. Bos and Peter L. Montgomery and Daniel Shumow and Gregory M. Zaverucha
+  section: impl
+  supplements:
+  - type: slides
+    url: http://sac2013.irmacs.sfu.ca/slides/s26.pdf
+- title: Complete Systems of Two Addition Laws for Elliptic Curves
+  url: https://doi.org/10.1006/jnth.1995.1088
+  author: Bosma W. Lenstra H.W
+  section: ecarith
+- title: Crafting Certified Elliptic Curve Cryptography Implementations in Coq
+  url: http://adam.chlipala.net/theses/andreser_meng.pdf
+  section: verif
+- title: Specification of Curve Selection and Supported Curve Parameters in MSR ECCLib
+  url: https://www.microsoft.com/en-us/research/publication/specification-of-curve-selection-and-supported-curve-parameters-in-msr-ecclib/
+  section: curves
+- title: Scalar recoding and regular 2w-ary right-to-left EC scalar multiplication
+    algorithm
+  url: https://doi.org/10.1016/j.ipl.2013.02.002
+  author: Yoo-Jin Baek
+  section: scalarmult
+- title: Signed Binary Representations Revisited
+  url: https://eprint.iacr.org/2004/195
+  author: Katsuyuki Okeya and Katja Schmidt-Samoa and Christian Spahn and Tsuyoshi
+    Takagi
+  section: scalarmult
+- title: Some Explicit Formulae of NAF and its Left-to-Right Analogue
+  url: https://eprint.iacr.org/2005/384
+  author: Dong-Guk Han and Tetsuya Izu and Tsuyoshi Takagi
+  section: scalarmult
+- title: Software Implementation of Modular Exponentiation Using Advanced Vector Instructions
+    Architectures
+  url: https://doi.org/10.1007/978-3-642-31662-3_9
+  author: Shay Gueron and Vlad Krasnov
+  section: impl
+- title: Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without
+    Compromises
+  url: http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf
+  note: FIAT Crypto
+  section: verif
+- title: Exponent Recoding and Regular Exponentiation Algorithms
+  url: http://www.geocities.ws/mike.tunstall/papers/JT09.pdf
+  author: Joye-Tunstall
+  section: scalarmult
+- title: Efficient arithmetic on Koblitz curves
+  url: https://www.decred.org/research/solinas2000.pdf
+  author: Solinas
+  section: scalarmult
+- title: A survey of fast exponentiation methods
+  url: https://www.dmgordon.org/papers/jalg.pdf
+  author: Daniel M. Gordon
+  section: scalarmult
+- title: Parallel scalar multiplication on general elliptic curves over F_p hedged
+    against Non-Differential Side-Channel Attacks
+  url: https://pdfs.semanticscholar.org/ffa2/f1db6aeaf0fb03cf010bad12266da11d00e1.pdf
+  author: Wieland Fischer, Christophe Giraud, Erik Woodward Knudsen and Jean-Pierre
+    Seifert
+  section: scalarmult
+- title: Speeding the Pollard and Elliptic Curve Methods of Factorization
+  url: https://www.ams.org/journals/mcom/1987-48-177/S0025-5718-1987-0866113-7/S0025-5718-1987-0866113-7.pdf
+  author: Peter Montgomery
+  section: field
+- title: Highly Regular Right-to-Left Algorithms for Scalar Multiplication
+  url: https://www.iacr.org/archive/ches2007/47270135/47270135.pdf
+  author: Marc Joye
+  section: scalarmult
+- title: Slothful reduction
+  url: https://eprint.iacr.org/2017/437
+  author: Michael Scott
+  section: ecarith
+- title: Faster addition and doubling on elliptic curves
+  url: https://eprint.iacr.org/2007/286
+  author: Daniel J. Bernstein and Tanja Lange
+  note: Found via citation "Thankfully efficient exception-free formulations are now
+    available [4], [11]".
+  section: ecarith
+- title: RELIC Toolkit
+  url: https://github.com/relic-toolkit/relic
+  section: software
+- title: Efficient Elliptic Curve Exponentiation Using Mixed Coordinates
+  url: https://link.springer.com/content/pdf/10.1007/3-540-49649-1_6.pdf
+  section: ecarith
+- title: Improved Techniques for Fast Exponentiation
+  url: https://www.bmoeller.de/pdf/fastexp-icisc2002.pdf
+  section: scalarmult
+- title: Finite Field Arithmetic (Chapter 11 of Handbook of Elliptic and Hyperelliptic
+    Curve Cryptogrpahy)
+  url: https://koclab.cs.ucsb.edu/teaching/ecc/eccPapers/Doche-ch11.pdf
+  author: Doche
+  section: field
+- title: Go assembly language complementary reference
+  url: https://quasilyte.dev/blog/post/go-asm-complementary-reference/
+  author: Iskander Sharipov
+  section: asm
+- title: Fast point multiplication algorithms for binary elliptic curves with and
+    without precomputation
+  url: https://eprint.iacr.org/2014/427
+  section: scalarmult
+- title: Elliptic curves and their implementation
+  url: https://www.imperialviolet.org/2010/12/04/ecc.html
+  author: Adam Langley
+  note: Friendly introduction.
+  section: impl
+- title: Multiprecision Arithmetic for Cryptology in C++
+  url: https://arxiv.org/abs/1804.07236
+  author: Niek J. Bouman
+  section: impl
+  supplements:
+  - type: slides
+    url: https://martindale.info/eipsi/ctbignum_slides_2018.pdf
+  - type: code
+    url: https://github.com/niekbouman/ctbignum
+- title: The Design and Application of a Retargetable Peephole Optimizer
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.64.7226&rep=rep1&type=pdf
+  author: Davidson and Fraser
+  note: Early description of an RTL language.
+  section: asm
+- title: New Instructions Supporting Large Integer Arithmetic on Intel Architecture
+    Processors
+  url: https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-large-integer-arithmetic-paper.pdf
+  author: Intel White Paper
+  note: Concise and easy description of how to exploit the `MULX/ADCX/ADOX` instructions,
+    illustrated with a 512x512-bit multiply.
+  section: impl
+- title: Large Integer Squaring on Intel Architecture Processors
+  url: https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/large-integer-squaring-ia-paper.pdf
+  author: Intel White Paper
+  note: Extension of the multiplcation paper to the squaring case.
+  section: impl
+- title: Software Implementation of Public-Key Cryptography (SAC Summer School)
+  url: https://irp-cdn.multiscreensite.com/7fa75f95/files/uploaded/Software%20Implementation%20of%20Public-Key%20Cryptography%20-%20SAC%20Summer%20School.pdf
+  author: Patrick Longa
+  note: Incredible survey.
+  section: impl
+  highlight: true
+- title: Pippenger's exponentiation algorithm
+  url: https://cr.yp.to/papers/pippenger.pdf
+  author: DJB
+  note: Excellent summary. Matrix representation of chains.
+  section: addchain
+- title: On addition chains
+  url: https://projecteuclid.org/euclid.bams/1183502136
+  author: Brauer
+  note: The _original_ Brauer paper.
+  section: addchain
+- title: The Additive Complexity of a Natural Number
+  url: https://www.researchgate.net/publication/267016251_The_additive_complexity_of_a_natural_number
+  author: Belaga
+  note: Early introduction of the dictionary method, with the observation that only
+    odd window values are required (page 7). Used to prove upper bound.
+  section: addchain
+- title: On the Evaluation of Powers
+  url: https://www.ii.uni.wroc.pl/~aje/WordEq2015/papers/addition_chains_Yao.pdf
+  author: Yao
+  note: _Original_ definition of Yao's algorithm.
+  section: addchain
+- title: Exponentiating faster with addition chains
+  url: https://www.researchgate.net/publication/221348287_Exponentiating_Faster_with_Addition_Chains
+  author: Yacobi
+  note: LZ applied to dictionary creation. The _original_ definition of Yacobi's algorithm.
+  section: addchain
+- title: Addition chains using continued fractions
+  url: https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf
+  author: BBBD
+  note: _Original_ continued fractions paper.
+  section: addchain
+- title: Faster Square Roots in Annoying Finite Fields
+  url: https://cr.yp.to/papers/sqroot.pdf
+  author: DJB
+  note: Methods for square roots modulo primes 1 (mod 4), with focus on the NIST P-224
+    prime.
+  section: field
+- title: New Speed Records for Montgomery Modular Multiplication on 8-bit AVR Microcontrollers
+  url: https://eprint.iacr.org/2013/882
+  section: field
+- title: High-Speed Cryptography
+  url: http://www.just.edu.jo/~tawalbeh/cpe776/notes/high.pdf
+  author: Cetin Koc
+  note: Lecture notes with survey of multiplication methods.
+  section: field
+- title: High-Speed Algorithms & Architectures For Number-Theoretic Cryptosystems
+  url: https://www.microsoft.com/en-us/research/wp-content/uploads/1998/06/97Acar.pdf
+  author: Tolga Acar
+  note: Thesis. Various proposals for Montgomery multiplies, discussion of how to
+    extend the x86 instruction set for crypto.
+  section: field
+- title: 'EE 371 Lecture 5: More Adders & Multipliers'
+  url: http://web.stanford.edu/class/archive/ee/ee371/ee371.1066/lectures/lect_05.pdf
+  author: Mark Horowitz
+  note: Nice coverage of Modified Booth Recoding.
+  section: scalarmult
+- title: Scalar-multiplication algorithms
+  url: https://cryptojedi.org/peter/data/eccss-20130911b.pdf
+  author: Peter Schwabe
+  note: ECC 2013 Summer School. Simple introduction to scalar multiplication algorithms.
+  section: scalarmult
+- title: Survey of Elliptic Curve Scalar Multiplication Algorithms
+  url: https://pdfs.semanticscholar.org/4da9/cfe2ff561a29bd90c8799873154b819f5cd9.pdf
+  note: Concise survey.
+  section: scalarmult
+- title: Fast and Regular Algorithms for Scalar Multiplication over Elliptic Curves
+  url: https://eprint.iacr.org/2011/338
+  author: Matthieu Rivain
+  note: Only skimmed, but the sub-section on "Scalar Recoding" includes a dense summary
+    of the approaches.
+  section: scalarmult
+- title: The Width-w NAF Method Provides Small Memory and Fast Elliptic Scalar Multiplications
+    Secure against Side Channel Attacks
+  url: https://doi.org/10.1007/3-540-36563-X_23
+  note: Signed windows using all _odd_ digits.
+  section: scalarmult
+- title: Securing Elliptic Curve Point Multiplication against Side-Channel Attacks
+  url: https://www.bmoeller.de/pdf/ecc-sca-isc2001.pdf
+  author: Bodo Moller
+  note: Booth-like recoding that _avoids zero_ digits.
+  section: scalarmult
+- title: Analysis and optimization of elliptic-curve single-scalar multiplication
+  url: http://www.hyperelliptic.org/EFD/precomp.pdf
+  author: DJB & Lange
+  note: the paper behind the Explicit Formula Database. Excellent overview.
+  section: ecarith
+- title: Complete addition formulas for prime order elliptic curves
+  url: https://eprint.iacr.org/2015/1060
+  author: Joost Renes and Craig Costello and Lejla Batina
+  section: ecarith
+- title: A Compact and Exception-Free Ladder for All Short Weierstrass Elliptic Curves
+  url: https://doi.org/10.1007/978-3-319-54669-8_10
+  author: Ruggero Susella and Sofia Montrasio
+  section: ecarith
+- title: A Binary Redundant Scalar Point Multiplication in Secure Elliptic Curve Cryptosystems
+  url: http://ijns.jalaxy.com.tw/contents/ijns-v3-n2/ijns-2006-v3-n2-p132-137.pdf
+  author: Sangook Moon
+  note: Suggests the use of a _quadruple_ formula in scalar multiplication.
+  section: ecarith
+- title: Trading Inversions for Multiplications in Elliptic Curve Cryptography
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.1336&rep=rep1&type=pdf
+  note: Explores alternative bases and formulae for scalar multiplication.
+  section: ecarith
+- title: Fast Elliptic Curve Arithmetic and Improved Weil Pairing Evaluation
+  url: https://arxiv.org/abs/math/0208038
+  author: Kirsten Eisentraeger, Kristin Lauter, Peter L. Montgomery
+  note: Merged double-add.
+  section: ecarith
+- title: Improved Algorithms for Elliptic Curve Arithmetic in GF(2^n)
+  url: https://link.springer.com/content/pdf/10.1007/3-540-48892-8_16.pdf
+  author: Julio Lopez and Ricardo Dahab
+  note: Repeated doubling formulae.
+  section: ecarith
+- title: '"Nice" Curves'
+  url: https://eprint.iacr.org/2019/1259
+  author: Kaushik Nath and Palash Sarkar
+  note: Proposes new pairs of Montgomery-Edwards curves at both the 128-bit and the
+    224-bit security levels. _Note:_ performance boost at the cost of a couple of
+    bits of security. Additional free bits in the top limb allow for savings in modular
+    reduction.
+  section: ecarith
+- title: Assessing and Exploiting BigNum Vulnerabilities
+  url: https://comsecuris.com/slides/slides-bignum-bhus2015.pdf
+  author: Ralf-Philipp Weinmann
+  note: Examples of specific arbitrary precision integer bugs and how to find them.
+  section: bugs
+- title: Practical realisation and elimination of an ECC-related software bug attack
+  url: https://eprint.iacr.org/2011/633
+  author: B.B. Brumley and M. Barbosa and D. Page and F. Vercauteren
+  note: Exploit for bug in OpenSSL version 0.9.8g which permit an attack against ECDH-based
+    functionality. Some discussion of discovery and verification with `CAOverif`.
+  section: bugs
+- title: Addition chains with multiplicative cost
+  url: http://www.math.ucsd.edu/~ronspubs/78_11_addition_chains.pdf
+  note: Theoretical result on number of multiplications.
+  section: addchain
+- title: On the evaluation of powers and related problems
+  url: https://doi.org/10.1109/SFCS.1976.21
+  author: Pippenger
+  note: Matrix and graph-theoretical view of addition chain methods.
+  section: addchain
+- title: On string replacement exponentiation
+  url: https://doi.org/10.1023/A:1011212615791
+  note: Mostly just theoretical results.
+  section: addchain
+- title: High-radix and bit recoding techniques for modular exponentiation
+  url: https://doi.org/10.1080/00207169108804009
+  note: Requires subtraction.
+  section: scalarmult
+- title: Fast Modular Exponentiation
+  url: http://cryptocode.net/docs/c06.pdf
+  note: Requires subtraction.
+  section: addchain
+- title: An improved binary algorithm for RSA
+  url: https://core.ac.uk/download/pdf/82735567.pdf
+  note: Requires subtraction.
+  section: addchain
+- title: New Algorithm for Classical Modular Inverse
+  url: https://link.springer.com/content/pdf/10.1007%2F3-540-36400-5_6.pdf
+  note: Optimized for hardware, requires subtraction.
+  section: addchain
+- title: Algorithms for software implementations of RSA
+  url: http://www.chrismitchell.net/afsior.pdf
+  note: Lookup-table based.
+  section: field
+- title: Calculating optimal addition chains
+  url: https://link.springer.com/content/pdf/10.1007%2Fs00607-010-0118-8.pdf
+  section: addchain
+- title: Efficient Generation of Minimal Length Addition Chains
+  url: https://pdfs.semanticscholar.org/6e33/657f2acf01c70fb66fbcc9c06416123c7ed6.pdf
+  section: addchain
+- title: Finding short and implementation-friendly addition chains with evolutionary
+    algorithms
+  url: https://dspace.mit.edu/bitstream/handle/1721.1/115968/10732_2017_9340_ReferencePDF.pdf
+  section: addchain
+- title: Developing an automatic generation tool for cryptographic pairing functions
+  url: http://doras.dcu.ie/16002/1/thesis.pdf
+  section: addchain
+- title: Optimizing linear maps modulo 2
+  url: https://binary.cr.yp.to/linearmod2-20090830.pdf
+  section: addchain
+- title: An Artificial Immune System Heuristic for Generating Short Addition Chains
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.490.991&rep=rep1&type=pdf
+  section: addchain
+- title: 'SPEED 2009 Proceedings: Software Performance Enhancement for Encryption
+    and Decryption and Cryptographic Compilers'
+  url: http://www.hyperelliptic.org/SPEED/record09.pdf
+  section: addchain
+- title: Efficient exponentiation using precomputation and vector addition chains
+  url: https://link.springer.com/content/pdf/10.1007/BFb0053453.pdf
+  section: addchain
+- title: Implementation of the GBD cryptosystem
+  url: https://eprints.qut.edu.au/441/1/08_brown04implementation.pdf
+  section: addchain
+- title: Redundant integer representations and fast exponentiation
+  url: https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf
+  section: addchain
+- title: High-speed high-security signatures
+  url: https://ed25519.cr.yp.to/ed25519-20110705.pdf
+  section: addchain
+- title: 'Cultivating Sapling: New Crypto Foundations'
+  url: https://github.com/zcash/zcash-blog/blob/4268b1a9f7e523f59bb254b9fa7a9f9f9d7f75a7/_posts/2017-07-26-cultivating-sapling-new-crypto-foundations.md
+  note: Section "New multi-exponentiation algorithm"
+  section: addchain
+- title: Faster batch forgery identification
+  url: https://eprint.iacr.org/2012/549
+  note: Special case of Pippenger's algorithm, Page 15.
+  section: addchain
+- title: On Fast Calculation of Addition Chains for Isogeny-Based Cryptography
+  url: https://eprint.iacr.org/2016/1045
+  section: addchain
+- title: Fast and simple constant-time hashing to the BLS12-381 elliptic curve
+  url: https://eprint.iacr.org/2019/403
+  section: codegen
+- title: Designing a code generator of Pairing Based Cryptography functions
+  url: https://www.ucc.ie/en/media/academic/centreforplanningeducationresearch/LDominguez.pdf
+  section: codegen
+- title: Ideas for a New Elliptic Curve Cryptography Library
+  url: https://briansmith.org/GFp-0
+  section: codegen
+- title: Generalised Mersenne Numbers Revisited
+  url: https://eprint.iacr.org/2011/444
+  section: field
+- title: '`zkcrypto/jubjub`'
+  url: https://github.com/zkcrypto/jubjub
+  section: software
+- title: Modular Multiplication Without Trial Division
+  url: https://web.itu.edu.tr/~orssi/dersler/cryptography/Montgomery.pdf
+  section: field
+- title: The Montgomery Modular Inverse - Revisited
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.75.8377&rep=rep1&type=pdf
+  section: field
+- title: Efficient Software-Implementation of Finite Fields with Applications to Cryptography
+  url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.86.2495&rep=rep1&type=pdf
+  section: field
+- title: Efficient Software Implementations of Modular Exponentiation
+  url: https://eprint.iacr.org/2011/239
+  section: field
+- title: The Montgomery Powering Ladder
+  url: http://cr.yp.to/bib/2003/joye-ladder.pdf
+  section: ecarith
+- title: A note on how to (pre-)compute a ladder
+  url: https://eprint.iacr.org/2017/264
+  section: ecarith
+- title: A Faster Software Implementation of the Supersingular Isogeny Diffie-Hellman
+    Key Exchange Protocol
+  url: https://eprint.iacr.org/2017/1015
+  section: impl
+- title: Fast Arithmetic Modulo 2^xp^y±1
+  url: https://eprint.iacr.org/2016/986
+  section: field
+- title: 'RFC 7748: Elliptic Curves for Security'
+  url: https://www.rfc-editor.org/rfc/rfc7748.txt
+  section: spec
+- title: Solinas primes of small weight for fixed sizes
+  url: https://eprint.iacr.org/2010/058
+  section: field
+- title: Twisted Edwards Curves
+  url: https://eprint.iacr.org/2008/013
+  section: curves
+- title: New software speed records for cryptographic pairings
+  url: https://cryptojedi.org/papers/dclxvi-20100714.pdf
+  section: impl
+- title: Multiplication and Squaring on Pairing-Friendly Fields
+  url: https://eprint.iacr.org/2006/471
+  section: field
+- title: Efficient Arithmetic Modulo Minimal Redundancy Cyclotomic Primes
+  url: https://pdfs.semanticscholar.org/45eb/cc684c6c5b1d0941a490280382012f1b2361.pdf
+  section: field
+- title: Pairing-Friendly Curves
+  url: https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-00.html
+  section: curves
+- title: Aspects of Hyperelliptic Curves over Large Prime Fields in Software Implementations
+  url: https://www.iacr.org/archive/ches2004/31560147/31560147.pdf
+  section: field
+- title: Software implementation of the NIST elliptic curves over prime fields
+  url: http://delta.cs.cinvestav.mx/~francisco/arith/julio.pdf
+  section: impl
+- title: Speeding up XTR
+  url: https://www.iacr.org/archive/asiacrypt2001/22480125.pdf
+  section: addchain
+- title: 'Engineering Primes: Taking the Magic out of Magic Numbers'
+  url: https://speakerdeck.com/gtank/engineering-prime-numbers
+  section: field
+- title: How to (pre-)compute a ladder
+  url: http://www.ic.unicamp.br/~ra142685/userfiles/papers/oliveira_sac2017.pdf
+  section: ecarith
+- title: Double-Base Number System and Applications
+  url: http://www.hyperelliptic.org/tanja/conf/ECC08/slides/Christophe-Doche.pdf
+  section: scalarmult
+- title: An Introduction & Supplement to Knuth's Introduction to Addition Chains
+  url: https://briansmith.org/addition-chain-intro-01
+  section: addchain
+- title: Addition Chains as Polymorphic Higher-order Functions
+  url: https://briansmith.org/addition-chains-as-higher-order-functions-01
+  section: addchain
+- title: additionchains.com
+  url: http://www.additionchains.com/
+  section: addchain
+- title: 'OEIS A003313: Length of shortest addition chain for n'
+  url: https://oeis.org/A003313
+  section: addchain
+- title: 'Ed25519: High-speed high-security signatures'
+  url: https://ed25519.cr.yp.to/ed25519-20110926.pdf
+  section: curves
+- title: 'FourQ: four-dimensional decompositions on a Q-curve over the Mersenne prime'
+  url: https://eprint.iacr.org/2015/565
+  section: curves
+- title: 'Curve4Q: `draft-ladd-cfrg-4q-01`'
+  url: https://tools.ietf.org/html/draft-ladd-cfrg-4q-01
+  section: curves
+- title: Jacobian coordinates with a4=-3 for short Weierstrass curves
+  url: https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html
+  section: ecarith
+- title: SIKE/SIDH Spec
+  url: https://sike.org/files/SIDH-spec.pdf
+  section: spec
+- title: Handbook of Elliptic and Hyperelliptic Curve Cryptography
+  url: https://www.hyperelliptic.org/HEHCC/
+  section: book
+- title: Guide to Elliptic Curve Cryptography
+  url: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.394.3037&rep=rep1&type=pdf
+  section: book
+- title: Topics in Computational Number Theory Inspired by Peter L. Montgomery
+  url: http://www.joppebos.com/_pages/montgomery/
+  section: book
+- title: 'EverCrypt: A Fast, Verified, Cross-Platform Cryptographic Provider'
+  url: https://eprint.iacr.org/2019/757
+  queued: true
+- title: On inversion modulo pseudo-Mersenne primes
+  url: https://eprint.iacr.org/2018/1038
+  author: Michael Scott
+  note: Heuristic approach for addition chains for inversion exponents usually seen
+    in cryptographic applications.
+  section: addchain
+- title: A new algorithm for residue multiplication modulo 2^521−1
+  url: https://eprint.iacr.org/2016/138
+  author: Shoukat Ali and Murat Cenk
+  queued: true
+- title: Machine-Checked Proofs for Cryptographic Standards
+  url: https://eprint.iacr.org/2019/1155
+  queued: true
+- title: 'HACL*: A Verified Modern Cryptographic Library'
+  url: https://eprint.iacr.org/2017/536
+  queued: true
+- title: A note on high-security general-purpose elliptic curves
+  url: https://eprint.iacr.org/2013/647
+  author: Diego F. Aranha and Paulo S. L. M. Barreto and Geovandro C. C. F. Pereira
+    and Jefferson E. Ricardini
+  section: curves
+  id: aranha
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2013/647
+    year: "2013"
+- title: 'Curve25519: New Diffie-Hellman Speed Records'
+  url: https://cr.yp.to/ecdh/curve25519-20060209.pdf
+  author: Bernstein, Daniel J.
+  section: curves
+  id: curve25519
+  type: inproceedings
+  fields:
+    abstract: 'This paper explains the design and implementation of a high-security
+      elliptic-curve-Diffie-Hellman function achieving record-setting speeds: e.g.,
+      832457 Pentium III cycles (with several side benefits: free key compression,
+      free key validation, and state-of-the-art timing-attack protection), more than
+      twice as fast as other authors'' results at the same conjectured security level
+      (with or without the side benefits).'
+    address: Berlin, Heidelberg
+    booktitle: Public Key Cryptography - PKC 2006
+    editor: Yung, Moti and Dodis, Yevgeniy and Kiayias, Aggelos and Malkin, Tal
+    isbn: 978-3-540-33852-9
+    pages: 207--228
+    publisher: Springer Berlin Heidelberg
+    year: "2006"
+- title: 'SafeCurves: choosing safe curves for elliptic-curve cryptography'
+  url: https://safecurves.cr.yp.to
+  author: Daniel J. Bernstein and Tanja Lange
+  section: curves
+  id: safecurves
+- title: 'Elligator: Elliptic-curve points indistinguishable from uniform random strings'
+  url: https://eprint.iacr.org/2013/325
+  author: Daniel J. Bernstein and Mike Hamburg and Anna Krasnova and Tanja Lange
+  section: curves
+  id: elligator
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2013/325
+    year: "2013"
+- title: Security dangers of the NIST curves
+  url: https://cr.yp.to/talks/2013.09.16/slides-djb-20130916-a4.pdf
+  author: Daniel J. Bernstein and Tanja Lange
+  section: curves
+  id: nistdanger
+  fields:
+    year: "2013"
+- title: Efficient computation of addition chains
+  url: http://www.numdam.org/item/JTNB_1994__6_1_21_0
+  author: Bergeron, F. and Berstel, J. and Brlek, S.
+  section: addchain
+  id: efficientcompaddchain
+  type: article
+  fields:
+    journal: Journal de theorie des nombres de Bordeaux
+    language: en
+    mrnumber: "1305286"
+    number: "1"
+    pages: 21-38
+    publisher: Universite Bordeaux I
+    volume: "6"
+    year: "1994"
+    zbl: "0812.11072"
+- title: Exponentiation
+  url: https://koclab.cs.ucsb.edu/teaching/ecc/eccPapers/Doche-ch09.pdf
+  author: Christophe Doche
+  section: scalarmult
+  id: hehcc:exp
+  type: inbook
+  fields:
+    booktitle: Handbook of Elliptic and Hyperelliptic Curve Cryptography
+    chapter: "9"
+    publisher: Chapman and Hall
+    year: "2006"
+- title: Addition Chain Heuristics
+  url: https://link.springer.com/content/pdf/10.1007/0-387-34805-0_37.pdf
+  author: Bos, Jurjen and Coster, Matthijs
+  section: addchain
+  id: boscoster
+  type: inproceedings
+  fields:
+    abstract: Much current research focuses on fast evaluation of RSA, which consists
+      of computing powers modulo a large number n. While some try to increase the
+      speed of multiplica- tions, here we consider reducing the number of multiplications.
+      In particular, we present a precomputation method that reduces the number of
+      multiplications for the computation of a given power.
+    address: New York, NY
+    booktitle: Advances in Cryptology --- CRYPTO' 89 Proceedings
+    editor: Brassard, Gilles
+    isbn: 978-0-387-34805-6
+    pages: 400--407
+    publisher: Springer New York
+    year: "1990"
+- title: Speeding up subgroup cryptosystems
+  url: https://cr.yp.to/bib/2003/stam-thesis.pdf
+  author: Stam, Martijn
+  section: addchain
+  id: speedsubgroup
+  type: phdthesis
+  fields:
+    school: Technische Universiteit Eindhoven
+    year: "2003"
+- title: kwantam/addchain
+  url: https://github.com/kwantam/addchain
+  author: Riad S. Wahby
+  note: Go library for addition chain generation.
+  section: software
+  id: github:kwantam/addchain
+  fields:
+    howpublished: Github Repository
+    license: Apache License, Version 2.0
+    year: "2018"
+- title: 'MpNT: A Multi-Precision Number Theory Package, Number Theoretical Algorithms
+    (I)'
+  url: https://profs.info.uaic.ro/~tr/tr03-02.pdf
+  author: F. L. Ţiplea and S. Iftene and C. Hriţcu and I. Goriac and R. Gordân and
+    E. Erbiceanu
+  section: addchain
+  id: mpnt
+  type: techreport
+  fields:
+    institution: Faculty of Computer Science, "Alexandru Ioan Cuza" University, Iasi
+    number: TR03-02
+    year: "2003"
+- title: Modifications of Bos and Coster’s Heuristics in search of a shorter addition
+    chain for faster exponentiation
+  url: http://library.isical.ac.in:8080/jspui/bitstream/123456789/6441/1/DISS-285.pdf
+  author: Ayan Nandy
+  section: addchain
+  id: modboscoster
+  type: mastersthesis
+  fields:
+    school: Indian Statistical Institute Kolkata
+    year: "2011"
+- title: On the final exponentiation for calculating pairings on ordinary elliptic
+    curves
+  url: https://eprint.iacr.org/2008/490
+  author: Michael Scott and Naomi Benger and Manuel Charlemagne and Luis J. Dominguez
+    Perez and Ezekiel J. Kachisa
+  note: Contains various real-world examples of addition sequences.
+  section: addchain
+  id: pairingsfinalexp
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2008/490
+    year: "2008"
+- title: Brauer addition-subtraction chains
+  url: http://www.martin-otto.de/publications/docs/2001_MartinOtto_Diplom_BrauerAddition-SubtractionChains.pdf
+  author: Martin Otto
+  section: addchain
+  id: braueraddsubchains
+  type: phdthesis
+  fields:
+    school: Universitat Paderborn
+    year: "2001"
+- title: New Methods for Generating Short Addition Chains
+  url: https://pdfs.semanticscholar.org/b398/d10faca35af9ce5a6026458b251fd0a5640c.pdf
+  author: Kunihiro, Noboru and Yamamoto, Hirosuke
+  section: addchain
+  id: genshortchains
+  type: article
+  fields:
+    journal: IEICE Transactions on Fundamentals of Electronics Communications and
+      Computer Sciences
+    month: "01"
+    volume: E83A
+    year: "2000"
+- title: Method and apparatus for public key exchange in a cryptographic system
+  url: https://patents.google.com/patent/US5159632A
+  author: Richard E. Crandall
+  section: field
+  id: crandallprime
+  fields:
+    howpublished: US Patent 5,159,632
+    year: "1992"
+- title: Generalized Mersenne Primes
+  url: http://cacr.uwaterloo.ca/techreports/1999/corr99-39.pdf
+  author: Jerome A. Solinas
+  section: field
+  id: solinasprime
+  type: techreport
+  fields:
+    institution: Centre for Applied Cryptographic Research (CACR) at the University
+      of Waterloo
+    number: CORR 99-39
+    year: "1999"
+- title: Digital Signature Standard (DSS)
+  url: https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf
+  author: NIST
+  section: spec
+  id: fips186-2
+  fields:
+    howpublished: Federal Information Processing Standards Publication 186-2
+    year: "2000"
+- title: Ed448-Goldilocks, a new elliptic curve
+  url: https://eprint.iacr.org/2015/625
+  author: Mike Hamburg
+  section: curves
+  id: goldilocks
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2015/625
+    year: "2015"
+- title: The Most Efficient Known Addition Chains for Field Element and Scalar Inversion
+    for the Most Popular and Most Unpopular Elliptic Curves
+  url: https://briansmith.org/ecc-inversion-addition-chains-01
+  author: Brian Smith
+  section: addchain
+  highlight: true
+  id: curvechains
+  fields:
+    urldate: "2019-06-30"
+    year: "2017"
+- title: 'A Review on Heuristics for Addition Chain Problem: Towards Efficient Public
+    Key Cryptosystems'
+  url: https://pdfs.semanticscholar.org/7965/dfbf8b7faf6634247c2f0ec163c9588fc1bc.pdf
+  author: Adamu Muhammad Noma and Abdullah Muhammed and Mohamad Afendee Mohamed and
+    Zuriati Ahmad Zulkarnain
+  section: addchain
+  id: addchainreview
+  type: article
+  fields:
+    journal: Journal of Computer Science
+    number: "8"
+    pages: 275-289
+    volume: "13"
+    year: "2017"
+- title: 'SEC 2: Recommended Elliptic Curve Domain Parameters, Version 2.0'
+  url: https://safecurves.cr.yp.to/www.secg.org/sec2-v2.pdf
+  author: Certicom Research
+  section: spec
+  id: sec2
+  fields:
+    howpublished: Standards for Efficient Cryptography 2
+    year: "2010"
+- title: Efficient computation of addition-subtraction chains using generalized continued
+    Fractions
+  url: https://eprint.iacr.org/2013/466
+  author: Amadou Tall and Ali Yassin Sanghare
+  note: Adapts continued fractions to subtraction chains. Nice clear review of continued
+    fractions strategies.
+  section: addchain
+  id: gencontfrac
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2013/466
+    year: "2013"
+- title: Efficient Implementation
+  url: http://cacr.uwaterloo.ca/hac/about/chap14.pdf
+  author: Alfred J. Menezes and Paul C. van Oorschot and Scott A. Vanstone
+  section: impl
+  id: hac:impl
+  type: inbook
+  fields:
+    booktitle: Handbook of Applied Cryptography
+    chapter: "14"
+    publisher: CRC Press
+    year: "1996"
+- title: Fast Prime Field Elliptic Curve Cryptography with 256 Bit Primes
+  url: https://eprint.iacr.org/2013/816
+  author: Shay Gueron and Vlad Krasnov
+  section: impl
+  highlight: true
+  id: fastprimefieldecc
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2013/816
+    year: "2013"
+- title: Analysis and optimization of elliptic-curve single-scalar multiplication
+  url: https://eprint.iacr.org/2007/455
+  author: Daniel J. Bernstein and Tanja Lange
+  section: ecarith
+  id: efdanalysis
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2007/455
+    year: "2007"
+- title: Explicit-Formulas Database
+  url: https://hyperelliptic.org/EFD
+  author: Daniel J. Bernstein and Tanja Lange
+  section: ecarith
+  id: efd
+  fields:
+    urldate: "2019-07-14"
+- title: 'Selecting Elliptic Curves for Cryptography: An Efficiency and Security Analysis'
+  url: https://eprint.iacr.org/2014/130
+  author: Joppe W. Bos and Craig Costello and Patrick Longa and Michael Naehrig
+  note: Superbly detailed paper on the implementation of the MSR Elliptic Curve Cryptography
+    Library, with code provided.
+  section: impl
+  highlight: true
+  id: msrecclibpaper
+  fields:
+    howpublished: Cryptology ePrint Archive, Report 2014/130
+    year: "2014"
+- title: MSR Elliptic Curve Cryptography Library
+  url: https://www.microsoft.com/en-us/research/project/msr-elliptic-curve-cryptography-library/
+  author: Microsoft Research
+  section: software
+  id: msrecclibcode
+  fields:
+    year: "2014"
+- title: High-speed Curve25519 on 8-bit, 16-bit, and 32-bit microcontrollers
+  url: https://doi.org/10.1007/s10623-015-0087-1
+  author: Michael Düll and Björn Haase and Gesine Hinterwälder and Michael Hutter
+    and Christof Paar and \ Ana Helena Sánchez and Peter Schwabe
+  section: impl
+  queued: true
+  fields:
+    day: "01"
+    doi: 10.1007/s10623-015-0087-1
+    journal: Designs, Codes and Cryptography
+    month: Dec
+    number: "2"
+    pages: 493--514
+    volume: "77"
+    year: "2015"
+- title: Verifying Branch-Free Assembly Code in Why3
+  url: http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
+  author: Marc Schoolderman
+  section: verif
+  queued: true

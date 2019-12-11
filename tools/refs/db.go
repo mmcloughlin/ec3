@@ -20,17 +20,17 @@ type Section struct {
 
 // Reference describes a referenced resource.
 type Reference struct {
-	Title       string            `yaml:"title"`
-	URL         string            `yaml:"url"`
-	Author      string            `yaml:"author"`
-	Note        string            `yaml:"note"`
-	Section     string            `yaml:"section"`
-	Highlight   bool              `yaml:"highlight"`
-	Supplements []Supplement      `yaml:"supplements"`
-	Queued      bool              `yaml:"queued"`
-	ID          string            `yaml:"id"`
-	Type        string            `yaml:"type"`
-	Fields      map[string]string `yaml:"fields"`
+	Title       string            `yaml:"title,omitempty"`
+	URL         string            `yaml:"url,omitempty"`
+	Author      string            `yaml:"author,omitempty"`
+	Note        string            `yaml:"note,omitempty"`
+	Section     string            `yaml:"section,omitempty"`
+	Highlight   bool              `yaml:"highlight,omitempty"`
+	Supplements []Supplement      `yaml:"supplements,omitempty"`
+	Queued      bool              `yaml:"queued,omitempty"`
+	ID          string            `yaml:"id,omitempty"`
+	Type        string            `yaml:"type,omitempty"`
+	Fields      map[string]string `yaml:"fields,omitempty"`
 }
 
 // Supplement is another resource associated with a reference. For example, in
@@ -49,4 +49,13 @@ func LoadDatabase(r io.Reader) (*Database, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+// StoreDatabase writes the database to w.
+func StoreDatabase(w io.Writer, db *Database) error {
+	e := yaml.NewEncoder(w)
+	if err := e.Encode(db); err != nil {
+		return err
+	}
+	return e.Close()
 }
