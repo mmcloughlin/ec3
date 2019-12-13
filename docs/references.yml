@@ -888,9 +888,14 @@ references:
     volume: "77"
     year: "2015"
 - title: Verifying Branch-Free Assembly Code in Why3
-  url: http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
+  url: https://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf
   author: Marc Schoolderman
   section: verif
+  supplements:
+  - type: slides
+    url: https://cs.ru.nl/~M.Schoolderman/pres/vstte17.pdf
+  - type: code
+    url: https://gitlab.science.ru.nl/sovereign/why3-avr
 - title: Verifying Curve25519 Software
   url: https://cryptojedi.org/papers/verify25519-20140428.pdf
   author: Yu-Fang Chen and Chang-Hong Hsu and Hsin-Hung Lin and Peter Schwabe and
@@ -907,3 +912,8 @@ references:
   author: Jean-Christophe Filliâtre and Léon Gondelman and Andrei Paskevich
   section: verif
   queued: true
+- title: The Why3 platform
+  url: http://why3.lri.fr/manual.pdf
+  author: François Bobot and Jean-Christophe Filliâtre and Claude Marché and Guillaume
+    Melquiond and Andrei Paskevich
+  section: verif

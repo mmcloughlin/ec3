@@ -140,7 +140,8 @@
 * [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798v2/document)
 * [Crafting Certified Elliptic Curve Cryptography Implementations in Coq](http://adam.chlipala.net/theses/andreser_meng.pdf)
 * [Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without Compromises](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf) _Note:_ FIAT Crypto
-* [Verifying Branch-Free Assembly Code in Why3](http://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf) Marc Schoolderman.
+* [Verifying Branch-Free Assembly Code in Why3](https://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf) ([slides](https://cs.ru.nl/~M.Schoolderman/pres/vstte17.pdf), [code](https://gitlab.science.ru.nl/sovereign/why3-avr)) Marc Schoolderman.
+* [The Why3 platform](http://why3.lri.fr/manual.pdf) François Bobot and Jean-Christophe Filliâtre and Claude Marché and Guillaume Melquiond and Andrei Paskevich.
 ## Software
 * [RELIC Toolkit](https://github.com/relic-toolkit/relic)
 * [`zkcrypto/jubjub`](https://github.com/zkcrypto/jubjub)
