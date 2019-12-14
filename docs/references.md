@@ -125,6 +125,7 @@
 ## Bugs
 * [Assessing and Exploiting BigNum Vulnerabilities](https://comsecuris.com/slides/slides-bignum-bhus2015.pdf) Ralf-Philipp Weinmann. _Note:_ Examples of specific arbitrary precision integer bugs and how to find them.
 * [Practical realisation and elimination of an ECC-related software bug attack](https://eprint.iacr.org/2011/633) B.B. Brumley and M. Barbosa and D. Page and F. Vercauteren. _Note:_ Exploit for bug in OpenSSL version 0.9.8g which permit an attack against ECDH-based functionality. Some discussion of discovery and verification with `CAOverif`.
+* [The PARIS256 Attack: Or, Squeezing a Key Through a Carry Bit](https://i.blackhat.com/us-18/Wed-August-8/us-18-Valsorda-Squeezing-A-Key-Through-A-Carry-Bit-wp.pdf) ([presentation](https://fahrplan.events.ccc.de/congress/2017/Fahrplan/events/9021.html), [CVE-2017-8932](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8932), [issue](https://golang.org/issue/20040)) Sean Devlin and Filippo Valsorda.
 ## Verification
 * [A Brief Overview of HOL4](https://ts.data61.csiro.au/publications/nicta_full_text/1482.pdf)
 * [On Construction of a Library of Formally Verified Low-level Arithmetic Functions](https://staff.aist.go.jp/reynald.affeldt/documents/arilib-affeldt.pdf)

@@ -917,3 +917,14 @@ references:
   author: François Bobot and Jean-Christophe Filliâtre and Claude Marché and Guillaume
     Melquiond and Andrei Paskevich
   section: verif
+- title: 'The PARIS256 Attack: Or, Squeezing a Key Through a Carry Bit'
+  url: https://i.blackhat.com/us-18/Wed-August-8/us-18-Valsorda-Squeezing-A-Key-Through-A-Carry-Bit-wp.pdf
+  author: Sean Devlin and Filippo Valsorda
+  section: bugs
+  supplements:
+  - type: presentation
+    url: https://fahrplan.events.ccc.de/congress/2017/Fahrplan/events/9021.html
+  - type: CVE-2017-8932
+    url: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8932
+  - type: issue
+    url: https://golang.org/issue/20040
