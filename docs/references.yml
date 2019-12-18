@@ -928,3 +928,10 @@ references:
     url: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-8932
   - type: issue
     url: https://golang.org/issue/20040
+- title: 'EXEgesis: Understanding CPUs to speed up code'
+  url: https://goo.gl/koSKFK
+  author: Google Compiler Research
+  section: asm
+  supplements:
+  - type: code
+    url: https://github.com/google/EXEgesis

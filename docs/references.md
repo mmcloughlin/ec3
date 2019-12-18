@@ -178,3 +178,4 @@
 * [Systematic Support of Parallel Bit Streams in LLVM](https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf) Meng Lin.
 * [Go assembly language complementary reference](https://quasilyte.dev/blog/post/go-asm-complementary-reference/) Iskander Sharipov.
 * [The Design and Application of a Retargetable Peephole Optimizer](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.64.7226&rep=rep1&type=pdf) Davidson and Fraser. _Note:_ Early description of an RTL language.
+* [EXEgesis: Understanding CPUs to speed up code](https://goo.gl/koSKFK) ([code](https://github.com/google/EXEgesis)) Google Compiler Research.
