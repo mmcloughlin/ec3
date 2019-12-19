@@ -37,7 +37,7 @@ references:
   url: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.171.621&rep=rep1&type=pdf
   section: verif
 - title: A Verified Extensible Library of Elliptic Curves
-  url: https://hal.inria.fr/hal-01425957/document
+  url: https://hal.inria.fr/hal-01425957
   author: Jean Karim Zinzindohoue, Evmorfia-Iro Bartzia, Karthikeyan Bhargavan
   section: verif
 - title: Formal Verification of a Big Integer Library Written in C0
@@ -52,10 +52,10 @@ references:
   url: http://user.it.uu.se/~tjawe125/publications/boehme11reconstruction.html
   section: verif
 - title: A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms
-  url: https://hal.inria.fr/hal-01699754v1/document
+  url: https://hal.inria.fr/hal-01699754
   section: verif
 - title: How to Get an Efficient yet Verified Arbitrary-Precision Integer Library
-  url: https://hal.inria.fr/hal-01519732v2/document
+  url: https://hal.inria.fr/hal-01519732
   section: verif
   supplements:
   - type: code
@@ -89,7 +89,7 @@ references:
   author: Kaushik Nath and Palash Sarkar
   section: field
 - title: A type-safe arbitrary precision arithmetic portability layer for HLS tools
-  url: https://hal.inria.fr/hal-02131798v2/document
+  url: https://hal.inria.fr/hal-02131798
   section: verif
 - title: Systematic Support of Parallel Bit Streams in LLVM
   url: https://pdfs.semanticscholar.org/1530/6ba903de3e674ba6facf9a76ea41880fc918.pdf

@@ -109,6 +109,33 @@ func IACRCanonical(r *Reference) []error {
 	return nil
 }
 
+// HALCanonical ensures that HAL references conform to a canonical form.
+func HALCanonical(r *Reference) []error {
+	u, err := url.Parse(r.URL)
+	if err != nil {
+		return []error{err}
+	}
+
+	if u.Host != "hal.inria.fr" {
+		return nil
+	}
+
+	if u.Scheme != "https" {
+		return singleerror("url %s: require https", u)
+	}
+
+	match, err := regexp.MatchString(`^/hal-\d+$`, u.Path)
+	if err != nil {
+		return []error{err}
+	}
+
+	if !match {
+		return singleerror("url %s: link to the root page", u)
+	}
+
+	return nil
+}
+
 // DisallowHost builds a linter that errors for URLs with the given host.
 func DisallowHost(host string) Linter {
 	return ReferenceLinterFunc(func(r *Reference) []error {

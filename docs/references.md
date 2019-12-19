@@ -130,15 +130,15 @@
 * [A Brief Overview of HOL4](https://ts.data61.csiro.au/publications/nicta_full_text/1482.pdf)
 * [On Construction of a Library of Formally Verified Low-level Arithmetic Functions](https://staff.aist.go.jp/reynald.affeldt/documents/arilib-affeldt.pdf)
 * [Verification of Machine Code Implementations of Arithmetic Functions for Cryptography](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.171.621&rep=rep1&type=pdf)
-* [A Verified Extensible Library of Elliptic Curves](https://hal.inria.fr/hal-01425957/document) Jean Karim Zinzindohoue, Evmorfia-Iro Bartzia, Karthikeyan Bhargavan.
+* [A Verified Extensible Library of Elliptic Curves](https://hal.inria.fr/hal-01425957) Jean Karim Zinzindohoue, Evmorfia-Iro Bartzia, Karthikeyan Bhargavan.
 * [Formal Verification of a Big Integer Library Written in C0](http://www-wjp.cs.uni-sb.de/publikationen/Fi06.pdf) Sabine Fischer.
 * [Proof Pearl: A Verified Bignum Implementation in x86-64 Machine Code](https://www.cl.cam.ac.uk/~mom22/cpp13/) Magnus O. Myreen and Gregorio Curello.
 * [Reconstruction of Z3's Bit-Vector Proofs in HOL4 and Isabelle/HOL](http://user.it.uu.se/~tjawe125/publications/boehme11reconstruction.html)
-* [A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms](https://hal.inria.fr/hal-01699754v1/document)
-* [How to Get an Efficient yet Verified Arbitrary-Precision Integer Library](https://hal.inria.fr/hal-01519732v2/document) ([code](http://toccata.lri.fr/gallery/multiprecision.en.html))
+* [A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms](https://hal.inria.fr/hal-01699754)
+* [How to Get an Efficient yet Verified Arbitrary-Precision Integer Library](https://hal.inria.fr/hal-01519732) ([code](http://toccata.lri.fr/gallery/multiprecision.en.html))
 * [A Verified, Efficient Embedding of a Verifiable Assembly Language](https://www.microsoft.com/en-us/research/publication/a-verified-efficient-embedding-of-a-verifiable-assembly-language/)
 * [CAOVerif: An Open-Source Deductive Verification Platform for Cryptographic Software Implementations](https://haslab.uminho.pt/jsp/files/opencertjournal_ack.pdf)
-* [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798v2/document)
+* [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798)
 * [Crafting Certified Elliptic Curve Cryptography Implementations in Coq](http://adam.chlipala.net/theses/andreser_meng.pdf)
 * [Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without Compromises](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf) _Note:_ FIAT Crypto
 * [Verifying Branch-Free Assembly Code in Why3](https://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf) ([slides](https://cs.ru.nl/~M.Schoolderman/pres/vstte17.pdf), [code](https://gitlab.science.ru.nl/sovereign/why3-avr)) Marc Schoolderman.
