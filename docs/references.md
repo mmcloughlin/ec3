@@ -135,7 +135,7 @@
 * [Proof Pearl: A Verified Bignum Implementation in x86-64 Machine Code](https://www.cl.cam.ac.uk/~mom22/cpp13/) Magnus O. Myreen and Gregorio Curello.
 * [Reconstruction of Z3's Bit-Vector Proofs in HOL4 and Isabelle/HOL](http://user.it.uu.se/~tjawe125/publications/boehme11reconstruction.html)
 * [A Why3 Framework for Reflection Proofs and its Application to GMP's Algorithms](https://hal.inria.fr/hal-01699754v1/document)
-* [How to Get an Efficient yet Verified Arbitrary-Precision Integer Library](https://hal.inria.fr/hal-01519732v2/document)
+* [How to Get an Efficient yet Verified Arbitrary-Precision Integer Library](https://hal.inria.fr/hal-01519732v2/document) ([code](http://toccata.lri.fr/gallery/multiprecision.en.html))
 * [A Verified, Efficient Embedding of a Verifiable Assembly Language](https://www.microsoft.com/en-us/research/publication/a-verified-efficient-embedding-of-a-verifiable-assembly-language/)
 * [CAOVerif: An Open-Source Deductive Verification Platform for Cryptographic Software Implementations](https://haslab.uminho.pt/jsp/files/opencertjournal_ack.pdf)
 * [A type-safe arbitrary precision arithmetic portability layer for HLS tools](https://hal.inria.fr/hal-02131798v2/document)

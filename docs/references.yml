@@ -57,6 +57,9 @@ references:
 - title: How to Get an Efficient yet Verified Arbitrary-Precision Integer Library
   url: https://hal.inria.fr/hal-01519732v2/document
   section: verif
+  supplements:
+  - type: code
+    url: http://toccata.lri.fr/gallery/multiprecision.en.html
 - title: Analyzing and Comparing Montgomery Multiplication Algorithms
   url: https://pdfs.semanticscholar.org/5e39/41ff482ec3ee41dc53c3298f0be085c69483.pdf
   author: Cetin K. Koc, Tolga Acar, Burton S. Kaliski Jr
