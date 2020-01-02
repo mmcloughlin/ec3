@@ -938,3 +938,50 @@ references:
   supplements:
   - type: code
     url: https://github.com/google/EXEgesis
+- title: 'hacspec: Towards Verifiable Crypto Standards'
+  url: https://hal.inria.fr/hal-01967342
+  author: Karthikeyan Bhargavan and Franziskus Kiefer and Pierre-Yves Strub
+  section: verif
+  supplements:
+  - type: code
+    url: https://github.com/HACS-workshop/hacspec
+  - type: intro
+    url: https://www.franziskuskiefer.de/post/hacspec1/
+  - type: status
+    url: https://www.franziskuskiefer.de/post/hacspec2/
+  queued: true
+- title: 'gfverif: fast and easy verification of finite-field arithmetic'
+  url: http://gfverif.cryptojedi.org/
+  author: Daniel J. Bernstein and Peter Schwabe
+  section: verif
+  queued: true
+- title: 'Jasmin: High-Assurance and High-Speed Cryptography'
+  url: https://hal.inria.fr/hal-01649140
+  author: José Almeida and Manuel Barbosa and Gilles Barthe and Arthur Blot and Benjamin
+    Grégoire and Vincent Laporte and Tiago Oliveira and Hugo Pacheco and Benedikt
+    Schmidt and Pierre-Yves Stru
+  section: verif
+  supplements:
+  - type: slides
+    url: http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf
+  queued: true
+- title: A Roadmap for High Assurance Cryptography
+  url: https://hal.inria.fr/hal-01673294
+  author: Harry Halpin
+  section: verif
+  queued: true
+- title: 'The Last Mile: High-Assurance and High-Speed Cryptographic Implementations'
+  url: https://arxiv.org/abs/1904.04606
+  author: José Bacelar Almeida and Manuel Barbosa and Gilles Barthe and Benjamin Grégoire
+    and Adrien Koutsos and Vincent Laporte and Tiago Oliveira and Pierre-Yves Strub
+  section: verif
+  supplements:
+  - type: code
+    url: https://github.com/tfaoliveira/libjc
+  queued: true
+- title: 'Proving Cryptographic Implementations Secure - Part II: Proof techniques
+    and tools'
+  url: https://summerschool-croatia.cs.ru.nl/2018/slides/Proving%20Cryptographic%20Implementations%20Secure%20-%20Part%202.pdf
+  author: Manuel Barbosa
+  section: verif
+  queued: true
