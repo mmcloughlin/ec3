@@ -190,9 +190,9 @@ func (cmd *linkcheck) Execute(_ context.Context, f *flag.FlagSet, _ ...interface
 
 	// Check all URLs.
 	status := subcommands.ExitSuccess
-	for _, reference := range db.References {
-		if err := CheckLink(reference.URL); err != nil {
-			cmd.Log.Printf("url %s failed: %s", reference.URL, err)
+	for _, link := range DatabaseLinks(db) {
+		if err := CheckLink(link); err != nil {
+			cmd.Log.Printf("url %s failed: %s", link, err)
 			status = subcommands.ExitFailure
 		}
 	}
