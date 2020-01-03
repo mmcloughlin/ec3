@@ -143,7 +143,7 @@
 * [Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without Compromises](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf) _Note:_ FIAT Crypto
 * [Verifying Branch-Free Assembly Code in Why3](https://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf) ([slides](https://cs.ru.nl/~M.Schoolderman/pres/vstte17.pdf), [code](https://gitlab.science.ru.nl/sovereign/why3-avr)) Marc Schoolderman.
 * [The Why3 platform](http://why3.lri.fr/manual.pdf) François Bobot and Jean-Christophe Filliâtre and Claude Marché and Guillaume Melquiond and Andrei Paskevich.
-* [Jasmin: High-Assurance and High-Speed Cryptography](https://hal.inria.fr/hal-01649140) ([slides](http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf)) José Almeida and Manuel Barbosa and Gilles Barthe and Arthur Blot and Benjamin Grégoire and Vincent Laporte and Tiago Oliveira and Hugo Pacheco and Benedikt Schmidt and Pierre-Yves Stru.
+* [**Jasmin: High-Assurance and High-Speed Cryptography**](https://hal.inria.fr/hal-01649140) ([slides](http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf)) José Almeida and Manuel Barbosa and Gilles Barthe and Arthur Blot and Benjamin Grégoire and Vincent Laporte and Tiago Oliveira and Hugo Pacheco and Benedikt Schmidt and Pierre-Yves Strub.
 * [A Roadmap for High Assurance Cryptography](https://hal.inria.fr/hal-01673294) Harry Halpin.
 ## Software
 * [RELIC Toolkit](https://github.com/relic-toolkit/relic)

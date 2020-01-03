@@ -1,4 +1,4 @@
-all: references.md references.bib
+all: lint references.md references.bib
 
 %.md: %.yml
 	refs gen -type markdown -out $@ $<

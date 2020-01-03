@@ -959,8 +959,9 @@ references:
   url: https://hal.inria.fr/hal-01649140
   author: José Almeida and Manuel Barbosa and Gilles Barthe and Arthur Blot and Benjamin
     Grégoire and Vincent Laporte and Tiago Oliveira and Hugo Pacheco and Benedikt
-    Schmidt and Pierre-Yves Stru
+    Schmidt and Pierre-Yves Strub
   section: verif
+  highlight: true
   supplements:
   - type: slides
     url: http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf
@@ -981,5 +982,36 @@ references:
     and tools'
   url: https://summerschool-croatia.cs.ru.nl/2018/slides/Proving%20Cryptographic%20Implementations%20Secure%20-%20Part%202.pdf
   author: Manuel Barbosa
+  section: verif
+  queued: true
+- title: Evmorfia-Iro Bartzia and Pierre-Yves Strub
+  url: https://hal.inria.fr/hal-01102288
+  section: verif
+  queued: true
+- title: Verified correctness and security of OpenSSL HMAC
+  url: https://www.cs.princeton.edu/~appel/papers/verified-hmac.pdf
+  author: Lennart Beringer and Adam Petcher and Katherine Q. Ye and Andrew W. Appel
+  section: verif
+  queued: true
+- title: 'Vale: Verifying High-Performance Cryptographic Assembly Code'
+  url: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-bond.pdf
+  section: verif
+  supplements:
+  - type: presentation
+    url: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/bond
+  - type: slides
+    url: https://www.usenix.org/sites/default/files/conference/protected-files/usenixsecurity17_slides_rane.pdf
+  - type: video
+    url: https://www.youtube.com/watch?v=B4-bnqZ7C2Y
+  queued: true
+- title: Systematic Synthesis of Elliptic Curve Cryptography Implementations
+  url: https://people.csail.mit.edu/jgross/personal-website/papers/2017-fiat-crypto-pldi-draft.pdf
+  author: Andres Erbsen and Jade Philipoom and Jason Gross and Robert Sloan and Adam
+    Chlipala
+  section: verif
+  queued: true
+- title: The Foundational Cryptography Framework
+  url: http://www.cs.cornell.edu/~jgm/papers/FCF.pdf
+  author: Adam Petcher and Greg Morrisett
   section: verif
   queued: true
