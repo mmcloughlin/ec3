@@ -248,7 +248,7 @@ references:
     odd window values are required (page 7). Used to prove upper bound.
   section: addchain
 - title: On the Evaluation of Powers
-  url: https://www.ii.uni.wroc.pl/~aje/WordEq2015/papers/addition_chains_Yao.pdf
+  url: https://archive.org/details/onevaluationofpo675yaoa/
   author: Yao
   note: _Original_ definition of Yao's algorithm.
   section: addchain
@@ -258,7 +258,7 @@ references:
   note: LZ applied to dictionary creation. The _original_ definition of Yacobi's algorithm.
   section: addchain
 - title: Addition chains using continued fractions
-  url: https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf
+  url: https://www.academia.edu/25477090/Addition_chains_using_continued_fractions
   author: BBBD
   note: _Original_ continued fractions paper.
   section: addchain
@@ -423,7 +423,7 @@ references:
   url: https://link.springer.com/content/pdf/10.1007/BFb0053453.pdf
   section: addchain
 - title: Implementation of the GBD cryptosystem
-  url: https://eprints.qut.edu.au/441/1/08_brown04implementation.pdf
+  url: https://eprints.qut.edu.au/441/
   section: addchain
 - title: Redundant integer representations and fast exponentiation
   url: https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf
@@ -964,12 +964,10 @@ references:
   supplements:
   - type: slides
     url: http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf
-  queued: true
 - title: A Roadmap for High Assurance Cryptography
   url: https://hal.inria.fr/hal-01673294
   author: Harry Halpin
   section: verif
-  queued: true
 - title: 'The Last Mile: High-Assurance and High-Speed Cryptographic Implementations'
   url: https://arxiv.org/abs/1904.04606
   author: José Bacelar Almeida and Manuel Barbosa and Gilles Barthe and Benjamin Grégoire

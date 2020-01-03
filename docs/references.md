@@ -17,9 +17,9 @@
 * [Pippenger's exponentiation algorithm](https://cr.yp.to/papers/pippenger.pdf) DJB. _Note:_ Excellent summary. Matrix representation of chains.
 * [On addition chains](https://projecteuclid.org/euclid.bams/1183502136) Brauer. _Note:_ The _original_ Brauer paper.
 * [The Additive Complexity of a Natural Number](https://www.researchgate.net/publication/267016251_The_additive_complexity_of_a_natural_number) Belaga. _Note:_ Early introduction of the dictionary method, with the observation that only odd window values are required (page 7). Used to prove upper bound.
-* [On the Evaluation of Powers](https://www.ii.uni.wroc.pl/~aje/WordEq2015/papers/addition_chains_Yao.pdf) Yao. _Note:_ _Original_ definition of Yao's algorithm.
+* [On the Evaluation of Powers](https://archive.org/details/onevaluationofpo675yaoa/) Yao. _Note:_ _Original_ definition of Yao's algorithm.
 * [Exponentiating faster with addition chains](https://www.researchgate.net/publication/221348287_Exponentiating_Faster_with_Addition_Chains) Yacobi. _Note:_ LZ applied to dictionary creation. The _original_ definition of Yacobi's algorithm.
-* [Addition chains using continued fractions](https://www-igm.univ-mlv.fr/~berstel/Articles/1989AdditionChainDuboc.pdf) BBBD. _Note:_ _Original_ continued fractions paper.
+* [Addition chains using continued fractions](https://www.academia.edu/25477090/Addition_chains_using_continued_fractions) BBBD. _Note:_ _Original_ continued fractions paper.
 * [Addition chains with multiplicative cost](http://www.math.ucsd.edu/~ronspubs/78_11_addition_chains.pdf) _Note:_ Theoretical result on number of multiplications.
 * [On the evaluation of powers and related problems](https://doi.org/10.1109/SFCS.1976.21) Pippenger. _Note:_ Matrix and graph-theoretical view of addition chain methods.
 * [On string replacement exponentiation](https://doi.org/10.1023/A:1011212615791) _Note:_ Mostly just theoretical results.
@@ -34,7 +34,7 @@
 * [An Artificial Immune System Heuristic for Generating Short Addition Chains](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.490.991&rep=rep1&type=pdf)
 * [SPEED 2009 Proceedings: Software Performance Enhancement for Encryption and Decryption and Cryptographic Compilers](http://www.hyperelliptic.org/SPEED/record09.pdf)
 * [Efficient exponentiation using precomputation and vector addition chains](https://link.springer.com/content/pdf/10.1007/BFb0053453.pdf)
-* [Implementation of the GBD cryptosystem](https://eprints.qut.edu.au/441/1/08_brown04implementation.pdf)
+* [Implementation of the GBD cryptosystem](https://eprints.qut.edu.au/441/)
 * [Redundant integer representations and fast exponentiation](https://repository.royalholloway.ac.uk/file/cb0f3ec9-a23f-6ab8-5dd3-1b73129cef71/8/rirafe.pdf)
 * [High-speed high-security signatures](https://ed25519.cr.yp.to/ed25519-20110705.pdf)
 * [Cultivating Sapling: New Crypto Foundations](https://github.com/zcash/zcash-blog/blob/4268b1a9f7e523f59bb254b9fa7a9f9f9d7f75a7/_posts/2017-07-26-cultivating-sapling-new-crypto-foundations.md) _Note:_ Section "New multi-exponentiation algorithm"
@@ -143,6 +143,8 @@
 * [Simple High-Level Code For Cryptographic Arithmetic – With Proofs, Without Compromises](http://adam.chlipala.net/papers/FiatCryptoSP19/FiatCryptoSP19.pdf) _Note:_ FIAT Crypto
 * [Verifying Branch-Free Assembly Code in Why3](https://cs.ru.nl/~M.Schoolderman/pub/vstte-why3-avr-revised.pdf) ([slides](https://cs.ru.nl/~M.Schoolderman/pres/vstte17.pdf), [code](https://gitlab.science.ru.nl/sovereign/why3-avr)) Marc Schoolderman.
 * [The Why3 platform](http://why3.lri.fr/manual.pdf) François Bobot and Jean-Christophe Filliâtre and Claude Marché and Guillaume Melquiond and Andrei Paskevich.
+* [Jasmin: High-Assurance and High-Speed Cryptography](https://hal.inria.fr/hal-01649140) ([slides](http://www.lsv.fr/~koutsos/slides/slides_celtic.pdf)) José Almeida and Manuel Barbosa and Gilles Barthe and Arthur Blot and Benjamin Grégoire and Vincent Laporte and Tiago Oliveira and Hugo Pacheco and Benedikt Schmidt and Pierre-Yves Stru.
+* [A Roadmap for High Assurance Cryptography](https://hal.inria.fr/hal-01673294) Harry Halpin.
 ## Software
 * [RELIC Toolkit](https://github.com/relic-toolkit/relic)
 * [`zkcrypto/jubjub`](https://github.com/zkcrypto/jubjub)
