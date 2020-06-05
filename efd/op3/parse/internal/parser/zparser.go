@@ -75,6 +75,7 @@ var g = &grammar{
 							pos:        position{line: 19, col: 28, offset: 268},
 							val:        "=",
 							ignoreCase: false,
+							want:       "\"=\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 19, col: 32, offset: 272},
@@ -166,6 +167,7 @@ var g = &grammar{
 							pos:        position{line: 30, col: 21, offset: 500},
 							val:        "^",
 							ignoreCase: false,
+							want:       "\"^\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 30, col: 25, offset: 504},
@@ -196,6 +198,7 @@ var g = &grammar{
 							pos:        position{line: 37, col: 8, offset: 618},
 							val:        "1",
 							ignoreCase: false,
+							want:       "\"1\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 37, col: 12, offset: 622},
@@ -205,6 +208,7 @@ var g = &grammar{
 							pos:        position{line: 37, col: 14, offset: 624},
 							val:        "/",
 							ignoreCase: false,
+							want:       "\"/\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 37, col: 18, offset: 628},
@@ -247,6 +251,7 @@ var g = &grammar{
 							pos:        position{line: 43, col: 20, offset: 725},
 							val:        "*",
 							ignoreCase: false,
+							want:       "\"*\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 43, col: 24, offset: 729},
@@ -277,6 +282,7 @@ var g = &grammar{
 							pos:        position{line: 50, col: 8, offset: 840},
 							val:        "-",
 							ignoreCase: false,
+							want:       "\"-\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 50, col: 12, offset: 844},
@@ -319,6 +325,7 @@ var g = &grammar{
 							pos:        position{line: 56, col: 20, offset: 941},
 							val:        "+",
 							ignoreCase: false,
+							want:       "\"+\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 56, col: 24, offset: 945},
@@ -361,6 +368,7 @@ var g = &grammar{
 							pos:        position{line: 63, col: 20, offset: 1068},
 							val:        "-",
 							ignoreCase: false,
+							want:       "\"-\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 63, col: 24, offset: 1072},
@@ -403,6 +411,7 @@ var g = &grammar{
 							pos:        position{line: 70, col: 22, offset: 1197},
 							val:        "?",
 							ignoreCase: false,
+							want:       "\"?\"",
 						},
 						&ruleRefExpr{
 							pos:  position{line: 70, col: 26, offset: 1201},
@@ -550,6 +559,7 @@ var g = &grammar{
 						pos:        position{line: 99, col: 19, offset: 1750},
 						val:        "0x",
 						ignoreCase: false,
+						want:       "\"0x\"",
 					},
 					&oneOrMoreExpr{
 						pos: position{line: 99, col: 24, offset: 1755},
@@ -574,6 +584,7 @@ var g = &grammar{
 						pos:        position{line: 101, col: 21, offset: 1789},
 						val:        "0",
 						ignoreCase: false,
+						want:       "\"0\"",
 					},
 					&oneOrMoreExpr{
 						pos: position{line: 101, col: 25, offset: 1793},
@@ -628,6 +639,7 @@ var g = &grammar{
 				pos:        position{line: 109, col: 8, offset: 1888},
 				val:        "\n",
 				ignoreCase: false,
+				want:       "\"\\n\"",
 			},
 		},
 		{
@@ -1106,6 +1118,7 @@ type litMatcher struct {
 	pos        position
 	val        string
 	ignoreCase bool
+	want       string
 }
 
 type charClassMatcher struct {
@@ -1900,11 +1913,6 @@ func (p *parser) parseLitMatcher(lit *litMatcher) (interface{}, bool) {
 		defer p.out(p.in("parseLitMatcher"))
 	}
 
-	ignoreCase := ""
-	if lit.ignoreCase {
-		ignoreCase = "i"
-	}
-	val := string(strconv.AppendQuote([]byte{}, lit.val)) + ignoreCase // wrap 'lit.val' with double quotes
 	start := p.pt
 	for _, want := range lit.val {
 		cur := p.pt.rn
@@ -1912,13 +1920,13 @@ func (p *parser) parseLitMatcher(lit *litMatcher) (interface{}, bool) {
 			cur = unicode.ToLower(cur)
 		}
 		if cur != want {
-			p.failAt(false, start.position, val)
+			p.failAt(false, start.position, lit.want)
 			p.restore(start)
 			return nil, false
 		}
 		p.read()
 	}
-	p.failAt(true, start.position, val)
+	p.failAt(true, start.position, lit.want)
 	return p.sliceFrom(start), true
 }
 

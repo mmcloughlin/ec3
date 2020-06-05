@@ -21,9 +21,11 @@ generate:
 .PHONY: bootstrap
 bootstrap:
 	go get -v -t ./...
-	go get -u \
-		mvdan.cc/gofumpt/gofumports \
-		github.com/mna/pigeon
+
+	GO111MODULE=off go get -u github.com/myitcv/gobin
+	gobin mvdan.cc/gofumpt/gofumports@v0.0.0-20200412215918-a91da47f375c
+	gobin github.com/mna/pigeon@v1.0.1-0.20200224192238-18953b277063
+
 	go install \
 		./tools/mathfmt \
 		./tools/refs \
