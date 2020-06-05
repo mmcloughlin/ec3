@@ -48,5 +48,5 @@ workflows:
   version: 2
   ci:
     jobs:
-      - test:
-      - generate:
+      - test
+      - generate
