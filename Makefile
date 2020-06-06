@@ -25,9 +25,9 @@ bootstrap:
 	GO111MODULE=off go get -u github.com/myitcv/gobin
 	gobin mvdan.cc/gofumpt/gofumports@v0.0.0-20200412215918-a91da47f375c
 	gobin github.com/mna/pigeon@v1.0.1-0.20200224192238-18953b277063
+	gobin github.com/mmcloughlin/mathfmt@v0.0.0-20200207041814-4064651798f4
 
 	go install \
-		./tools/mathfmt \
 		./tools/refs \
 		./tools/bib \
 		./tools/assets

@@ -193,7 +193,7 @@ func (a *api) Decode() {
 
 // Encode generates an encode function for Montgomery fields.
 func (a *api) Encode() {
-	// Define the R^2 constant.
+	// Define the R² constant.
 	r2 := a.Name("r2")
 	a.Commentf("%s is the multiplier R^2 for encoding into the Montgomery domain.", "r2")
 	R2 := bigint.Pow2(2 * uint(a.Field.ElementBits()))
