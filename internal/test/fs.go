@@ -6,9 +6,8 @@ import (
 	"testing"
 )
 
-// TempDir creates a temp directory. Returns the path to the directory and a
-// cleanup function.
-func TempDir(t *testing.T) (string, func()) {
+// TempDir creates a temp directory. Returns the path to the directory.
+func TempDir(t *testing.T) string {
 	t.Helper()
 
 	dir, err := ioutil.TempDir("", "test")
@@ -16,9 +15,11 @@ func TempDir(t *testing.T) (string, func()) {
 		t.Fatal(err)
 	}
 
-	return dir, func() {
+	t.Cleanup(func() {
 		if err := os.RemoveAll(dir); err != nil {
 			t.Fatal(err)
 		}
-	}
+	})
+
+	return dir
 }

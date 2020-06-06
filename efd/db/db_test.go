@@ -34,8 +34,7 @@ func AssertFiles(t *testing.T, s Store, expect map[string]string) {
 
 func TestDirectory(t *testing.T) {
 	// Setup a temporary directory.
-	dir, clean := test.TempDir(t)
-	defer clean()
+	dir := test.TempDir(t)
 
 	paths := []string{"one", "two", "three"}
 	filename := "data"
