@@ -2,16 +2,8 @@ version: 2
 
 aliases:
   env: &env
-    environment:
-      BUILD_IMAGE: mmcloughlin/ec3-build
-      DOCKERFILE: Dockerfile
-  runner: &runner
-    <<: *env
     docker:
-      - image: ${BUILD_IMAGE}:commit-${CIRCLE_SHA1}
-        auth:
-          username: ${DOCKERHUB_USERNAME}
-          password: ${DOCKERHUB_PASSWORD}
+      - image: circleci/golang:1.14
     working_directory: /go/src/github.com/mmcloughlin/ec3
   checkdirty: &checkdirty
     name: Git Status
@@ -20,45 +12,8 @@ aliases:
       test -z "$(git status --porcelain)"
 
 jobs:
-  container:
-    <<: *env
-    docker:
-      - image: circleci/buildpack-deps:bionic
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Configure Environment
-          command: |
-            echo "export CACHE_TAG=dockerfile-$(sha1sum ${DOCKERFILE})" >> ${BASH_ENV}
-            echo "export COMMIT_TAG=commit-${CIRCLE_SHA1}" >> ${BASH_ENV}
-      - run:
-          name: Docker Login
-          command: |
-            echo ${DOCKERHUB_PASSWORD} | docker login --username ${DOCKERHUB_USERNAME} --password-stdin
-      - run:
-          name: Docker Pull
-          command: |
-            docker pull ${BUILD_IMAGE}:latest || true
-            docker pull ${BUILD_IMAGE}:${CACHE_TAG} || true
-      - run:
-          name: Docker Build
-          command: |
-            docker build \
-              --cache-from ${BUILD_IMAGE}:latest \
-              --cache-from ${BUILD_IMAGE}:${CACHE_TAG} \
-              --tag ${BUILD_IMAGE}:latest \
-              --tag ${BUILD_IMAGE}:${CACHE_TAG} \
-              --tag ${BUILD_IMAGE}:${COMMIT_TAG} \
-              .
-      - run:
-          name: Docker Push
-          command: |
-            docker push ${BUILD_IMAGE}:latest
-            docker push ${BUILD_IMAGE}:${CACHE_TAG}
-            docker push ${BUILD_IMAGE}:${COMMIT_TAG}
   test:
-    <<: *runner
+    <<: *env
     steps:
       - checkout
       - run:
@@ -75,7 +30,7 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
           when: on_success
   generate:
-    <<: *runner
+    <<: *env
     steps:
       - checkout
       - run:
@@ -94,10 +49,5 @@ workflows:
   version: 2
   ci:
     jobs:
-      - container
-      - test:
-          requires:
-            - container
-      - generate:
-          requires:
-            - container
+      - test
+      - generate
