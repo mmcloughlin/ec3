@@ -190,7 +190,7 @@ func Mul(ctx *build.Context, z, x, y Int) {
 	}
 }
 
-// Sqr does a full square z = x^2.
+// Sqr does a full square z = x².
 func Sqr(ctx *build.Context, z, x Int) {
 	Mul(ctx, z, x, x)
 }

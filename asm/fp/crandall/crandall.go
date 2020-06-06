@@ -165,7 +165,7 @@ func (b builder) ReduceDouble(z, x mp.Int) {
 	//
 	// Currently r has one too many limbs, so we need to reduce again. The value in
 	// the top limb is ⩽ d. When we reduce we have to multiply by d again, so the
-	// result cannot exceed d^2. Provided d is small, the result will not exceed a single limb.
+	// result cannot exceed d². Provided d is small, the result will not exceed a single limb.
 
 	// TODO(mbm): assert d is within an acceptable range
 

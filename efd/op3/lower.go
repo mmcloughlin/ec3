@@ -59,7 +59,7 @@ func lower(a ast.Assignment) ([]ast.Assignment, error) {
 		return []ast.Assignment{a}, nil
 	}
 
-	// Non-primitive instructions are raising to a constant power x^c or
+	// Non-primitive instructions are raising to a constant power xᶜ or
 	// multiplying by a constant c*x. In either case lowering the instructions
 	// reduces to an addition chain for the constant c. In this case the constants
 	// we actually see are either small or powers of two; in particular, naive
