@@ -8,7 +8,7 @@ aliases:
   checkdirty: &checkdirty
     name: Git Status
     command: |
-      git diff
+      git --no-pager diff
       test -z "$(git status --porcelain)"
 
 jobs:
