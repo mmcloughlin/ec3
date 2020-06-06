@@ -1,7 +1,9 @@
 version: 2
 
 aliases:
-  runner: &runner
+  env: &env
+    docker:
+      - image: circleci/golang:1.14
     working_directory: /go/src/github.com/mmcloughlin/ec3
   checkdirty: &checkdirty
     name: Git Status
@@ -11,7 +13,7 @@ aliases:
 
 jobs:
   test:
-    <<: *runner
+    <<: *env
     steps:
       - checkout
       - run:
@@ -27,9 +29,8 @@ jobs:
           name: Upload Coverage
           command: bash <(curl -s https://codecov.io/bash) -F unittests -f coverage.out
           when: on_success
-
   generate:
-    <<: *runner
+    <<: *env
     steps:
       - checkout
       - run:
