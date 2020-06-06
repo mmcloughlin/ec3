@@ -4,7 +4,6 @@ aliases:
   env: &env
     docker:
       - image: circleci/golang:1.14
-    working_directory: /go/src/github.com/mmcloughlin/ec3
   checkdirty: &checkdirty
     name: Git Status
     command: |
