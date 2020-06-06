@@ -7,6 +7,7 @@ import (
 	"github.com/mmcloughlin/addchain/acc"
 	"github.com/mmcloughlin/addchain/acc/ir"
 	"github.com/mmcloughlin/addchain/acc/pass"
+
 	"github.com/mmcloughlin/ec3/gen"
 	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/errutil"
