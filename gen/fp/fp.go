@@ -4,7 +4,7 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/mmcloughlin/ec3/addchain/acc/ir"
+	"github.com/mmcloughlin/addchain/acc/ir"
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/gen"

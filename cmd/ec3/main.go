@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mmcloughlin/ec3/addchain/acc"
-	"github.com/mmcloughlin/ec3/addchain/acc/ir"
+	"github.com/mmcloughlin/addchain/acc"
+	"github.com/mmcloughlin/addchain/acc/ir"
 	"github.com/mmcloughlin/ec3/asm/fp/crandall"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/efd"
