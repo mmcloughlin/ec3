@@ -92,7 +92,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 	// Step 6: if odd = 0 then k = r − k
 	even := K.ConvertToOdd()
 
-	// Step 7: Recode k to (k_t, ..., k_0) using Algorithm 6.
+	// Step 7: Recode k to (k_t, ..., k₀) using Algorithm 6.
 	digits := K.FixedWindowRecode()
 
 	// Step 4: Compute P[i] = (2i + 1)P for 0 ⩽ i < 2^{w−2}.
@@ -122,7 +122,7 @@ func (c curve) ScalarMult(x1, y1 *big.Int, k []byte) (x, y *big.Int) {
 		q.Double(&q)
 	}
 
-	// Step 19: Q = Q ⊕ s_0 * P[(|k_0| − 1)/2]
+	// Step 19: Q = Q ⊕ s₀ * P[(|k₀| − 1)/2]
 	tbl.Lookup(&r, digits[0])
 	rp := r.Projective()
 	qp := q.Projective()
