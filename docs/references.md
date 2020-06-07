@@ -181,3 +181,4 @@
 * [Go assembly language complementary reference](https://quasilyte.dev/blog/post/go-asm-complementary-reference/) Iskander Sharipov.
 * [The Design and Application of a Retargetable Peephole Optimizer](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.64.7226&rep=rep1&type=pdf) Davidson and Fraser. _Note:_ Early description of an RTL language.
 * [EXEgesis: Understanding CPUs to speed up code](https://goo.gl/koSKFK) ([code](https://github.com/google/EXEgesis)) Google Compiler Research.
+* [The LLVM Target-Independent Code Generator](https://llvm.org/docs/CodeGenerator.html)

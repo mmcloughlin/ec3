@@ -957,3 +957,6 @@ references:
   author: Adam Petcher and Greg Morrisett
   section: verif
   queued: true
+- title: The LLVM Target-Independent Code Generator
+  url: https://llvm.org/docs/CodeGenerator.html
+  section: asm
