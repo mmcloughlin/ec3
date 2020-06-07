@@ -9,7 +9,7 @@ import (
 	"github.com/mmcloughlin/ec3/asm/fp"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/gen"
-	"github.com/mmcloughlin/ec3/gen/name"
+	"github.com/mmcloughlin/ec3/name"
 )
 
 type Config struct {

@@ -19,7 +19,7 @@ import (
 	"github.com/mmcloughlin/ec3/gen/curve"
 	"github.com/mmcloughlin/ec3/gen/fmla"
 	"github.com/mmcloughlin/ec3/gen/fp"
-	"github.com/mmcloughlin/ec3/gen/name"
+	"github.com/mmcloughlin/ec3/name"
 	"github.com/mmcloughlin/ec3/prime"
 )
 

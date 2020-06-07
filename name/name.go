@@ -2,7 +2,7 @@
 package name
 
 import (
-	"go/ast"
+	"go/token"
 	"strings"
 )
 
@@ -56,5 +56,5 @@ func SetExported(name string, exported bool) string {
 
 // IsExported reports whether name is an exported Go symbol.
 func IsExported(name string) bool {
-	return ast.IsExported(name)
+	return token.IsExported(name)
 }
