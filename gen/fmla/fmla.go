@@ -20,6 +20,7 @@ import (
 	"github.com/mmcloughlin/ec3/internal/container/disjointset"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 	"github.com/mmcloughlin/ec3/internal/gocode"
+	"github.com/mmcloughlin/ec3/name"
 )
 
 type Component interface {
@@ -108,7 +109,7 @@ func (f Function) Program() (*ast.Program, error) {
 
 	// Ensure the program is robust to potential alias sets.
 	aliases := f.AliasSets()
-	p = op3.AliasCorrect(p, aliases, outputs, op3.Temporaries())
+	p = op3.AliasCorrect(p, aliases, outputs, name.Uniqued(name.Temporaries()))
 
 	// Finally, reduce the program to primitives.
 	p, err = op3.Lower(p)
