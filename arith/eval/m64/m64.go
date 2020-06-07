@@ -37,6 +37,14 @@ func (Processor) Bits() uint { return 64 }
 // Const builds an n-bit constant.
 func (Processor) Const(x uint64, n uint) eval.Value { return Word(x) }
 
+// ITE returns x if l≡r else y.
+func (p *Processor) ITE(l, r, x, y eval.Value) eval.Value {
+	if p.u64(l) == p.u64(r) {
+		return x
+	}
+	return y
+}
+
 // ADD executes an add with carry instruction.
 func (p *Processor) ADD(x, y, cin eval.Value) (sum, cout eval.Value) {
 	s, c := bits.Add64(p.u64(x), p.u64(y), p.u64(cin))
