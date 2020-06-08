@@ -2,8 +2,12 @@ package bigint
 
 import (
 	"math/big"
+	"math/rand"
 	"reflect"
 	"testing"
+	"time"
+
+	"github.com/mmcloughlin/ec3/internal/test"
 )
 
 func TestHex(t *testing.T) {
@@ -78,6 +82,20 @@ func TestUint64s(t *testing.T) {
 	if !reflect.DeepEqual(expect, got) {
 		t.Fail()
 	}
+}
+
+func TestUint64sRoundTrip(t *testing.T) {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	n := uint(512)
+	test.Repeat(t, func(t *testing.T) bool {
+		x := RandBits(r, n)
+		words := Uint64s(x)
+		got := FromUint64s(words)
+		if !Equal(got, x) {
+			t.Fail()
+		}
+		return true
+	})
 }
 
 func TestBytesLittleEndian(t *testing.T) {

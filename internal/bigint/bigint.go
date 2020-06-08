@@ -181,6 +181,18 @@ func Uint64s(x *big.Int) []uint64 {
 	return words
 }
 
+// FromUint64s builds a big integer from little-endian 64-bit limbs.
+func FromUint64s(words []uint64) *big.Int {
+	x := Zero()
+	word := new(big.Int)
+	for i := len(words) - 1; i >= 0; i-- {
+		word.SetUint64(words[i])
+		x.Lsh(x, 64)
+		x.Or(x, word)
+	}
+	return x
+}
+
 // BytesLittleEndian returns the absolute value of x as a little-endian byte slice.
 func BytesLittleEndian(x *big.Int) []byte {
 	b := x.Bytes()
