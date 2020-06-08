@@ -2,9 +2,12 @@
 package m64
 
 import (
+	"math/big"
 	"math/bits"
 
 	"github.com/mmcloughlin/ec3/arith/eval"
+	"github.com/mmcloughlin/ec3/arith/ir"
+	"github.com/mmcloughlin/ec3/internal/bigint"
 	"github.com/mmcloughlin/ec3/internal/errutil"
 )
 
@@ -14,6 +17,60 @@ type Word uint64
 // Bits returns the number of bits required to represent x.
 func (x Word) Bits() uint {
 	return uint(bits.Len64(uint64(x)))
+}
+
+// Evaluator for arithmetic programs with 64-bit limbs.
+type Evaluator struct {
+	eval *eval.Evaluator
+}
+
+func NewEvaluator() *Evaluator {
+	return &Evaluator{
+		eval: eval.NewEvaluator(New()),
+	}
+}
+
+// SetRegister sets register r to value x.
+func (e *Evaluator) SetRegister(r ir.Register, x uint64) {
+	e.eval.SetRegister(r, Word(x))
+}
+
+// Register returns the value in the given register.
+func (e *Evaluator) Register(r ir.Register) (uint64, error) {
+	v, err := e.eval.Register(r)
+	if err != nil {
+		return 0, err
+	}
+	return u64(v)
+}
+
+// SetInt sets registers to the 64-bit limbs of x.
+func (e *Evaluator) SetInt(z ir.Registers, x *big.Int) {
+	limbs := bigint.Uint64s(x)
+	for i, limb := range limbs {
+		e.SetRegister(z[i], limb)
+	}
+	for i := len(limbs); i < len(z); i++ {
+		e.SetRegister(z[i], 0)
+	}
+}
+
+// Int returns the integer represented by the 64-bit limbs in the given registers.
+func (e *Evaluator) Int(z ir.Registers) (*big.Int, error) {
+	words := make([]uint64, len(z))
+	for i, r := range z {
+		word, err := e.Register(r)
+		if err != nil {
+			return nil, err
+		}
+		words[i] = word
+	}
+	return bigint.FromUint64s(words), nil
+}
+
+// Execute the program p.
+func (e *Evaluator) Execute(p *ir.Program) error {
+	return e.eval.Execute(p)
 }
 
 // Processor is a 64-bit arithmetic evaluator.
@@ -75,9 +132,18 @@ func (p *Processor) SHR(x eval.Value, s uint) eval.Value {
 
 // u64 casts v to uint64.
 func (p *Processor) u64(v eval.Value) uint64 {
-	if x, ok := v.(Word); ok {
-		return uint64(x)
+	x, err := u64(v)
+	if err != nil {
+		p.errs.Add(errutil.UnexpectedType(v))
+		return 0
 	}
-	p.errs.Add(errutil.UnexpectedType(v))
-	return 0
+	return x
+}
+
+// u64 type asserts v to a uint64.
+func u64(v eval.Value) (uint64, error) {
+	if x, ok := v.(Word); ok {
+		return uint64(x), nil
+	}
+	return 0, errutil.UnexpectedType(v)
 }
