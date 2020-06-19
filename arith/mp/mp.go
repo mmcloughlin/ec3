@@ -35,6 +35,15 @@ func add(ctx *build.Context, x, y ir.Int, k int) ir.Int {
 	return z
 }
 
+// SubInto sets z = x-y using borrow register b.
+func SubInto(ctx *build.Context, z, x, y ir.Int, b ir.Register) {
+	var bin ir.Operand = ir.Flag(0)
+	for i := 0; i < z.Len(); i++ {
+		ctx.SUB(ir.Limb(x, i), ir.Limb(y, i), bin, z.Limb(i), b)
+		bin = b
+	}
+}
+
 // MulInto sets z = x*y.
 func MulInto(ctx *build.Context, z, x, y ir.Int) {
 	acc := NewAccumulator(ctx, z)
