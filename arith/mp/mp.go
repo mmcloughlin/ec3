@@ -34,3 +34,16 @@ func add(ctx *build.Context, x, y ir.Int, k int) ir.Int {
 	AddInto(ctx, z, x, y, c)
 	return z
 }
+
+// MulInto sets z = x*y.
+func MulInto(ctx *build.Context, z, x, y ir.Int) {
+	acc := NewAccumulator(ctx, z)
+	for i, a := range x.Limbs() {
+		for j, b := range y.Limbs() {
+			lo, hi := ctx.Register("lo"), ctx.Register("hi")
+			ctx.MUL(a, b, hi, lo)
+			acc.AddProduct(hi, lo, i+j)
+		}
+		acc.Flush()
+	}
+}
