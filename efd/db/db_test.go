@@ -47,7 +47,7 @@ func TestDirectory(t *testing.T) {
 		err := os.Mkdir(root, 0755)
 		assert.NoError(t, err)
 
-		ioutil.WriteFile(filepath.Join(root, filename), []byte(contents), 0640)
+		err = ioutil.WriteFile(filepath.Join(root, filename), []byte(contents), 0640)
 		assert.NoError(t, err)
 	}
 

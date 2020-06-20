@@ -314,7 +314,7 @@ func (p parser) shape(k Key, r io.Reader) error {
 
 func (p parser) op3(k Key, r io.Reader) error {
 	prog, err := parse.Reader(k.Path, r)
-	// Note we expect some files to fail parsing, so we supress errors here.
+	// Note we expect some files to fail parsing, so we suppress errors here.
 	if err != nil {
 		return nil
 	}

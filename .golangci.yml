@@ -1,11 +1,24 @@
 linters:
   enable-all: true
   disable:
-  - lll
-  - maligned
-  - gosec
-  - prealloc
-  - unparam
-  - gochecknoglobals
-  - gochecknoinits
-  - wsl
+    - lll
+    - maligned
+    - gosec
+    - prealloc
+    - unparam
+    - gochecknoglobals
+    - gochecknoinits
+    - wsl
+    - testpackage
+    - gomnd
+    - godox
+    - goerr113
+    - funlen
+    - dogsled
+    - goconst
+
+issues:
+  exclude-rules:
+    - linters:
+        - gocritic
+      text: captLocal

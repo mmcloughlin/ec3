@@ -58,10 +58,7 @@ func TestMUL(t *testing.T) {
 		hi, lo := proc.MUL(Word(x), Word(y))
 		return uint64(hi.(Word)), uint64(lo.(Word))
 	}
-	expect := func(x, y uint64) (uint64, uint64) {
-		return bits.Mul64(x, y)
-	}
-	if err := quick.CheckEqual(got, expect, nil); err != nil {
+	if err := quick.CheckEqual(got, bits.Mul64, nil); err != nil {
 		t.Fatal(err)
 	}
 }
