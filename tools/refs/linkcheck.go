@@ -19,11 +19,16 @@ func DatabaseLinks(db *Database) []string {
 }
 
 // CheckLink checks whether the given URL exists.
-func CheckLink(u string) error {
+func CheckLink(u string) (err error) {
 	r, err := http.Get(u)
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if errc := r.Body.Close(); errc != nil && err == nil {
+			err = errc
+		}
+	}()
 
 	if r.StatusCode != http.StatusOK {
 		return xerrors.Errorf("http status %d", r.StatusCode)

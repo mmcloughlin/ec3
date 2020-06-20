@@ -23,7 +23,8 @@ type Config struct {
 	name.Scheme
 }
 
-// Montgomery reports whether this is a montgomery field. Fields implemented this way require encoding and decoding before
+// Montgomery reports whether this is a montgomery field. Fields implemented
+// this way require encoding and decoding before field operations.
 func (c Config) Montgomery() bool {
 	_, ok := c.Field.(mont.Field)
 	return ok

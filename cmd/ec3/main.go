@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/elliptic"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -11,7 +12,6 @@ import (
 	"github.com/mmcloughlin/addchain/acc"
 	"github.com/mmcloughlin/addchain/acc/ir"
 
-	"github.com/mmcloughlin/ec3/asm/fp/crandall"
 	"github.com/mmcloughlin/ec3/asm/fp/mont"
 	"github.com/mmcloughlin/ec3/efd"
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
@@ -24,16 +24,14 @@ import (
 )
 
 var (
-	flags = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	directory = flag.String("dir", "", "directory to write to")
 
-	directory = flags.String("dir", "", "directory to write to")
-
-	inverse       = flags.String("inv", "", "addition chain for field inversion")
-	scalarinverse = flags.String("scalarinv", "", "addition chain for scalar field inversion")
+	inverse       = flag.String("inv", "", "addition chain for field inversion")
+	scalarinverse = flag.String("scalarinv", "", "addition chain for scalar field inversion")
 )
 
 func main() {
-	flags.Parse(os.Args[1:])
+	flag.Parse()
 
 	// Load inversion chains.
 	if *inverse == "" {
@@ -53,8 +51,10 @@ func main() {
 	}
 
 	// Build file set.
-	// fs := fp25519(p)
-	fs := p256(p, scalarinvp)
+	fs, err := p256(p, scalarinvp)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for _, f := range fs {
 		fmt.Printf("## `%s`\n", f.Path)
@@ -73,24 +73,7 @@ func main() {
 	}
 }
 
-func fp25519(p *ir.Program) gen.Files {
-	cfg := fp.Config{
-		Field:        crandall.New(prime.P25519),
-		InverseChain: p,
-
-		PackageName:     "fp25519",
-		ElementTypeName: "Elt",
-	}
-
-	fs, err := fp.Package(cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return fs
-}
-
-func p256(p, scalarinvp *ir.Program) gen.Files {
+func p256(p, scalarinvp *ir.Program) (gen.Files, error) {
 	params := elliptic.P256().Params()
 
 	// Field config.
@@ -106,7 +89,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	fieldfiles, err := fp.Package(fieldcfg)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// Scalar field config.
@@ -125,13 +108,13 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	scalarfiles, err := fp.Package(scalarcfg)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// Point config.
 	shape := efd.LookupShape("g1p/shortw")
 	if shape == nil {
-		log.Fatalf("unknown shape")
+		return nil, errors.New("unknown shape")
 	}
 
 	affinecoords := []string{}
@@ -147,7 +130,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	reprjac := efd.LookupRepresentation("g1p/shortw/jacobian-3")
 	if reprjac == nil {
-		log.Fatalf("unknown representation")
+		return nil, errors.New("unknown representation")
 	}
 
 	jacobian := fmla.Representation{
@@ -157,8 +140,8 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 	}
 
 	reprproj := efd.LookupRepresentation("g1p/shortw/projective-3")
-	if reprjac == nil {
-		log.Fatalf("unknown representation")
+	if reprproj == nil {
+		return nil, errors.New("unknown representation")
 	}
 
 	projective := fmla.Representation{
@@ -200,7 +183,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	scalef := efd.LookupFormula("g1p/shortw/jacobian-3/scaling/z")
 	if scalef == nil {
-		log.Fatalf("unknown formula")
+		return nil, errors.New("unknown formula")
 	}
 
 	jtoa := fmla.Function{
@@ -230,7 +213,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	pscalef := efd.LookupFormula("g1p/shortw/projective-3/scaling/z")
 	if pscalef == nil {
-		log.Fatalf("unknown formula")
+		return nil, errors.New("unknown formula")
 	}
 
 	ptoa := fmla.Function{
@@ -282,7 +265,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	addf := efd.LookupFormula("g1p/shortw/jacobian-3/addition/add-2007-bl")
 	if addf == nil {
-		log.Fatal("unknown formula")
+		return nil, errors.New("unknown formula")
 	}
 
 	add := fmla.NewAsmFunctionDefault(fmla.Function{
@@ -297,7 +280,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	dblf := efd.LookupFormula("g1p/shortw/jacobian-3/doubling/dbl-2001-b")
 	if dblf == nil {
-		log.Fatal("unknown formula")
+		return nil, errors.New("unknown formula")
 	}
 
 	dbl := fmla.NewAsmFunctionDefault(fmla.Function{
@@ -331,7 +314,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	compaddf := efd.LookupFormula("g1p/shortw/projective-3/addition/add-2015-rcb")
 	if compaddf == nil {
-		log.Fatal("unknown formula")
+		return nil, errors.New("unknown formula")
 	}
 
 	compadd := fmla.NewAsmFunctionDefault(fmla.Function{
@@ -377,7 +360,7 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	pointfiles, err := fmla.Package(pointcfg)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// Curve operations.
@@ -389,9 +372,9 @@ func p256(p, scalarinvp *ir.Program) gen.Files {
 
 	curvefiles, err := shortw.Generate()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	// Merge and output.
-	return gen.Merge(fieldfiles, scalarfiles, pointfiles, curvefiles)
+	return gen.Merge(fieldfiles, scalarfiles, pointfiles, curvefiles), nil
 }

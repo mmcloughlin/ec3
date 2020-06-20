@@ -4,8 +4,6 @@ import (
 	"github.com/mmcloughlin/ec3/efd/op3/ast"
 )
 
-var baseurl = "https://hyperelliptic.org/EFD"
-
 type Shape struct {
 	Collection string
 	ID         string

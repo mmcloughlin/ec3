@@ -43,7 +43,8 @@ func Prefixed(prefix string) Scheme {
 	})
 }
 
-// SetExported returns the given name
+// SetExported returns the given name, modified to be exported or not depending
+// on the provided flag.
 func SetExported(name string, exported bool) string {
 	if name == "" {
 		return ""

@@ -39,6 +39,7 @@ func TestUnion(t *testing.T) {
 	// Build set that should have the same assignments.
 	d := New()
 	for s := range members {
+		s := s // scopelint
 		size := len(members[s])
 		rand.Shuffle(size, func(i, j int) {
 			members[s][i], members[s][j] = members[s][j], members[s][i]

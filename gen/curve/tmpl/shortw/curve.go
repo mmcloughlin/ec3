@@ -41,7 +41,7 @@ func init() {
 	curvename.BitSize = ConstBitSize
 }
 
-// Add returns the sum of (x1,y1) and (x2,y2)
+// Add returns the sum of (x1,y1) and (x2,y2).
 func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	a2 := NewAffine(x2, y2)
@@ -52,7 +52,7 @@ func (c curve) Add(x1, y1, x2, y2 *big.Int) (x, y *big.Int) {
 	return s.Affine().Coordinates()
 }
 
-// Double returns 2*(x1,y1)
+// Double returns 2*(x1,y1).
 func (c curve) Double(x1, y1 *big.Int) (x, y *big.Int) {
 	a1 := NewAffine(x1, y1)
 	j1 := a1.Jacobian()
