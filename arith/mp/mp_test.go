@@ -12,6 +12,63 @@ import (
 	"github.com/mmcloughlin/ec3/internal/test"
 )
 
+func TestConditionalMove(t *testing.T) {
+	k := 4
+	n := uint(64 * k)
+
+	// Build program.
+	ctx := build.NewContext()
+	X := ctx.Int("X", k)
+	Y := ctx.Int("Y", k)
+	F := ctx.Register("f")
+	ConditionalMove(ctx, Y, X, F, 1)
+
+	p, err := ctx.Program()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("program:\n%s", p)
+
+	// got: use the evaluator
+	f := func(x, y *big.Int, c uint64) *big.Int {
+		e := m64.NewEvaluator()
+		e.SetInt(X, x)
+		e.SetInt(Y, y)
+		e.SetRegister(F, c)
+		if err := e.Execute(p); err != nil {
+			t.Fatal(err)
+		}
+		y, err = e.Int(Y)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return y
+	}
+
+	// expect: conditional move
+	g := func(x, y *big.Int, c uint64) *big.Int {
+		if c == 0 {
+			return y
+		}
+		return x
+	}
+
+	// Random trials.
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	test.Repeat(t, func(t *testing.T) bool {
+		x := bigint.RandBits(r, n)
+		y := bigint.RandBits(r, n)
+		c := uint64(r.Int63n(2))
+		got := f(x, y, c)
+		expect := g(x, y, c)
+		if !bigint.Equal(expect, got) {
+			t.Fail()
+		}
+		return true
+	})
+}
+
 func TestAddInto(t *testing.T) {
 	k := 4
 	n := uint(64 * k)

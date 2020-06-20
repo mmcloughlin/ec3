@@ -7,6 +7,14 @@ import (
 	"github.com/mmcloughlin/ec3/internal/ints"
 )
 
+// ConditionalMove moves src to dst if f≡eq.
+func ConditionalMove(ctx *build.Context, dst, src ir.Int, f ir.Operand, eq ir.Flag) {
+	k := ints.Min(dst.Len(), src.Len())
+	for i := 0; i < k; i++ {
+		ctx.CMOV(src.Limb(i), dst.Limb(i), f, eq)
+	}
+}
+
 // AddInto sets z = x+y using carry register c.
 func AddInto(ctx *build.Context, z, x, y ir.Int, c ir.Register) {
 	var cin ir.Operand = ir.Flag(0)
