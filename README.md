@@ -9,7 +9,7 @@ with performance as close as possible to hand-crafted implementations.
 In its current state, `ec3` can generate a full implementation of the NIST
 P-256 elliptic curve, however much more work is required to reach performance
 parity with the standard library implementation. It's unpolished and comes
-with no guarantees: it's shared as-is in the hopes that the approach is
+with no guarantees: `ec3` is shared as-is in the hopes that the approach is
 interesting to others, or some subcomponents are independently useful. In
 particular:
 
