@@ -735,6 +735,11 @@ references:
   fields:
     howpublished: Cryptology ePrint Archive, Report 2015/625
     year: "2015"
+- title: Standard curve database
+  url: https://neuromancer.sk/std/
+  author: Jan Jancar and Vladimir Sedlacek
+  section: curves
+  id: std-curves
 - title: The Most Efficient Known Addition Chains for Field Element and Scalar Inversion for the Most Popular and Most Unpopular Elliptic Curves
   url: https://briansmith.org/ecc-inversion-addition-chains-01
   author: Brian Smith

@@ -171,6 +171,7 @@
 * [Elligator: Elliptic-curve points indistinguishable from uniform random strings](https://eprint.iacr.org/2013/325) Daniel J. Bernstein and Mike Hamburg and Anna Krasnova and Tanja Lange.
 * [Security dangers of the NIST curves](https://cr.yp.to/talks/2013.09.16/slides-djb-20130916-a4.pdf) Daniel J. Bernstein and Tanja Lange.
 * [Ed448-Goldilocks, a new elliptic curve](https://eprint.iacr.org/2015/625) Mike Hamburg.
+* [Standard curve database](https://neuromancer.sk/std/) Jan Jancar and Vladimir Sedlacek.
 ## Specifications
 * [RFC 7748: Elliptic Curves for Security](https://www.rfc-editor.org/rfc/rfc7748.txt)
 * [SIKE/SIDH Spec](https://sike.org/files/SIDH-spec.pdf)
